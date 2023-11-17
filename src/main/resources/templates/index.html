@@ -109,11 +109,12 @@
 </div>
 
 <script>
+	const backendHost = "https://dist-apps-spring-exercise.azuremicroservices.io"
     const dataForm = document.getElementById("data-form");
     const outputBody = document.getElementById("output-body");
 
     function fetchAndDisplayData() {
-        fetch("/get-form-data")
+        fetch(backendHost + "/get-form-data")
             .then(response => response.json())
             .then(data => {
                 outputBody.innerHTML = "";
@@ -141,7 +142,7 @@
             phone: phone
         };
 
-        fetch("/submit-form", {
+        fetch(backendHost + "/submit-form", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
