@@ -1,45 +1,32 @@
-# AI5109-Distributed-Applications
+# Distributed Application Lecture
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+## Application
 
-## Basic Principles
+During the first 4 Exercises I have created an application for contacts. With a form the user can insert new contacts containing name and phonenumber. All contacts inside the database are shown in an table below the form.
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+Besides the contacts application I have also included another application called random dog. When calling <Server IP>/randomDog I will call the free random dog API to recieve an random picture of a dog. The site will show a link to open the picture in a different tab, the acutall response of the API, the status code and all the headers for the request
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+## Setup
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+### Used Servers
 
-## Working on Your Own Branch
+Spring Boot Application running on Azure Virtual Machine (using Azure Student Progamm)
+MySQL Database running on Azure Database for MySQL Servers (using Azure Student Programm)
 
-Follow these steps to create and work on your own branch:
+### Used technology on VM
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/Stinktopf/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+- Java 17
+- Nginx 1.18.0
+- Gradle 8.1
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+## Tutorial Starting Application
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
-
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
-
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+1. Start VM and DB on portal.azure
+2. Connect to VM using ssh and private keys stored on Mac and PC
+3. Start Spring Boot Application
+```bash
+java -jar /build/libs/distributedapplications1-0.0.1-SNAPSHOT.jar
+```
+4. Pray that the application starts without errors
+5. Visit <Public IP> to see contacts application and <Public IP>/randomDog to see random dog application
+6. After done testing the application remember to stop VM and DB to not waste student credit
