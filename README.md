@@ -19,7 +19,7 @@ Follow these steps to create and work on your own branch:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/Stinktopf/AI5109-Distributed-Applications.git
+   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
    cd AI5109-Distributed-Applications
    ```
 

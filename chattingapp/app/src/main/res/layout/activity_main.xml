@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- App name on a lavender color strip -->
+    <TextView
+        android:id="@+id/appNameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ZapTalk"
+        android:gravity="center"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:background="#E6E6FA"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
+
+    <!-- Developer info container -->
+    <LinearLayout
+        android:id="@+id/developerContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/appNameText"
+        android:background="@drawable/gray_rounded_corner_background"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/developerInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Developer: Shafi Shaik\nMatriculation number: 1492806"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/inputField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Name here"
+        android:layout_below="@id/developerContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <!-- Store and Retrieve Buttons -->
+    <Button
+        android:id="@+id/storeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_below="@id/inputField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/retrieveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retrieve"
+        android:layout_below="@id/storeButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <!-- Display Text -->
+    <TextView
+        android:id="@+id/displayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stored value will appear here"
+        android:layout_below="@id/retrieveButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:visibility="gone" />
+
+</RelativeLayout>
