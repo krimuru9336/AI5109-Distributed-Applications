@@ -1,0 +1,194 @@
+<!--
+ author: Lucas Immanuel Nickel
+ matriculation: 1318441
+ date: 2023-11-19
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml"
+          href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-telephone-fill' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z'/%3E%3C/svg%3E" />
+    <style>
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+                color: #ffffff;
+            }
+
+            .text-white {
+                color: #ffffff;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-black dark:text-white">
+<nav class="bg-gray-800 p-4">
+    <div class="container mx-auto flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+            <span class="text-white dark:text-gray-300 text-xl font-semibold" style="display: flex; align-items: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-telephone-fill" viewBox="0 0 16 16" style="margin-right: 8px;">
+                    <path fill-rule="evenodd"
+                          d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                </svg>
+                Call Management
+            </span>
+        </div>
+    </div>
+</nav>
+
+<div class="container mx-auto mt-5">
+    <div class="mt-4">
+        <table class="min-w-full border border-gray-900 bg-gray-800 rounded-lg shadow-md text-white">
+            <thead>
+            <tr>
+                <th class="border border-gray-900 px-4 py-2 text-center">ID</th>
+                <th class="border border-gray-900 px-4 py-2 text-center">Name</th>
+                <th class="border border-gray-900 px-4 py-2 text-center">Phone</th>
+            </tr>
+            </thead>
+            <tbody id="callbacksBody">
+            <!-- Data will be dynamically populated here -->
+            </tbody>
+            <tbody>
+            <td>
+                <div class="flex items-center justify-center">
+                    <button onclick="requestCallback()" class="bg-green-500 text-white dark:bg-green-600 dark:text-white rounded-full w-10 h-10 hover:bg-green-600 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                             class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/>
+                        </svg>
+                    </button>
+                </div>
+            </td>
+            <td>
+                <input type="text" id="name" class="border border-gray-900 rounded py-2 px-3 w-full bg-gray-700 text-white" placeholder="Name"
+                       required>
+            </td>
+            <td>
+                <input type="tel" id="phone" class="border border-gray-900 rounded py-2 px-3 w-full bg-gray-700 text-white" placeholder="Phone"
+                       pattern="[0-9]{3} [0-9]{3} [0-9]{4}" maxlength="12" required>
+            </td>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <button onclick="listAllCallbacks()" class="bg-gray-800 text-white rounded py-2 px-4 hover:bg-gray-700 mt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+        </button>
+        <button id="clearBtn" onclick="clearAllCallbacks()" class="bg-red-500 text-white dark:bg-gray-800 dark:text-white rounded py-2 px-4 ml-1 hover:bg-red-600 mt-2" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+            </svg>
+        </button>
+    </div>
+</div>
+<footer class="bg-gray-800 py-4 text-center fixed bottom-0 w-full">
+    <div class="flex items-center justify-center">
+        <div id="current_date" class="text-gray-400">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+            <script>
+                const formattedDate = moment().format('YYYY-MM-DD');
+                document.getElementById("current_date").innerHTML = "<b>Date:</b> " + formattedDate + " • <b>Name:</b> Lucas Immanuel Nickel • <b>ID:</b> 1318441";
+            </script>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const API_ENDPOINT = "http://azure-backend.stinktopf.de";
+
+    window.onload = function () {
+        listAllCallbacks();
+    };
+
+    function requestCallback() {
+        const nameInput = document.getElementById("name");
+        const phoneInput = document.getElementById("phone");
+
+        const name = nameInput.value;
+        const phone = phoneInput.value;
+
+        if (!name || !phone || !phone.match(/^\d{3} \d{3} \d{4}$/)) {
+            alert("Please enter valid name and phone (format: 123 456 7890)");
+            return;
+        }
+
+        fetch(`${API_ENDPOINT}/api/request-a-callback`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                phone: phone
+            })
+        }).then(response => {
+            if (response.status === 201) {
+                console.log("Callback requested successfully!");
+                listAllCallbacks();
+
+                nameInput.value = "";
+                phoneInput.value = "";
+            } else {
+                alert("Error: " + response.status);
+            }
+        }).catch(error => {
+            alert("Error: " + error);
+        });
+    }
+
+
+    function listAllCallbacks() {
+        fetch(`${API_ENDPOINT}/api/callbacks`)
+            .then(response => response.json())
+            .then(data => {
+                const callbacksBody = document.getElementById("callbacksBody");
+                callbacksBody.innerHTML = "";
+
+                const clearBtn = document.getElementById("clearBtn");
+                if (data.length > 0) {
+                    clearBtn.style.display = "inline-block";
+                } else {
+                    clearBtn.style.display = "none";
+                }
+
+                data.forEach(callback => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td class="border border-gray-900 px-4 py-2 text-center">${callback.id}</td>
+                        <td class="border border-gray-900 px-4 py-2 text-center">${callback.name}</td>
+                        <td class="border border-gray-900 px-4 py-2 text-center">${callback.phone}</td>
+                    `;
+                    callbacksBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                alert("Error: " + error);
+            });
+    }
+
+    function clearAllCallbacks() {
+        fetch(`${API_ENDPOINT}/api/clear-all-callbacks`, {
+            method: "POST"
+        }).then(response => {
+            if (response.ok) {
+                console.log("All callbacks cleared successfully!");
+                listAllCallbacks();
+            } else {
+                alert("Error: " + response.status);
+            }
+        }).catch(error => {
+            alert("Error: " + error);
+        });
+    }
+</script>
+</body>
+</html>

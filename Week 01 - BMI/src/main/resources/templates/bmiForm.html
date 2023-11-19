@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Rechner</title>
+    <!-- Verwende Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">BMI Rechner</h1>
+    <form action="/calculate-bmi" method="post">
+        <div class="form-group">
+            <label for="weight">Gewicht (kg):</label>
+            <input type="number" step="0.01" class="form-control" id="weight" name="weight" required>
+        </div>
+        <div class="form-group">
+            <label for="height">Größe (m):</label>
+            <input type="number" step="0.01" class="form-control" id="height" name="height" required>
+        </div>
+        <button type="submit" class="btn btn-primary">BMI berechnen</button>
+    </form>
+    <!-- Anzeige des BMI-Ergebnisses -->
+    <div th:if="${bmiResult != null}" class="mt-4">
+        <h4>Dein BMI: <span th:text="${bmiResult}"></span></h4>
+    </div>
+</div>
+
+<!-- Verwende Bootstrap JS und jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
