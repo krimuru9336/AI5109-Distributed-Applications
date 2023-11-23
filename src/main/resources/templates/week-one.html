@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Week 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+<div class="mx-auto w-50 p-5">
+<h1 class="h1 mb-2">Phone number saver</h1>
+<div class="info"></div>
+<form action="/week-one/save" class="form-control mb-2" method="post">
+    <div class="form-group mb-2">
+        <label for="name">Name:</label>
+        <input class="form-control" type="text" name="name" id="name" placeholder="Max Mustermann" required>
+    </div>
+    <div class="form-group mb-2">
+        <label for="phoneNumber">Phone:</label>
+        <input class=form-control type="tel" id="phoneNumber" name="phoneNumber" placeholder="03721 24 77 84" pattern="^(\+([789]|49)|0)(\d\s*){1,}$" required>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+</form>
+<h2 class="h2 mb-2">DB Results:</h2>
+<table class="table mb-2">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="item : ${phoneNumbers}">
+            <td th:text="${item.getId()}"></td>
+            <td th:text="${item.getName()}"></td>
+            <td th:text="${item.getPhoneNumber()}"></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<script src="/js/infoInjector.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
