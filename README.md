@@ -1,45 +1,75 @@
 # AI5109-Distributed-Applications
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+This README describes what I did to solve Exercise 3
+The Springboot-App uses the KeyVault we created in Azure
 
-## Basic Principles
+## Database Server
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
-
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
-
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
-
-## Working on Your Own Branch
-
-Follow these steps to create and work on your own branch:
-
-1. **Clone the Repository:**
+1. **Create a VM on Azure and install/setup Mysql:**
    ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
+   sudo apt update
+   sudo apt install mysql-server
+   sudo systemctl start mysql.service
+   sudo mysql_secure_installation
    ```
 
-2. **Create a New Branch Named After Your FD Number:**
+2. **Create database and table:**
    ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+   sudo mysql
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+   CREATE DATABASE bmi_db;
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
+   CREATE TABLE `bmi_db`.`bmi`(`id` INT AUTO_INCREMENT NOT NULL, `name` VARCHAR(45) NOT NULL, `weight` DOUBLE NOT NULL, `height` DOUBLE NOT NULL, `bmi` DOUBLE NULL, PRIMARY KEY (`id`));
    ```
 
-5. **Push Changes to Your Branch:**
+3. **Allow external connections to your db:**
    ```bash
-   git push origin fdai1234
+   CREATE USER 'dbuser'@'%' IDENTIFIED BY 'password';
+
+   GRANT SELECT, INSERT, ALTER ON `bmi_db`.`bmi` TO 'dbuser'@'%';
+
+   FLUSH PRIVILEGES;
    ```
-   - Replace `fdai1234` with your actual FD number.
+
+4. **Create external db user:**
+   Log into azure, access your VM and click on "Network" in the navigation.
+
+   Add a new inbound port rule:
+
+   Source: IP of your other server
+
+   Destination: *
+
+   Service: MySQL
+
+   Action: Allow
+
+   Priority: 310
+
+   Name: MySQL   
+
+5. **Change config on server:**
+   ```bash 
+   sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf 
+   ```
+   Change `bind-address` and `mysqlx-bin-address` from `127.0.0.1` to `0.0.0.0` allowing the mysql server to listen on all ips.
+
+   Restart MySQL Service:
+
+   `sudo systemctl restart mysql`
+
+## Create a KeyVault and fill it with secrets
+
+Populate your secrets with the credentials of the created db user and the IP-Adress of the Database-VM
+
+## Springboot-Application Server
+
+1. **Create another VM on Azure and install Java:**
+   For example you can download the latest version of java (https://www.oracle.com/de/java/technologies/downloads/) and use SCP to upload it onto your VM
+   Alternatively you can use `apt install` to install the needed version of java
+
+2. **Upload your Springboot-Application (jar-file built with Maven) to your VM:**
+   `scp -i {private-key} {path to your Springboot-App.jar} {destination on VM e.g. azureuser@20.55.35.13:/home/azureuser/}`
+
+3. **Now you can run your app with:**
+   `java -jar app.jar`
