@@ -6,16 +6,16 @@
 </head>
 <body>
 <h1>Contact Form</h1>
-<form th:action="@{/contacts}" th:object="${newContact}" method="post">
+<form id="contactForm">
     <label for="name">Name:</label>
-    <input type="text" id="name" th:field="*{name}"><br>
-    <label for="phone">Phone Number:</label>
-    <input type="text" id="phone" th:field="*{phoneNumber}"><br>
-    <button type="submit">Submit</button>
+    <input type="text" id="name" th:value="${name}"><br>
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="text" id="phoneNumber" th:value="${phoneNumber}"><br>
+    <button type="button" onclick="addContact()">Submit</button>
 </form>
 
 <h1>Contact List</h1>
-<div th:if="${not #lists.isEmpty(contacts)}">
+<div id="contactList" th:each="contact : ${contacts}">
     <table>
         <thead>
         <tr>
@@ -24,7 +24,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="contact : ${contacts}">
+        <tr>
             <td th:text="${contact.name}"></td>
             <td th:text="${contact.phoneNumber}"></td>
         </tr>
@@ -32,9 +32,44 @@
     </table>
 </div>
 
+<script th:inline="javascript">
+        function fetchContacts() {
+            fetch('http://20.62.166.42/api/contacts')
+                .then(response => response.json())
+                .then(data => {
+                    const contactListDiv = document.getElementById('contactList');
+                    contactListDiv.innerHTML = '<table><thead><tr><th>Name</th><th>Phone Number</th></tr></thead><tbody>' +
+                        data.map(contact => `<tr><td>${contact.name}</td><td>${contact.phoneNumber}</td></tr>`).join('') +
+                        '</tbody></table>';
+                })
+                .catch(error => console.error('Error fetching contacts:', error));
+        }
+
+        function addContact() {
+            const name = document.getElementById('name').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            fetch('http://20.62.166.42/api/contacts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, phoneNumber })
+            })
+            .then(response => {
+                if (response.ok) {
+                    fetchContacts();
+                } else {
+                    console.error('Error adding contact:', response.statusText);
+                }
+            })
+            .catch(error => console.error('Error adding contact:', error));
+        }
+        fetchContacts();
+    </script>
 </body>
 </html>
 
 <!--
-Jonas Wagner - 1315578 - 28.10.2023
+Jonas Wagner - 1315578 - 24.11.2023
 -->
