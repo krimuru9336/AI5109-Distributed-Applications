@@ -16,8 +16,17 @@ public class ContactController {
     @GetMapping
     public List<Contact> getAllContacts() {
         List<Contact> allContacts = contactRepository.findAll();
-        System.out.println("GET All Contacts: " + allContacts.toString());
+        System.out.println("GET All Contacts: " + printContacts(allContacts));
         return allContacts;
+    }
+
+    private String printContacts(List<Contact> allContacts) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Contact contact : allContacts) {
+            stringBuilder.append("Name: ").append(contact.getName()).append(", ");
+            stringBuilder.append("Phone: ").append(contact.getPhoneNumber()).append("\n");
+        }
+        return stringBuilder.toString();
     }
 
     @PostMapping
