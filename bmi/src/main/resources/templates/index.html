@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+    <title>BMI Calculator</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        form {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>  
+</head>
+<body>
+    <h1>BMI Calculator</h1>
+    <form th:action="@{/calculate-bmi}" method="post" th:object="${person}">
+		<label for="name">Name:</label>
+		<input type="text" th:field="*{name}" placeholder="Name" />
+		<br>
+		<label for="weight">Weight:</label>
+        <input type="number" step="any" th:field="*{weight}" placeholder="Weight (kg)" />
+        <br>
+        <label for="height">Height:</label>
+        <input type="number" step="any" th:field="*{height}" placeholder="Height (m)" />	
+        <br>	
+        <input type="submit" value="Calculate BMI" />
+    </form>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Weight (kg)</th>
+            <th>Height (m)</th>
+            <th>BMI</th>
+        </tr>
+        <tr th:each="person : ${persons}">
+            <td th:text="${person.name}"></td>
+            <td th:text="${person.weight}"></td>
+            <td th:text="${person.height}"></td>
+            <td th:text="${person.bmi}"></td>
+        </tr>
+    </table>
+</body>
+</html>
