@@ -15,11 +15,14 @@ public class ContactController {
 
     @GetMapping
     public List<Contact> getAllContacts() {
-        return contactRepository.findAll();
+        List<Contact> allContacts = contactRepository.findAll();
+        System.out.println("GET All Contacts: " + allContacts.toString());
+        return allContacts;
     }
 
     @PostMapping
     public Contact addContact(@RequestBody Contact contact) {
+        System.out.println("Add Contact to DB: " + contact);
         return contactRepository.save(contact);
     }
 

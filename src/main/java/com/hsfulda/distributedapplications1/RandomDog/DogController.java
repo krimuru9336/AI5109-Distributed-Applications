@@ -22,6 +22,9 @@ public class DogController {
 
     @GetMapping("/randomDog")
     public void getRandomDog(HttpServletResponse response) throws IOException {
+
+        System.out.println("Trying to call random dog API");
+
         ResponseEntity<DogApiResponse> apiResponse = restTemplate.getForEntity(dogApiUrl, DogApiResponse.class);
         String imageUrl = Objects.requireNonNull(apiResponse.getBody()).getMessage();
 
@@ -37,6 +40,8 @@ public class DogController {
         response.setContentType("text/html");
 
         response.getWriter().write(htmlContent);
+
+        System.out.println("API call successful. Result send to frontend");
     }
 }
 /*
