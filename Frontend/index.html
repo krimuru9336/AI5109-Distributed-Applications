@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Contact App</title>
@@ -8,14 +8,14 @@
 <h1>Contact Form</h1>
 <form id="contactForm">
     <label for="name">Name:</label>
-    <input type="text" id="name" th:value="${name}"><br>
+    <input type="text" id="name"><br>
     <label for="phoneNumber">Phone Number:</label>
-    <input type="text" id="phoneNumber" th:value="${phoneNumber}"><br>
+    <input type="text" id="phoneNumber"><br>
     <button type="button" onclick="addContact()">Submit</button>
 </form>
 
 <h1>Contact List</h1>
-<div id="contactList" th:each="contact : ${contacts}">
+<div id="contactList">
     <table>
         <thead>
         <tr>
@@ -25,14 +25,14 @@
         </thead>
         <tbody>
         <tr>
-            <td th:text="${contact.name}"></td>
-            <td th:text="${contact.phoneNumber}"></td>
+            <td></td>
+            <td></td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<script th:inline="javascript">
+<script>
         function fetchContacts() {
             fetch('http://20.62.166.42/api/contacts')
                 .then(response => response.json())
