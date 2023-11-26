@@ -1,0 +1,20 @@
+<!--
+Author: Usama Sajjad
+Matriculation Number: 1409048
+Created Date: 09/11/2023
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cryptocurrency Exchange Rates</title>
+</head>
+<body>
+    <h1>Cryptocurrency Exchange Rates (Base Currency: USD)</h1>
+    <ul>
+        {% for currency, rate in exchange_rates.items() %}
+            <li>{{ currency }}: {{ rate }}</li>
+        {% endfor %}
+    </ul>
+    <a class="home-button" href="/">Home</a>
+</body>
+</html>

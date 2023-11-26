@@ -1,0 +1,82 @@
+<!--
+Author: Usama Sajjad
+Matriculation Number: 1409048
+Created Date: 05/11/2023
+
+This HTML template represents the user input form for the Flask application. It includes fields for name and phone number,
+as well as a "Submit" button and a "Show Data" button to navigate to the data display page.
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        form {
+            background-color: #fff;
+            width: 300px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .show-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .show-button:hover {
+            background-color: #1f8d43;
+        }
+    </style>
+</head>
+<body>
+    <h3>Author: Usama Sajjad</h3>
+    <h3>Matriculation Number: 1409048</h3>
+    <h3>Created Date: 05/11/2023</h3>
+
+    <form action="/submit" method="POST">
+        Name: <input type="text" name="name"><br>
+        Phone Number: <input type="text" name="phone_number"><br>
+        <input type="submit" value="Submit">
+        <a class="show-button" href="/display">Show Data</a>
+        <!-- ... (existing code) -->
+        <a class="coinlayer-api-button" href="/coinlayer_api">Cryptocurrency Exchange Rates</a>
+
+
+    </form>
+
+
+
+
+</body>
+</html>

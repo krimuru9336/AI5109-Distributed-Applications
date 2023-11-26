@@ -1,0 +1,84 @@
+<!--
+Author: Usama Sajjad
+Matriculation Number: 1409048
+Created Date: 05/11/2023
+
+This HTML template displays user data fetched from the SQLite database. It includes a table to show the data and a "Home" button
+to return to the home page.
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            margin: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .home-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .home-button:hover {
+            background-color: #1f8d43;
+        }
+    </style>
+</head>
+<body>
+    <h3>Author: Usama Sajjad</h3>
+    <h3>Matriculation Number: 1409048</h3>
+    <h3>Created Date: 05/11/2023</h3>
+
+    <h2>User Data</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a class="home-button" href="/">Home</a>
+
+
+
+
+
+
