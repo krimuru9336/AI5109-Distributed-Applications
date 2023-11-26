@@ -31,7 +31,7 @@ public class ContactController {
 
     @PostMapping
     public Contact addContact(@RequestBody Contact contact) {
-        System.out.println("Add Contact to DB: " + contact);
+        System.out.println("Add Contact to DB: Name: " + contact.getName() + ", Phone: " + contact.getPhoneNumber());
         return contactRepository.save(contact);
     }
 
