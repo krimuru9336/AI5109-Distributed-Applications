@@ -1,0 +1,23 @@
+<!-- Simon Keller, Matrikelnummer 1165562, 03.11.2023 -->
+<html>
+<body>
+	<div th:if="${bmi != null}">
+		<p th:text="'Hello ' + ${bmi.name}" />
+	    <p th:text="'Your BMI is: ' + ${bmi.bmi}" />
+	</div>
+	<form action="#" th:action="@{/calcbmi}" th:object="${bmi}" method="post">
+		<label for="fname">Name:</label>
+		<input type="text" required id="name" name="name"><br><br>
+		<label for="fname">Weight:</label>
+		<input type="number" required id="weight" name="weight"><br><br>
+		<label for="lname">Height:</label>
+		<input type="number" required id="height" name="height"><br><br>
+		<input type="submit" value="Submit">
+	</form>
+	<p>DB entries:</p>
+	<div th:each="entry : ${entries}">
+		<p th:text="'Name: '+${entry.name} +' Weight: '+${entry.weight} +' Height: '+ ${entry.height} +' BMI: '+ ${entry.bmi}" />
+	</div>
+</body>
+</html>
+<html>
