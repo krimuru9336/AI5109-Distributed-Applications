@@ -1,0 +1,45 @@
+<!--/*
+ * Author: Christian Jumtow
+ * Created: 03.11.2023
+ * MNr.: 1166358
+ */-->
+<html>
+
+<head></head>
+
+<body>
+	<h1>BMI Christian Jumtow</h1>
+	<form action="#" th:action="@{/bmi}" th:object="${bmibean}" method="post">
+		<label for="name">Name:</label><br>
+		<input type="text" id="name" name="name" value="John"><br>
+		<label for="weight">Weight in kg:</label><br>
+		<input type="number" id="weight" name="weight" value="100"><br>
+		<label for="height">Height in cm:</label><br>
+		<input type="number" id="height" name="height" value="170"><br><br>
+		<input type="submit" value="Submit">
+	</form>
+
+	<div th:if="${bmi != null}">
+		<p th:text="'Hi ' + ${bmi.name} + ', your BMI is:'"></p>
+		<p th:text="${bmi.bmi}"></p>
+	</div>
+	<table>
+		<thead>
+			<tr>
+				<th> Title </th>
+				<th> Author </th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${bmis == null}">
+				<td colspan="2"> No BMIs Available </td>
+			</tr>
+			<tr th:each="bmi : ${bmis}">
+				<td><span th:text="${bmi.name}"> Name </span></td>
+				<td><span th:text="${bmi.bmi}"> BMI </span></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+
+</html>
