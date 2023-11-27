@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .country-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .detail-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<!--  Name : Shyam Joshi -->
+<!--  Date : 7/11/2023 -->
+ <!-- Matriculation number 1482098 -->
+<body>
+    <div class="container" th:if="${country}">        
+        <h1 class="country-name" th:text="${country.name.common}">Country Name</h1>
+        <div class="row">
+            <div class="col-6">
+                <p class="detail-label">Is Independent:</p>
+                <p th:text="${country.independent}">Yes</p>
+
+                <p class="detail-label">Is UN Member:</p>
+                <p th:text="${country.unMember}">Yes</p>
+
+                <p class="detail-label">Capital:</p>
+                <p th:text="${country.capital[0]}">Capital City</p>
+
+                <p class="detail-label">Region:</p>
+                <p th:text="${country.region}">Region Name</p>
+            </div>
+            <div class="col-6">
+                <p class="detail-label">Subregion:</p>
+                <p th:text="${country.subregion}">Subregion Name</p>
+
+                <p class="detail-label">Is Landlocked:</p>
+                <p th:text="${country.landlocked}">No</p>
+
+                <p class="detail-label">Area:</p>
+                <p th:text="|${country.area} square kilometeres|">123,456</p>
+
+                <p class="detail-label">Population:</p>
+                <p th:text="${country.population}">7,890,123</p>
+            </div>
+        </div>
+    </div>
+    <div th:unless="${country}">
+        <p>Sorry country not found</p>
+    </div>
+</body>
+</html>

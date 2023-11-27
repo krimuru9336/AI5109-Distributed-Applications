@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Info Form</title>
+     
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<!--  Name : Shyam Joshi -->
+<!--  Date : 7/11/2023 -->
+ <!-- Matriculation number 1482098 -->
+<body>
+    <div class="container" th:fragment="content">
+        
+        <h2>User Information Form</h2>
+        <form th:object="${bmiData}" th:action="${submit_url}" method="post" id="bmiForm">
+            <div class="form-group">
+                <label for="name">Name:</label> 
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" th:field="*{name}">
+            </div>
+            <div class="form-group">
+                <label for="weight">Weight (kg):</label>
+                <input type="number" class="form-control" id="weight" name="weight" placeholder="Enter your weight" th:field="*{weight}">
+            </div>
+            <div class="form-group">
+                <label for="height">Height (m):</label>
+                <input type="number" step="any" class="form-control" id="height" name="height" placeholder="Enter your height" th:field="*{height}">
+            </div>
+            
+            <div class="form-group">
+                <label th:if="${bmi != null}" th:text="${bmi}"></label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="reset" class="btn btn-primary btn-red">Reset</button>
+            
+        </form>
+        <br>
+        <form method="post" id="form">
+            <button type="normal" formaction="/showAll" class="btn btn-primary btn-red">Show All Entries</button>
+        </form>
+        
+    </div>
+
+    <script>
+        // JavaScript validation
+        document.getElementById("bmiForm").addEventListener("submit", function (event) {
+            const name = document.getElementById("name").value;
+            const height = parseFloat(document.getElementById("height").value);
+            const weight = parseInt(document.getElementById("weight").value);
+
+            if (name === "") {
+                alert("Name cannot be empty.");
+                event.preventDefault();
+            }
+
+            if (isNaN(height) || height <= 0) {
+                alert("Height must be a positive number.");
+                event.preventDefault();
+            }
+
+            if (isNaN(weight) || weight <= 0) {
+                alert("Weight must be a positive number.");
+                event.preventDefault();
+            }
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
