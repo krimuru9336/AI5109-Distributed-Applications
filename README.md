@@ -1,45 +1,52 @@
 # AI5109-Distributed-Applications
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+This repository contains source code for the "Distributed Applications" module in the Winter Semester 2023/2024 at Hochschule Fulda.
 
-## Basic Principles
+## Week 1 & 2: Basic Springboot 
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+### Task Description
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+The goal of this project task is to integrate a front end with a backend and a database. The specific requirements are outlined below.
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+### Front End Requirements
 
-## Working on Your Own Branch
+1. Input form:
+	- Create a form with input fields for name and phone number, along with a submit button.
+2. Display Container:
+	- Include a small div or table to display contents retrieved from the database.
+	
+### Backend Requirements
 
-Follow these steps to create and work on your own branch:
+1. Data Submission:
+	- Implement backend functionality to receive data from the frontend and store it in the database.
+2. Data Retrieval:
+	- Implement backend functionality to retrieve data from the database and send it to the frontend.
+	
+### Database Requirements
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+1. Database Setup:
+	- Set up MySQL Workbench or a similar database system.
+2. Record Display:
+	- Implement functionality to display records from the database.
+	
+### Project Workflow
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+1. Frontend-Backend Communication:
+	- Ensure seamless communication between the frontend and backend for data submission and retrieval.
+2. Database Integration:
+	- Integrate the database into the backend to store and retrieve data efficiently.
+3. Dependencies:
+	- For getting the dependencies, visit [Spring Initializr](https://start.spring.io/) and select the desired dependencies for your project.
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+## Week 3: Calling an API
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+### Task Description
+
+The second task involves calling an API from your application. You have the flexibility to choose any API for this task.
+If you need suggestions, you can explore the [public APIs repository](https://github.com/public-apis/public-apis).
+
+### API Selection
+
+For this task, I chose to call the [Tomorrow.io API](https://docs.tomorrow.io/reference/welcome). This API provides weather-related data and services.
+
