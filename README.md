@@ -1,45 +1,42 @@
-# AI5109-Distributed-Applications
+#  😺 Cat BMI Calculation application
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+This is a Java Spring Boot application for Body Mass Index (BMI) calculations of cats. It can be used as one of many measures to check how in shape your cat is.
 
-## Basic Principles
+The BMI is calculated based on measurements taken at the circumference around the level of the 9th rib and the length of the lower back leg from knee to ankle. 
+Further details can be found [here](https://worldanimalfoundation.org/cats/bmi-calculator/).
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+## 📑 Main modules
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+- BmiApplication - Main class serving as the entry point for the Spring Boot application. Initializes the Spring context and starts the server.
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+- BmiBean - Entity class for storing BMI information in the database. Represents BMI records with attributes such as name, gender, rib cage, leg length, and BMI.
 
-## Working on Your Own Branch
+- BmiController - Spring MVC controller for handling BMI-related requests. Manages endpoints for retrieving and saving BMI records, performs BMI calculations.
 
-Follow these steps to create and work on your own branch:
+- BmiRepository - Spring Data JPA repository interface for CRUD operations on BmiBean entities. Provides methods for interacting with the database.
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+## ⭐ Enhancements
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+As an added feature, a RESTful API consumer for retrieving cat facts from the [MeowFacts API](https://github.com/wh-iterabb-it/meowfacts) is included. 
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+- MeowFactsConsumer - Communicates with the external API and returns cat facts in the response.
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+- MeowFactsApiResponse - Java class representing the structure of the MeowFacts API response. Deserializes JSON responses into Java objects.
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+- RestTemplateConfig - Spring configuration class for defining a RestTemplate bean. Configures and provides instances of the RestTemplate class for making HTTP requests.
+
+## 🚀 Deployment
+
+The application is deployed as an Azure App Service while the MySQL database is deployed to an Azure MySQL server.
+
+## 🌐 Visit the website
+
+Feel free to interact with the application by visiting https://cat-bmi.azurewebsites.net/ as well as enjoy interesting cat facts from https://cat-bmi.azurewebsites.net/meow-facts/meow.
+
+## ✒️ Authors
+
+- Sahan Wijesinghe
+- Distributed Applications - AI5109 - English version (WiSe23/24)
+- Hochschule Fulda
+
+_This project is developed for educational and demonstration purposes only._

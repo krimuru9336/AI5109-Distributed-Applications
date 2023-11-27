@@ -1,0 +1,109 @@
+<!-- 
+    Author: Sahan Wijesinghe (1453575) 
+    Created: 07.11.2023 
+    -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="ISO-8859-1" />
+        <title>Cat BMI Calculator</title>
+        <style>
+            .cat-image {
+                width: 400px; 
+                height: auto;
+                margin-right: 20px; 
+            }
+            form {
+                max-width: 400px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            input, select {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 15px;
+                box-sizing: border-box;
+            }
+
+            input[type="submit"] {
+                background-color: #4CAF50;
+                color: white;
+                cursor: pointer;
+            }        
+
+            table {
+            width: 50%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            th {
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container my-2">
+
+            <img src="https://worldanimalfoundation.org/wp-content/uploads/2023/08/how-to-calculate-cat-BMI.png" alt="Cat BMI Measurements" class="cat-image" />
+            <img src="https://worldanimalfoundation.org/wp-content/uploads/2023/08/Cat-BMI-Chart-1024x614.png" alt="Cat BMI Chart" class="cat-image" />
+
+            <h1>Calculate your cat's BMI</h1>
+
+            <form action="#" th:action="@{/}" th:object="${Bmi}" method="POST">
+                <label for="name">Your cat's name:</label>
+                <input type="text" th:field="*{name}" id="name" />
+    
+                <label for="gender">Gender:</label>
+                <select th:field="*{gender}" id="gender">
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                </select>
+    
+                <label for="ribCage">Rib cage (in cm):</label>
+                <input type="text" th:field="*{ribCage}" id="ribCage" />
+    
+                <label for="legLength">Leg length (in cm):</label>
+                <input type="text" th:field="*{legLength}" id="legLength" />
+    
+                <input type="submit" value="Calculate BMI" />
+            </form>
+
+            <br />
+
+            <h1>BMI List</h1>
+
+            <table border="1" class="table table-striped table-responsive-md">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Rib Cage (cm)</th>
+                        <th>Leg Length (cm)</th>
+                        <th>BMI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="bmi : ${listBmis}">
+                        <td th:text="${bmi.name}"></td>
+                        <td th:text="${bmi.gender}"></td>
+                        <td th:text="${bmi.ribCage}"></td>
+                        <td th:text="${bmi.legLength}"></td>
+                        <td th:text="${#numbers.formatDecimal(bmi.bmi, 0, 2)}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
