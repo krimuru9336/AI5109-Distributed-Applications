@@ -39,7 +39,6 @@ The goal of this project task is to integrate a front end with a backend and a d
 	- For getting the dependencies, visit [Spring Initializr](https://start.spring.io/) and select the desired dependencies for your project.
 
 
-
 ## Week 3: Calling an API
 
 ### Task Description
