@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Student Management System</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+
+<body>
+	<div class="container my-2">
+		<h1>Student Information</h1>
+
+		<table border="1" class="table table-responsive-md">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Contact</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="student : ${listStudents}">
+					<td th:text="${student.name}"></td>
+					<td th:text="${student.contact}"></td>
+				</tr>
+			</tbody>
+		</table>
+		
+				<a th:href="@{/showNewStudentForm}" class="btn btn-primary btn-sm mb-3"> Add Student </a>
+	</div>
+</body>
+
+</html>
