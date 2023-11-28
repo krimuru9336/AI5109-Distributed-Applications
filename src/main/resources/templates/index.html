@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<!--
+Author: Felix Stumpf
+Created: 03.11.2023 / Distributed Applications
+Matriculation-ID: 1165939
+ -->
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+<h1>Hi</h1>
+<img th:src="@{${duckUrl}}" id="duckimg" height="100" alt="Duck">
+<form th:action="@{/bmi}" th:object="${BmiBean}" method="post">
+    <label for="fname">Name:</label><br>
+    <input type="text" id="fname" name="name"><br>
+    <label for="height">Height[m]:</label><br>
+    <input type="number" step="0.01" id="height" name="height"><br>
+    <label for="weight">Weight[kg]:</label><br>
+    <input type="number" step="0.01" id="weight" name="weight"><br><br>
+    <button type="submit" id="submit" name="submit">Submit</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Height</th>
+        <th>Weight</th>
+        <th>BMI</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="BmiBean : ${bmis}">
+        <td th:text="${BmiBean.name}">Name</td>
+        <td th:text="${BmiBean.height}">Height</td>
+        <td th:text="${BmiBean.weight}">Weight</td>
+        <td th:text="${BmiBean.bmi}">BMI</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
