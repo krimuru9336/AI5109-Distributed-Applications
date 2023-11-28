@@ -1,0 +1,136 @@
+<html>
+
+<head>
+  <title>Basic Springboot Setup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    form {
+      margin: 20px auto;
+      width: 300px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="text"],
+    input[type="phone"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    input[type="submit"] {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #555;
+    }
+
+    .results {
+      width: 50%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #333;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Basic Springboot Setup</h1>
+  <form method="POST">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+    <br>
+    <label for="phone">Phone:</label>
+    <input type="phone" id="phone" name="phone" placeholder="Enter your phone" required>
+    <br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <table class="results">
+    <tr>
+      <th>Name</th>
+      <th>Phone</th>
+    </tr>
+  </table>
+
+  <script>
+    const backendURL = 'http://74.234.203.165:8081/form';
+    // submit form => send data to backend
+    document.querySelector('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.querySelector('#name').value;
+      const phone = document.querySelector('#phone').value;
+      const data = {
+        name,
+        phone
+      };
+      fetch(backendURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(data => {
+          location.reload();
+        })
+        .catch(err => console.log(err));
+    });
+
+    // load data from backend on load
+    window.addEventListener('load', () => {
+      fetch(backendURL)
+        .then(data => data.json())
+        .then(data => {
+          const table = document.querySelector('.results');
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            const name = document.createElement('td');
+            const phone = document.createElement('td');
+            name.innerText = item.name;
+            phone.innerText = item.phone;
+            row.appendChild(name);
+            row.appendChild(phone);
+            table.appendChild(row);
+          });
+        })
+        .catch(err => console.log(err));
+    });
+  </script>
+</body>
+
+</html>
