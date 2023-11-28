@@ -57,7 +57,17 @@
         	<groupId>com.microsoft.sqlserver</groupId>
         	<artifactId>mssql-jdbc</artifactId>
         	<version>9.2.1.jre11</version> <!-- Use the latest version available -->
-    	</dependency>
+    	</dependency>	
+    	    <!-- Azure Key Vault Starter -->
+	    <dependency>
+	        <groupId>com.microsoft.azure</groupId>
+	        <artifactId>azure-keyvault-secrets-spring-boot-starter</artifactId>
+	    </dependency>
+    <!-- Azure Identity Library -->
+	    <dependency>
+	        <groupId>com.microsoft.azure</groupId>
+	        <artifactId>azure-identity</artifactId> 
+	    </dependency>    	
 	</dependencies>
 
 	<build>
