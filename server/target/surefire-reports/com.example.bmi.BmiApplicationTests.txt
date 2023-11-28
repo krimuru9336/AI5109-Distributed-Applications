@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.bmi.BmiApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.092 s - in com.example.bmi.BmiApplicationTests

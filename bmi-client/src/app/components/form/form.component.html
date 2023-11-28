@@ -1,0 +1,89 @@
+<!--
+  Author: Azamat Afzalov
+  Matriculation number: 1492864
+  Date: 05.11.2023
+-->
+<div class="px-6 py-2 cursor-pointer" (click)="navigateToTable()">
+  See table &rarr;
+</div>
+<div class="flex justify-center items-center ">
+  <form class="space-y-2 w-full p-6" (ngSubmit)="onSubmit($event)">
+    <div>
+      <h2 class="text-2xl">Please enter your data</h2>
+    </div>
+    <div>
+      <label for="name" class="block text-sm font-medium leading-6 text-gray-900">
+        Name
+      </label>
+      <div class="mt-2">
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          [(ngModel)]="formData.name"
+        >
+      </div>
+    </div>
+    <div>
+      <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">
+        Phone
+      </label>
+      <div class="mt-2">
+        <input
+          id="phone"
+          name="phone"
+          type="text"
+          required
+          [(ngModel)]="formData.phone"
+          class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        >
+      </div>
+    </div>
+
+    <div class="flex justify-center gap-x-2">
+      <div class="flex-1">
+        <label for="name" class="block text-sm font-medium leading-6 text-gray-900">
+          Weight
+        </label>
+        <div class="mt-2">
+          <input
+            id="weight"
+            name="weight"
+            type="text"
+            required
+            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            [(ngModel)]="formData.weight"
+          >
+        </div>
+      </div>
+      <div class="flex-1">
+        <label for="name" class="block text-sm font-medium leading-6 text-gray-900">
+          Height
+        </label>
+        <div class="mt-2">
+          <input
+            id="height"
+            name="height"
+            type="text"
+            required
+            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            [(ngModel)]="formData.height"
+          >
+        </div>
+      </div>
+    </div>
+
+
+    <div>
+      <button
+        (click)="onSubmit($event)"
+        type="submit"
+        class="mt-6 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

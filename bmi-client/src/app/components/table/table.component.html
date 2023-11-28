@@ -1,0 +1,54 @@
+<!--
+  Author: Azamat Afzalov
+  Matriculation number: 1492864
+  Date: 05.11.2023
+-->
+
+<div class="p-6">
+  <div class="mb-2">
+    <p class="text-sm cursor-pointer" (click)="navigateToForm()">
+      &larr; Go to form
+    </p>
+  </div>
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th class="text-start px-6 py-3">
+          Name
+        </th>
+        <th class="text-start px-6 py-3">
+          Phone
+        </th>
+        <th class="text-start px-6 py-3">
+          Weight
+        </th>
+        <th class="text-start px-6 py-3">
+          Height
+        </th>
+        <th class="text-start px-6 py-3">
+          BMI
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let bmi of tableData" class="bg-white border-b hover:bg-gray-100 hover:cursor-pointer">
+      <td class="text-start px-6 py-3">
+        {{bmi.name}}
+      </td>
+      <td class="text-start px-6 py-3">
+        {{bmi.phone}}
+      </td>
+      <td class="text-start px-6 py-3">
+        {{bmi.weight}}kg
+      </td>
+      <td class="text-start px-6 py-3">
+        {{bmi.height}}cm
+      </td>
+      <td class="text-start px-6 py-3">
+        {{bmi.bmi | number : '.0-2'}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
