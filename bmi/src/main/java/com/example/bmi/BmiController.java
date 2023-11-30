@@ -1,38 +1,31 @@
-//Simon Keller, Matrikelnummer 1165562, 03.11.2023
 package com.example.bmi;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequestMapping("/api/bmi")
 public class BmiController {
-	private final BMIRepository bmiRepository;
+    private final BMIRepository bmiRepository;
 
     @Autowired
     public BmiController(BMIRepository bmiRepository) {
         this.bmiRepository = bmiRepository;
     }
-	@GetMapping("/")
-	public String showIndex(Model model) {
-		List<BmiBean> bel = bmiRepository.findAll();
-		model.addAttribute("entries",bel);
-		return "index";
-	}
-	
-	@PostMapping("/calcbmi")
-	public String m_calcbmi(@ModelAttribute BmiBean bmi, Model model) {
-		model.addAttribute("bmi",bmi);
-		bmi.setBmi(bmi.getWeight()/(bmi.getHeight()*bmi.getHeight()/10000));
-		bmiRepository.save(bmi);
-		
-		List<BmiBean> bel = bmiRepository.findAll();
-		model.addAttribute("entries",bel);
-		return "index";
-	}
+    @CrossOrigin("https://brave-bush-02a6df710.4.azurestaticapps.net")
+    @GetMapping("/calcbmi")
+    public List<BmiBean> showAllEntries() {
+    	System.out.println("showAllEntries");
+        return bmiRepository.findAll();
+    }
+    @CrossOrigin("https://brave-bush-02a6df710.4.azurestaticapps.net")
+    @PostMapping("/calcbmi")
+    public List<BmiBean> calculateBmi(@RequestBody BmiBean bmi) {
+        bmi.setBmi(bmi.getWeight() / (bmi.getHeight() * bmi.getHeight() / 10000));
+        System.out.println("Save new entry --> Weight: "+bmi.getWeight()+" Height: "+bmi.getHeight()+" BMI: "+bmi.getBmi());
+        bmiRepository.save(bmi);
+        return bmiRepository.findAll();
+    }
 }
