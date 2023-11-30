@@ -3,6 +3,7 @@ package com.example.bmi;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,13 +15,13 @@ public class BmiController {
     public BmiController(BMIRepository bmiRepository) {
         this.bmiRepository = bmiRepository;
     }
-    @CrossOrigin("https://brave-bush-02a6df710.4.azurestaticapps.net")
+    @CrossOrigin("${frontend.ip}")
     @GetMapping("/calcbmi")
     public List<BmiBean> showAllEntries() {
     	System.out.println("showAllEntries");
         return bmiRepository.findAll();
     }
-    @CrossOrigin("https://brave-bush-02a6df710.4.azurestaticapps.net")
+    @CrossOrigin("${frontend.ip}")
     @PostMapping("/calcbmi")
     public List<BmiBean> calculateBmi(@RequestBody BmiBean bmi) {
         bmi.setBmi(bmi.getWeight() / (bmi.getHeight() * bmi.getHeight() / 10000));
