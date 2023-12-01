@@ -64,11 +64,16 @@ public class BmiBean {
 	}
 
 	public double getBmi() {
-		if (bmi == 0 && height != 0) return weight / Math.pow(height / 100, 2);
+		if (bmi == 0 && height != 0) return calcBmi();
 		return bmi;
 	}
 
 	public void setBmi(double bmi) {
 		this.bmi = bmi;
+	}
+	
+	public double calcBmi() {
+		if (bmi == 0 && height != 0) this.bmi = weight / Math.pow(height / 100, 2);
+		return this.bmi;
 	}
 }

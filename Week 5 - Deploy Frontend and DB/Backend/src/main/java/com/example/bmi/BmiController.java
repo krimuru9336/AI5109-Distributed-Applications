@@ -33,6 +33,7 @@ public class BmiController {
     @CrossOrigin(origins = "${da.bmi.cors.allowed-origin}")
     @PostMapping("/entries")
     public BmiBean createEntry(@RequestBody BmiBean bmi) {
+    	bmi.calcBmi();
     	System.out.println("Save new entry:");
     	System.out.println("Name: " + bmi.getName() + " - Height: " + bmi.getHeight() + 
     			" - Weight: " + bmi.getWeight());
