@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coordinates Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #334048;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100dvh;
+            position: relative;
+            padding: 0;
+        }
+
+        form {
+            background-color: #1d282d;
+            padding: 20px;
+            border-radius: 8px;
+            width: 500px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #464646;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #response-box {
+            position: fixed;
+            background: #444444;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+            display: none;
+        }
+
+        #response-box>span {
+            line-height: 35px;
+            padding: 10px;
+            color: yellow;
+            font-size: 18px;
+            text-align: center;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="coordinates-form">
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="lat" placeholder="Enter latitude" required />
+
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="long" placeholder="Enter longitude" required />
+
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+
+    <div id="response-box">
+        <span id="textSpan"> Sample response </span>
+    </div>
+    <!-- /**
+    *! Distributed Applications
+    ** Name: Iman Emadi
+    ** Matriculation number: 1452312
+    *? Date: 24/11/2023
+    */ -->
+    <script>
+        function submitForm() {
+            var lat = document.getElementById("latitude").value;
+            var long = document.getElementById("longitude").value;
+
+            fetch(`http://20.56.22.249:80/getData?lat=${lat}&long=${long}`, {
+                method: "GET",
+            }).then(r => r.json()).then(r => {
+                const rBox = document.getElementById("response-box");
+                const txtSpan = document.getElementById("textSpan");
+                rBox.style.display = 'block';
+                txtSpan.innerText = r.message;
+            })
+        }
+    </script>
+</body>
+
+</html>

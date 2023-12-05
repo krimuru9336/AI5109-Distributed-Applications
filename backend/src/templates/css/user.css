@@ -1,0 +1,35 @@
+#invalid-box {
+    display: flex;
+    height: 100dvh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#invalid-box>h1 {
+    font-size: 4em;
+    color: yellow;
+    text-align: center;
+    line-height: 35px;
+}
+
+
+.info-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100dvh;
+    width: 100%;
+}
+
+.info-box>ul {
+    list-style: none;
+    background: #0000004d;
+    color: white;
+    padding: 30px;
+}
+
+.info-box>ul>li {
+    line-height: 35px;
+}
