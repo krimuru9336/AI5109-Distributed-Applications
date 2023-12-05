@@ -1,3 +1,0 @@
-INDEX VERSION 1.132
-file:/G:/My%20Drive/0%20Germany/From%20Fulda/2.%20Semester/Distributed%20Applications%20-%20AI5109/AI5109-Distributed-Applications/.metadata/.plugins/org.eclipse.jdt.core/1865797976.index
-meta_index

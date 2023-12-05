@@ -5,7 +5,15 @@ This is a Java Spring Boot application for Body Mass Index (BMI) calculations of
 The BMI is calculated based on measurements taken at the circumference around the level of the 9th rib and the length of the lower back leg from knee to ankle. 
 Further details can be found [here](https://worldanimalfoundation.org/cats/bmi-calculator/).
 
-## 📑 Main modules
+## 🚀 Architecure
+
+The application follows a distributed architecture and is deployed on 3 seperate servers. The frontend is deployed as a Static Website via Azure Storage while the backend is deployed to an Azure Web App. The MySQL database is deployed to an Azure MySQL server.
+
+## 📑 Frontend
+
+The frontend consists of an index page with a form for calculating a cat's BMI along with a BMI list table, a JavaScript file to interact with a backend API for managing cat BMI data and a simple stylesheet.
+
+## 📑 Backend
 
 - BmiApplication - Main class serving as the entry point for the Spring Boot application. Initializes the Spring context and starts the server.
 
@@ -14,6 +22,10 @@ Further details can be found [here](https://worldanimalfoundation.org/cats/bmi-c
 - BmiController - Spring MVC controller for handling BMI-related requests. Manages endpoints for retrieving and saving BMI records, performs BMI calculations.
 
 - BmiRepository - Spring Data JPA repository interface for CRUD operations on BmiBean entities. Provides methods for interacting with the database.
+
+## 📑 Database
+
+The database is a MySQL database.
 
 ## ⭐ Enhancements
 
@@ -25,17 +37,9 @@ As an added feature, a RESTful API consumer for retrieving cat facts from the [M
 
 - RestTemplateConfig - Spring configuration class for defining a RestTemplate bean. Configures and provides instances of the RestTemplate class for making HTTP requests.
 
-## 🚀 Deployment
-
-The application is deployed as an Azure App Service while the MySQL database is deployed to an Azure MySQL server.
-
-## 🌐 Visit the website
-
-Feel free to interact with the application by visiting https://cat-bmi.azurewebsites.net/ as well as enjoy interesting cat facts from https://cat-bmi.azurewebsites.net/meow-facts/meow.
-
 ## ✒️ Authors
 
-- Sahan Wijesinghe
+- Sahan Wijesinghe (urapola-mudalige.wijesinghe@informatik.hs-fulda.de)
 - Distributed Applications - AI5109 - English version (WiSe23/24)
 - Hochschule Fulda
 
