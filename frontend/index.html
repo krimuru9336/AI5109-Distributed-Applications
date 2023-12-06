@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BMI Calculator</title>
+</head>
+<body>
+<h1>BMI Calculator</h1>
+<form id="bmiForm">
+    <label for="weight">Weight (kg):</label>
+    <input type="number" id="weight" name="weight" required step="0.01" placeholder="Enter your weight" /><br><br>
+
+    <label for="height">Height (cm):</label>
+    <input type="number" id="height" name="height" required step="0.01" placeholder="Enter your height" /><br><br>
+
+    <input type="button" value="Calculate BMI" onclick="calculateBMI()" />
+</form>
+
+<div id="result">
+    <h2>Your BMI Result:</h2>
+    <p id="bmiValue"></p>
+    <p id="bmiCategory"></p>
+</div>
+
+<button style="margin-top: 15px" id="fetchDataButton">Fetch Data from Database</button>
+<div id="dataFromDatabase">
+    <h2>Data from Database:</h2>
+    <ul id="bmiDataList"></ul>
+</div>
+
+<script>
+    function calculateBMI() {
+        const weight = document.getElementById("weight").value;
+        const height = document.getElementById("height").value;
+
+        fetch("http://34.27.191.95:8870/calculate-bmi", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ weight, height }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById("result");
+                resultDiv.style.display = "block";
+
+                document.getElementById("bmiValue").textContent = `BMI: ${data.bmi}`;
+            })
+            .catch(error => console.error("Error calculating BMI:", error));
+    }
+
+    document.getElementById("fetchDataButton").addEventListener("click", function () {
+        fetch("http://34.27.191.95:8870/bmi-data")
+            .then(response => response.json())
+            .then(data => {
+                const bmiDataList = document.getElementById("bmiDataList");
+                bmiDataList.innerHTML = "";
+                data.forEach(item => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = `Weight: ${item.weight} kg, Height: ${item.height} cm, BMI: ${item.bmi}`;
+                    bmiDataList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error("Error fetching data:", error));
+    });
+</script>
+</body>
+</html>
