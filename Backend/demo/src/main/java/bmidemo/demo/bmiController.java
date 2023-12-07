@@ -47,8 +47,8 @@ public class bmiController {
     @Autowired
     RestService service;
 
-    String FrontendServerUrl = "http://172.205.240.26/resources/templates/";
-    String BackendServerUrl = "http://172.201.217.3/";
+    String FrontendServerUrl = "http://172.205.208.212/resources/templates/";
+    String BackendServerUrl = "http://172.205.208.116:8000/";
 
     @GetMapping("/index")
     public void index(Model Model, HttpServletResponse  resp ) throws IOException{
