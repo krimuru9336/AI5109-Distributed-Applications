@@ -1,0 +1,66 @@
+<!--author - Seshenya Weerasinghe-->
+<!--date - 07.12.2023-->
+<!--matriculation number - 1454176-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>BMI Calculator</title>
+        <link rel="stylesheet" href="index.css" />
+        <script src="bmi.js"></script>
+    </head>
+    <body>
+        <div class="container text-right">
+            <h1 class="text-center">BMI Calculator</h1>
+
+            <form id="bmiForm">
+                <div class="mb-3 row">
+                    <label for="name" class="col-sm-3 col-form-label">Name:</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                </div>
+                <br></br>
+                <div class="mb-3 row">
+                    <label for="height" class="col-sm-3 col-form-label">Height (cm):</label>
+                    <div class="col-sm-9">
+                        <input type="number" id="height" name="height" class="form-control" required>
+                    </div>
+                </div>
+                <br></br>
+                <div class="mb-3 row">
+                    <label for="weight" class="col-sm-3 col-form-label">Weight (kg):</label>
+                    <div class="col-sm-9">
+                        <input type="number" id="weight" name="weight" class="form-control" required>
+                    </div>
+                </div>
+                <br></br>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" onclick="addBmi()">Calculate BMI</button>
+                </div>
+            </form>
+        </div>
+        <div class="container text-center">
+            <h2 class="text-center">BMI Data List</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Height (cm)</th>
+                        <th>Weight (kg)</th>
+                        <th>BMI Value</th>
+                    </tr>
+                </thead>
+                <tbody id="bmiList">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
