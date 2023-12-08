@@ -1,0 +1,104 @@
+<!-- Author: Mohammed Amine Malloul -->
+<!-- Created 05/11/2023 -->
+
+
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+    <title>Spring Boot App</title>
+</head>
+
+<body>
+<h1>Add Person</h1>
+<form id="personForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br>
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="text" id="phoneNumber" name="phoneNumber" required>
+    <br>
+    <button type="button" onclick="addPerson()">Submit</button>
+</form>
+
+<h1>Persons</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Phone Number</th>
+    </tr>
+    </thead>
+    <tbody id="personsTableBody">
+    <!-- Table body will be populated dynamically with JavaScript -->
+    </tbody>
+</table>
+
+<script>
+    // Function to make API call and add a new person
+    function addPerson() {
+        var name = document.getElementById("name").value;
+        var phoneNumber = document.getElementById("phoneNumber").value;
+
+        // Make API call to add person
+        fetch('https://bmi-web-server.azurewebsites.net/add-person', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: name,
+                phoneNumber: phoneNumber
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Refresh the persons table after adding a new person
+                fetchPersons();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Function to fetch persons from the API and populate the table
+    function fetchPersons() {
+        // Make API call to get persons
+        fetch('https://bmi-web-server.azurewebsites.net/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Update the table with the fetched persons
+                updatePersonsTable(data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Function to update the persons table with the fetched data
+    function updatePersonsTable(persons) {
+        var tableBody = document.getElementById("personsTableBody");
+        // Clear existing table rows
+        tableBody.innerHTML = "";
+
+        // Populate the table with the fetched persons
+        persons.forEach(person => {
+            var row = tableBody.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = person.name;
+            cell2.innerHTML = person.phoneNumber;
+        });
+    }
+
+    // Fetch persons when the page loads
+    fetchPersons();
+</script>
+</body>
+
+</html>

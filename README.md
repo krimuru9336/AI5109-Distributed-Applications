@@ -1,45 +1,45 @@
-# AI5109-Distributed-Applications
+# Distributed Applications Lab Exercises By Mohammed Amine Malloul
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+## Description
+This Spring Boot application is part of my learning in the module Distributed Applications. It was created as part of lab exercises to set up a basic application with frontend, backend, and database components.
 
-## Basic Principles
+## Table of Contents
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+## Features
+- Input form with fields for name and phone number, and a submit button
+- Display of user data from the database in a div
+- Storing user-submitted data in the database and displaying it on the page
+- Integration with an external API to fetch gold prices in JSON format
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+## Prerequisites
+Ensure that you have the following prerequisites installed on your machine:
+- Java Development Kit (JDK) 17
+- Apache Maven 3.6.3
+- MySQL Workbench or similar
+- Mysql 8.*
+- A database called basic already created in Mysql server
 
-## Working on Your Own Branch
+## Installation
+1. Clone the repository: `git@github.com:Aminemalloul/bmi.git`
+2. Navigate to the project directory: `cd bmi`
+3. Build the application: `mvn clean install`
+4. Run the application: `java -jar target/BMI.jar`
 
-Follow these steps to create and work on your own branch:
+## Usage
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+### Lab 1: Basic Spring Boot Setup
+To access the default endpoint, navigate to the root URL: http://localhost:8080/
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+This will display a simple form with input fields for name and phone number, as well as a submit button. Upon submission, the entered data is stored in the database, and the contents are displayed on the same page.
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+### Lab 2: Calling APIs
+To fetch gold prices, use the following endpoint: http://localhost:8080/fetch
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+This endpoint calls an external API that provides gold prices in JSON format.
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+
