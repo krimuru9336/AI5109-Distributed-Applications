@@ -1,45 +1,28 @@
-# AI5109-Distributed-Applications
+Student Data
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
 
-## Basic Principles
+Client:
+A simple application that takes the Name and Phone number and stores it in the database.
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+Steps to run this project:
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+npm i
+npm run dev
+That's it!
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+Server:
 
-## Working on Your Own Branch
+Steps to run this project:
 
-Follow these steps to create and work on your own branch:
+npm i
+cd src
+node index.js
+That's it and your server should start.
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+You will require the below databse and table in mysql:
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+Run the below queries in mysql:
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+CREATE DATABASE lab_da /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci / /!80016 DEFAULT ENCRYPTION='N' */;
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
-
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+CREATE TABLE ex1 ( id int NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, phone varchar(45) NOT NULL, PRIMARY KEY (id), UNIQUE KEY id_UNIQUE (id) ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
