@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="ISO-8859-1" />
+    <title>Student Management System</title>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container my-2">
+      <h1>Students</h1>
+      <div id="form-container">
+        <hr />
+        <h3>Add Student</h3>
+        <form id="data-form">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="Student Name"
+            class="form-control mb-4 col-4"
+          />
+
+          <input
+            type="tel"
+            type="text"
+            id="phone"
+            name="phone"
+            placeholder="Student contact"
+            class="form-control mb-4 col-4"
+          />
+
+          <button type="submit" class="btn btn-info col-2">Save Student</button>
+        </form>
+      </div>
+      <div id="output-container">
+        <hr />
+        <h3>All Students</h3>
+        <table
+          id="output-table"
+          border="1"
+          class="table table-striped table-responsive-md"
+        >
+          <thead>
+            <tr>
+              <th>Student First Name</th>
+              <th>Student contact</th>
+            </tr>
+          </thead>
+          <tbody id="output-body">
+            <tr th:each="student : ${listStudents}">
+              <td th:text="${student.name}"></td>
+              <td th:text="${student.contact}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      const backendHost = "https://week5backend.azurewebsites.net:8082";
+      const dataForm = document.getElementById("data-form");
+      const outputBody = document.getElementById("output-body");
+
+      function fetchAndDisplayData() {
+        fetch(backendHost + "/getStudents")
+          .then((response) => response.json())
+          .then((data) => {
+            outputBody.innerHTML = "";
+
+            data.forEach((entry) => {
+              const newRow = document.createElement("tr");
+              newRow.innerHTML = `
+                        <td>${entry.name}</td>
+                        <td>${entry.contact}</td>
+                    `;
+              outputBody.appendChild(newRow);
+            });
+          });
+      }
+
+      dataForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const phone = document.getElementById("phone").value;
+
+        const formData = {
+          name: name,
+          contact: phone,
+        };
+
+        fetch(backendHost + "/addStudent", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }).then(() => {
+          fetchAndDisplayData();
+        });
+
+        dataForm.reset();
+      });
+
+      fetchAndDisplayData();
+    </script>
+  </body>
+</html>
