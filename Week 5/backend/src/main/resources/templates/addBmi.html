@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculate BMI</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">BMI Calculator</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <form action="#" method="post" th:action="@{calculateBMI}" th:object="${bmiModel}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input th:field="*{name}" type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="weight" class="form-label">Weight (KiloGrams)</label>
+                <input th:field="*{weight}" type="number" class="form-control" id="weight" min="0.1" step="0.01">
+            </div>
+            <div class="mb-3">
+                <label for="height" class="form-label">Height (Feet)</label>
+                <input th:field="*{height}" type="number" class="form-control" id="height" min="0.1" step="0.01">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <!-- /*
+        * Author: Rahul Patil
+        * Matriculation Number: 1478745
+        * Created: 05.11.2023
+        */ -->
+
+        <table class="table table-hover mt-5">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Height</th>
+                    <th scope="col">BMI</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="bmi:${bmiList}">
+                    <td th:text="${bmi.id}"></td>
+                    <td th:text="${bmi.name}"></td>
+                    <td th:text="${bmi.weight}"></td>
+                    <td th:text="${bmi.height}"></td>
+                    <td th:text="${bmi.bmi}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="/js/bootstrap.bundle.js"></script>
+</body>
+
+</html>
+
+<!-- /*
+* Author: Rahul Patil
+* Matriculation Number: 1478745
+* Created: 05.11.2023
+*/ -->
