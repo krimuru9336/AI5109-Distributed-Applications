@@ -1,45 +1,55 @@
-# AI5109-Distributed-Applications
+# da-practical
+ 
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+name: Build and deploy JAR app to Azure Web App - springboot-student-hauva
 
-## Basic Principles
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+jobs:
+  build:
+    runs-on: windows-latest
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+    steps:
+      - uses: actions/checkout@v4
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+      - name: Set up Java version
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
 
-## Working on Your Own Branch
+      - name: Build with Maven
+        run: mvn clean install
 
-Follow these steps to create and work on your own branch:
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: java-app
+          path: '${{ github.workspace }}/target/*.jar'
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
-
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
-
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
-
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
-
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: java-app
+      
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'springboot-student-hauva'
+          slot-name: 'production'
+          package: '*.jar'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_66812dca7b474d279c6b2c9099dfcfd8 }}

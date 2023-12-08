@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Student Management System</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <style>
+    body {
+        background-color: #edf5fc; 
+    }
+
+    h1 {
+        color: #004080;
+    }
+
+    hr {
+        background-color: #004080; 
+        height: 2px;
+    }
+
+    .card-header {
+        background-color: #002b4e; 
+        color: #ffffff; 
+    }
+
+    .card-body {
+        background-color:#e6ecff; 
+        color: #ffffff; 
+    }
+
+    .btn{
+        background-color:#002b4e;
+        border-color:#002b4e; 
+        color: rgb(255, 255, 255);
+    }
+
+    
+</style>
+
+</head>
+
+<body class="text-center">
+    <div class="container my-2 text-center">
+        <h1>Student Data</h1>
+       
+        <h3></h3>
+        <div class="card">
+            <div class="card-header">
+                Add Student
+            </div>
+            <div class="card-body">
+                <form action="#" th:action="@{/addStudent}" th:object="${student}" method="POST">
+                    <input type="text" th:field="*{name}" placeholder="Student Name"
+                        class="form-control mb-4 col-12">
+
+                    <input type="tel" th:field="*{contact}" placeholder="Student contact"
+                        class="form-control mb-4 col-12">
+
+                    <button type="submit" class="btn col-12"> Save Student</button>
+                </form>
+            </div>
+        </div>
+      	<br/>
+      	<br/>
+        <div>
+           <h3>List of Students</h3>
+        </div>
+        
+        <br/>
+      	<br/>
+        <table class="table table-light table-striped-responsive-md">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student : ${listStudents}">
+                    <td th:text="${student.name}"></td>
+                    <td th:text="${student.contact}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
