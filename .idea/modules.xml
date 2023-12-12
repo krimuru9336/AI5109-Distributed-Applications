@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/AI5109-Distributed-Applications.iml" filepath="$PROJECT_DIR$/.idea/AI5109-Distributed-Applications.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bmi/bmi.iml" filepath="$PROJECT_DIR$/bmi/bmi.iml" />
+    </modules>
+  </component>
+</project>

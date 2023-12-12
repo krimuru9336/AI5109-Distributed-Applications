@@ -1,45 +1,62 @@
-# AI5109-Distributed-Applications
+# AI5109-Distributed-Applications - Spring Boot Application
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+## Overview
 
-## Basic Principles
+This Spring Boot application, developed using the Spring Initializer with Maven, utilizes MySQL as its database.
+The purpose of this application
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+1. **Calculate BMI (Body Mass Index)**
+2. **Provide Apple music data via https://itunes.apple.com**
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+## Local Setup
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+### Clone Repository
 
-## Working on Your Own Branch
+```bash
+git clone https://github.com/gihanHsFulda/DistributedApp.git
+cd DistributedApp
+```
 
-Follow these steps to create and work on your own branch:
+**The application will be accessible locally at localhost:8080.**
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+_Note_
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+Ensure that MySQL is properly configured and accessible before running the application.
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+## API Endpoints
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+#### **BMI Controller**
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+##### Calculate BMI
+
+`POST /calculate`
+
+```
+{
+    "name": "John Doe",
+    "height": 180,
+    "weight": 70
+}
+```
+
+##### Get All Users
+
+`GET /users`
+
+```
+/users
+```
+
+#### **Music Controller**
+
+##### Get Music Data
+
+`GET /music?artist={artist name}`
+
+```
+/music?artist=edsheeran
+```
+
+## Production Deployment
+
+The production version of the application is deployed on Azure and publicly accessible at https://bmiappbe.azurewebsites.net/
