@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<title>User Form</title>
+</head>
+	<link rel="stylesheet" type="text/css" href="styles.css">
+
+<body>
+	<h1>User Form</h1>
+	<form action="/add" method="post" th:object="${user}">
+		<input type="hidden" th:field="*{id}" />
+		Name: <input type="text" th:field="*{name}" /><br />
+		Email: <input type="text" th:field="*{email}" /><br />
+		Phone Number: <input type="text" th:field="*{phoneNumber}" /><br />
+		<input type="submit" value="Save" />
+		<a href="/"><button>To list</button></a>
+	</form>
+	
+</body>
+
+</html>
+
+<!-- Author: Achraf Boudabous created: 28/10/2023 -->
+ 
