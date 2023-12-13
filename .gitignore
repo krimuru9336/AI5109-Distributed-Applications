@@ -1,0 +1,67 @@
+# Android
+*.apk
+*.ap_
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (e.g., proguard-rules.pro)
+proguard-rules.pro
+
+# Android Studio
+/.idea/
+/*.iml
+/.gradle/
+/captures/
+
+# User-specific files
+*.iml
+*.log
+*.properties
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build/Rebuild directories
+out/
+
+# External native build folder generated in Android Studio 2.2 and later
+.externalNativeBuild
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder configuration file (Mac)
+.DS_Store
+
+# Recycle Bin used on file shares (Windows)
+$RECYCLE.BIN/
+
+# Android Studio Navigation editor temp files
+.navigation/
+
+# Android Studio captures folder
+/captures/
+
+# Intellij
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Signing files
+signingConfig.json
+
+# Local configuration file (sdk path, etc.)
+local.properties
+
+# Gradle Wrapper
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
