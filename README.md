@@ -1,45 +1,77 @@
-# AI5109-Distributed-Applications
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+**Android Studio Database Example**
 
-## Basic Principles
+**Overview**
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+This Android Studio project demonstrates a basic application that allows
+users to input text, store it in an SQLite database, and retrieve the
+stored data. The application is built using Java and SQLite for local
+storage.
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+**Features**
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+1.  Takes user input in the form of a text field.
 
-## Working on Your Own Branch
+2.  Stores the input value in an SQLite database on button click.
 
-Follow these steps to create and work on your own branch:
+3.  Retrieves the stored value from the database and displays it as a
+    Toast on button click.
 
-1. **Clone the Repository:**
+**Prerequisites**
+
+-   Android Studio installed on your computer.
+
+-   Basic understanding of Android development.
+
+**Installation**
+
+1.  **Clone the Repository:**
    ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+      git clone https://github.com/your-username/android-studio-database-example.git
+```
+2.  **Open in Android Studio:**
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+    -   Open Android Studio.
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+    -   Click on \"File\" \> \"Open\" and select the cloned project.
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+3.  **Run the Application:**
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+    -   Connect an Android device or start an emulator.
+
+    -   Click on the \"Run\" button in Android Studio.
+
+**Usage**
+
+1.  **Launch the App:**
+
+    -   Open the app on your Android device or emulator.
+
+2.  **Enter Text:**
+
+    -   Type text into the text field.
+
+3.  **Save to Database:**
+
+    -   Click the \"Save to DB\" button to store the entered text in the
+        SQLite database.
+
+4.  **Retrieve from Database:**
+
+    -   Click the \"Retrieve from DB\" button to fetch the stored text
+        from the database and display it as a Toast.
+
+**Database**
+
+-   The application uses an SQLite database for local storage.
+
+-   The **DatabaseHelper** class manages database creation and version
+    management.
+
+-   Database file:
+    **data/data/your.package.name/databases/mydatabase.db**
+
+**Troubleshooting**
+
+-   If you encounter any issues, please make sure your Android Studio is
+    up to date, and the necessary SDK components are installed.
