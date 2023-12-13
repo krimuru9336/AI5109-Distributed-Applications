@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ProjectModuleOne</string>
+    <string name="line1">Adrianus Jonathan Engelbracht</string>
+    <string name="line2">13.12.2023</string>
+    <string name="line3">Matrikelnummer: 1151826</string>
+    <string name="edit_text_label">Name</string>
+    <string name="hint_enter_text">Enter Name</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_retrieve">Retrieve</string>
+</resources>
