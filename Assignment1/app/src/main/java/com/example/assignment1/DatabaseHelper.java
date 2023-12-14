@@ -50,4 +50,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query(TABLE_NAME, columns, null, null, null, null, null);
         return cursor;
     }
+
 }
