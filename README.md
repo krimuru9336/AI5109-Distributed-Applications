@@ -4,7 +4,7 @@ Branch by Firoj Kabir, fdai6491
 
 This branch consists all the codes for the weekly assignments and modules. In separate folder codes will be accessible.
 
-- ### weekly-assigments
+- ### weekly-assignments
 - ### modules
 
 There are README files for each section in the respective directory.
