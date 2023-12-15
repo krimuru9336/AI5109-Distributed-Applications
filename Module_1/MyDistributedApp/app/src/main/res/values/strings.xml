@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">My Distributed App</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Module 1 App</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        This is a test of an android app...
+    </string>
+    <string name="db_insert">Insert</string>
+    <string name="db_retrieve">Retrieve</string>
+    <string name="dev_name">Felix Stumpf</string>
+    <string name="dev_id">1165939</string>
+</resources>
