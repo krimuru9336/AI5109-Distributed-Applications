@@ -1,0 +1,37 @@
+<!-- header / navbar -->
+<div class="toolbar" role="banner">
+	<span style="margin-left: 40px;">Students information center</span>
+	<div class="spacer"></div>
+	<a [routerLink]="['posts']">Posts</a>
+</div>
+
+<ng-toast></ng-toast>
+
+<!-- StudentForm to takes data from frontend and send to DB  -->
+<form class="form" [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+	<h3>Student info form</h3>
+	<input type="text" placeholder="name" formControlName="name">
+	<br><br>
+	<input type="text" placeholder="phone" formControlName="phone">
+	<br><br>
+	<button type="submit">Submit</button>
+</form>
+
+<!-- takes data from DB and send to frontend  -->
+<h2>Students info</h2>
+<hr>
+<hr>
+<div *ngFor="let student of students">
+	<b>Name: {{ student.name }}
+		<span>
+			<button class="delete-btn" (click)="deleteStudent(student._id)">
+				x
+			</button>
+		</span>
+	</b>
+	<p>Phone: {{student.phone}}</p>
+	<hr>
+</div>
+
+<hr>
+<hr>

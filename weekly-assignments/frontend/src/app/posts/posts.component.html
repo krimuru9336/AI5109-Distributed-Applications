@@ -1,0 +1,14 @@
+<div class="toolbar" role="banner">
+	<span style="margin-left: 40px;">Public API for testing and prototyping</span>
+	<div class="spacer"></div>
+	<a [routerLink]="['']">Home</a>
+</div>
+
+<h2>JSON Placeholder - posts</h2>
+
+<!-- list of posts -->
+<ul class="list-group">
+	<li *ngFor="let post of posts" class="list-group-item">
+		{{ post.title }}
+	</li>
+</ul>
