@@ -3,11 +3,14 @@ package com.example.chitchat;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class MainActivity extends AppCompatActivity {
     private EditText editText;
@@ -19,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
 
         editText = findViewById(R.id.editText);
         dbHelper = new DbHelper(this);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Azamat Afzalov - 1492864");
+        toolbar.setTitleTextColor(Color.WHITE);
 
     }
 
