@@ -1,0 +1,9 @@
+version: '3'
+services:
+  wormhole:
+    image: wormhole:latest
+    ports:
+      - "8000:80"
+    env_file:
+      - .env
+    restart: always
