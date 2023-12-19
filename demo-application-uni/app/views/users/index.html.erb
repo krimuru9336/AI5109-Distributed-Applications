@@ -1,0 +1,33 @@
+<div class='container'>
+  <p id="notice"><%= notice %></p>
+
+  <h1>Users</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Phone Number</th>
+        <th colspan="3" scope="col"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td scope='row'><%= user.name %></td>
+          <td scope='row'><%= user.phone_number %></td>
+          <td scope='row'><%= link_to 'Show', user %></td>
+          <td scope='row'><%= link_to 'Edit', edit_user_path(user) %></td>
+          <td scope='row'><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <br>
+
+  <%= link_to 'New User', new_user_path %>
+  <br>
+  <%= link_to 'Sample Api Call', '/sample_api' %>
+</div>

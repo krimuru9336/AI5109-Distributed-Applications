@@ -1,0 +1,14 @@
+// inside app/frontend/packs/application.scss   
+
+// Import Bootstrap v5  
+@import "~bootstrap/scss/bootstrap";  
+a {
+  text-decoration: none; // Remove the underline
+  color: initial; // Reset the color to its default (optional)
+  background-color: transparent; // Set the background color to transparent (optional)
+
+  &:hover {
+    background-color: transparent; // Change the background color to transparent
+    opacity: 0.5; // Change the opacity to make it transparent (0.5 means 50% transparent)
+  }
+}
