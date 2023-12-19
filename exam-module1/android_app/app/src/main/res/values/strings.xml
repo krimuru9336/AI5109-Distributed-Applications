@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">WhatsDown</string>
+    <string name="student_info">Lorenz Hohmann, 1259904</string>
+    <string name="insert_button_text">Insert</string>
+    <string name="insert_button_text_error">Error!</string>
+    <string name="insert_button_text_loading">Saving...</string>
+    <string name="insert_button_text_success">Saved</string>
+    <string name="retrieve_button_text">Retrieve</string>
+    <string name="retrieve_button_text_error">Error!</string>
+    <string name="name_input_label">Name:</string>
+    <string name="name_input_placeholder">Lorenz</string>
+
+
+    <string name="backend_url">https://api.lorenzhohmann.de/</string>
+</resources>
