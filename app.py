@@ -1,7 +1,7 @@
 """
 Author: Usama Sajjad
 Matriculation Number: 1409048
-Created Date: 05/11/2023
+Created Date: 05/12/2023
 
 This Flask application serves as a simple web interface to collect user data (name and phone number), store it in an SQLite database,
 and display the data on another page. It includes routing for the home page, data submission, and data display.
