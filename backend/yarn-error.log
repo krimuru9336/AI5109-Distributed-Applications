@@ -1,0 +1,62 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn add axios
+
+PATH: 
+  /Users/actimimacbook/.opam/cs3110-2023sp/bin:/Users/actimimacbook/.rbenv/shims:/opt/homebrew/Cellar/zplug/2.4.2/bin:/opt/homebrew/Cellar/pyenv-virtualenv/1.2.1/shims:/Users/actimimacbook/.rbenv/shims:/Library/Frameworks/Python.framework/Versions/3.11/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/Apple/usr/bin:/Applications/quarto/bin:/Users/actimimacbook/Library/Android/sdk/emulator:/Users/actimimacbook/Library/Android/sdk/platform-tools:/Users/actimimacbook/Library/Android/sdk/emulator:/Users/actimimacbook/Library/Android/sdk/platform-tools
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  20.5.1
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: ENOENT: no such file or directory, copyfile '/Users/actimimacbook/Library/Caches/Yarn/v6/npm-glob-parent-6.0.2-6d237d99083950c79290f24c7642a3de9a28f9e3-integrity/node_modules/glob-parent/README.md' -> '/Users/actimimacbook/Work/distributed-applications-week1/node_modules/tailwindcss/node_modules/glob-parent/README.md'
+
+npm manifest: 
+  {
+    "name": "postgres-prisma",
+    "repository": "https://github.com/vercel/examples.git",
+    "license": "MIT",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+      "dev": "prisma generate && next dev",
+      "build": "prisma generate && prisma db push && prisma db seed && next build",
+      "start": "next start",
+      "lint": "next lint"
+    },
+    "prisma": {
+      "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    },
+    "dependencies": {
+      "@prisma/client": "^5.4.1",
+      "@types/ms": "^0.7.32",
+      "@types/node": "20.8.3",
+      "@types/react": "18.2.25",
+      "@types/react-dom": "18.2.11",
+      "autoprefixer": "10.4.16",
+      "eslint": "8.51.0",
+      "eslint-config-next": "13.5.4",
+      "ms": "^2.1.3",
+      "next": "13.5.4",
+      "postcss": "8.4.31",
+      "react": "18.2.0",
+      "react-dom": "18.2.0",
+      "tailwindcss": "3.3.3",
+      "ts-node": "^10.9.1",
+      "typescript": "5.2.2"
+    },
+    "devDependencies": {
+      "prisma": "^5.4.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
