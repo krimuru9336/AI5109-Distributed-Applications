@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DistributedApplicationsProject</string>
+    <string name="user_name">Nick Stolbov</string>
+    <string name="user_mat_nr">1269907</string>
+    <string name="user_info">Nick Stolbov, Matrikel Nr. 1269907</string>
+    <string name="label_username">Name</string>
+    <string name="hint_name">Enter name</string>
+    <string name="button_insert">Insert</string>
+    <string name="button_retrieve">Retrieve</string>
+</resources>

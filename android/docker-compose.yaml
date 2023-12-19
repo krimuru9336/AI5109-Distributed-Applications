@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  da-sqlite:
+    image: sqlite:latest
+    environment:
+      SQLITE_ROOT_PASSWORD: my_root_pw
+      SQLITE_DATABASE: da_project
+      SQLITE_USER: username
+      SQLITE_PASSWORD: password
+    ports:
+      - '3306:3306'
+    volumes:
+      - sqlite_data:/mydatabase
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: da-sqlite
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: my_root_pw
+    ports:
+      - '8080:80'
+    depends_on:
+      - da-sqlite
+
+volumes:
+  sqlite_data:
