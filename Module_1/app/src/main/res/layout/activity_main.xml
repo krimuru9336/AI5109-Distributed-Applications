@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/app_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/appname"
+        android:textSize="18sp"
+        android:background="#007787"
+        android:textColor="#ffffff"
+        android:padding="16dp"/>
+
+    <TextView
+        android:id="@+id/author_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/author"
+        android:textSize="18sp"
+        android:background="#0D7811"
+        android:textColor="#ffffff"
+        android:layout_below="@id/app_banner"
+        android:padding="16dp"/>
+
+    <EditText
+        android:id="@+id/name_input"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/input_label"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:inputType="text"
+        android:autofillHints="name"
+        android:hint="@string/enter_name" />
+
+    <Button
+        android:id="@+id/insert_to_db_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_input"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:onClick="saveNameToDatabase"
+        android:text="@string/insert" />
+
+    <Button
+        android:id="@+id/get_from_db_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_input"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="readAndDisplayFromDatabase"
+        android:text="@string/retrieve" />
+
+    <TextView
+        android:id="@+id/input_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/author_banner"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/name" />
+
+</RelativeLayout>

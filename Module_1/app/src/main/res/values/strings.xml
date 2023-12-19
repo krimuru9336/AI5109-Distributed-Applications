@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ChitChat</string>
+    <string name="retrieve">Retrieve</string>
+    <string name="insert">Insert</string>
+    <string name="name">Name:</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="author">Sven Schickentanz</string>
+    <string name="appname">Module 1 - ChitChat App</string>
+</resources>
