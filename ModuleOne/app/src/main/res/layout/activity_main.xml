@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    tools:ignore="ExtraText">
+
+    <!-- Header with App Name and Your Name -->
+    <TextView
+        android:id="@+id/headerText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:background="#8BC34A"/>
+
+    <TextView
+        android:id="@+id/yourNameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Louay Ben Hadj Said - 1438941"
+        android:layout_below="@id/headerText"
+        android:layout_marginTop="8dp"
+        android:background="#C8E6C9"/>
+
+    <!-- Input Field -->
+    <EditText
+        android:id="@+id/nameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your name"
+        android:layout_below="@id/yourNameText"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Save and Retrieve Buttons -->
+
+    <!-- Display Retrieved Value in an Outlined Box -->
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameInput"
+        android:layout_marginTop="190dp"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/retrieveButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameInput"
+        android:layout_marginTop="248dp"
+        android:text="Retrieve" />
+
+    <TextView
+        android:id="@+id/displayText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/retrieveButton"
+        android:layout_marginTop="119dp"
+        android:background="@android:drawable/edit_text"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text=""
+        android:textSize="18sp" />
+</RelativeLayout>
