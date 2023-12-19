@@ -1,0 +1,28 @@
+Git add new remote origin  git remote add origin https://github.com/krimuru9336/AI5109-Distributed-Applications.git
+
+Git switch remote origin
+git remote set-url origin https://github.com/krimuru9336/AI5109-Distributed-Applications.git
+
+
+Git show or verify origin
+git remote -v
+
+Show all remote branches
+git remote show origin
+
+create a new branch
+git checkout -b newbranch
+
+push new branch to the origin
+git push origin newbranch
+
+swith branch
+git checkout secondbranch
+
+check current branch
+git branch
+
+delete branch localy
+git branch -d branchname
+
+
