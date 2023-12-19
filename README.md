@@ -1,6 +1,9 @@
 # Flask Web Application
 
 ## Description
+-**Author: Usama Sajjad**
+-**Matriculation Number: 1409048**
+-**Created Date: 27/11/2023**
 This Flask web application demonstrates a simple project that includes a form to input data (name and phone number), a backend that interacts with a SQLite database, and API calls to external services (Shibe API, CoinLayer API). The application also utilizes HTML templates to display data and images.
 
 ## Features
