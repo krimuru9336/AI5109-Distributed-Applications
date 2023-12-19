@@ -42,4 +42,4 @@ To fetch gold prices, use the following endpoint: http://localhost:8080/fetch
 
 This endpoint calls an external API that provides gold prices in JSON format.
 
-
+.
