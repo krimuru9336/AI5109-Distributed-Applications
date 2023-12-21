@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CampusChat</string>
+    <string name="enter_text">Enter your name ..</string>
+    <string name="my_info"> By: Mohammed Amine Malloul \n fd Number: fdai7691</string>
+    <string name="insert">Insert</string>
+    <string name="retrieve">Retrieve</string>
+    <string name="name">Name:</string>
+</resources>
