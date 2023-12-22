@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MyFirstModule</string>
+    <string name="welcome_to_the_main_module">Welcome to the Main Module</string>
+</resources>
