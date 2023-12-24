@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">DA-App-Module1</string>
+    <style name="Base.Theme.DAAppModule1" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="Theme.DAAppModule1" parent="Base.Theme.DAAppModule1"/>
+</resources>
