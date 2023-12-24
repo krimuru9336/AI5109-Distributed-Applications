@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.chatapp;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 values.put("data", inputData);
                 db.insert("UserData", null, values);
 
-                Toast.makeText(MainActivity.this, "Data stored successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Data stored successfully in Database", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -56,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
                 if (cursor.moveToFirst()) {
                     String retrievedData = cursor.getString(cursor.getColumnIndex("data"));
-                    Toast.makeText(MainActivity.this, "Retrieved Data: " + retrievedData, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Hello : " + retrievedData, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "No data found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
                 }
 
                 cursor.close();
