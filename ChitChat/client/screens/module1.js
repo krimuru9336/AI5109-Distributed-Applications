@@ -19,7 +19,7 @@ db.transaction(tx => {
     );
 });
 
-export default HomeScreen = () => {
+export default Module1 = () => {
     const [text, setText] = React.useState('');
     const [visible, setVisible] = React.useState(false);
     const [storeText, setStoredText] = React.useState('');
@@ -49,7 +49,7 @@ export default HomeScreen = () => {
                 'SELECT * FROM items ORDER BY id DESC LIMIT 1',
                 [],
                 (_, results) => {
-                    if (results.rows.length > 0) {
+                    if (results.rows?.length > 0) {
                         const lastItem = results.rows.item(0);
                         setStoredText(lastItem?.value);
                         console.log(lastItem.value);
