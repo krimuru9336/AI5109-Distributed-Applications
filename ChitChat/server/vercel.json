@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "ChitChat/server/main.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "ChitChat/server/(.*)",
+            "dest": "ChitChat/server/main.py"
+        }
+    ]
+}
