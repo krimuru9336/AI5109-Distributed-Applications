@@ -1,12 +1,20 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Query
+import mysql.connector
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List, Dict
 import json
-from databases import Database
+import os
+from dotenv import load_dotenv
 
-database = Database(
-    'postgresql://default:9waurDfTAJc2@ep-plain-wildflower-76899077-pooler.us-east-1.postgres.vercel-storage.com:5432/verceldb', statement_cache_size=0
+load_dotenv()
+print(os.getenv("CHITCHAT_USER"))
+
+conn = mysql.connector.connect(
+    host=os.getenv("CHITCHAT_HOST"),
+    user=os.getenv("CHITCHAT_USER"),
+    password=os.getenv("CHITCHAT_PASSWORD"),
+    database=os.getenv("CHITCHAT_DATABASE")
 )
 
 app = FastAPI()
@@ -20,16 +28,6 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-async def startup_db_client():
-    await database.connect()
-
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    await database.disconnect()
-
-
 class User(BaseModel):
     id: Optional[int] = None
     name: str
@@ -37,40 +35,53 @@ class User(BaseModel):
 
 
 @app.post("/user/", response_model=User)
-async def create_item(user: User):
+def create_item(user: User):
+    cursor = conn.cursor()
     try:
-        query = "INSERT INTO users (name, email) VALUES (:name, :email) RETURNING id, name, email"
-        result = await database.fetch_one(query, values={"name": user.name, "email": user.email})
-        return result
+        query = "INSERT INTO users (name, email) VALUES (%s, %s)"
+        cursor.execute(query, (user.name, user.email))
+        conn.commit()
+        user.id = cursor.lastrowid
+        cursor.close()
+        return user
 
-    except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Database error: {e}"
-        )
+    except mysql.connector.Error as err:
+        if err.errno == 1062:  # MySQL error code for duplicate entry
+            raise HTTPException(
+                status_code=400, detail="Duplicate email, user already exists")
+        else:
+            # Handle other database errors
+            raise HTTPException(
+                status_code=500, detail=f"Database error: {err}")
 
 
 @app.get("/user/", response_model=List[User])
-async def read_user(user_id: Optional[int] = None):
+def read_user(user_id: Optional[int] = None):
+    cursor = conn.cursor()
     try:
         if user_id is not None:
-            query = "SELECT * FROM users WHERE id=:id"
-            result = await database.fetch_one(query, values={"id": user_id})
-            if result is None:
+            # If user_id is provided, fetch a specific user
+            query = "SELECT * FROM users WHERE id=%s"
+            cursor.execute(query, (user_id,))
+            user = cursor.fetchone()
+            cursor.close()
+            if user is None:
                 raise HTTPException(status_code=404, detail="User not found")
-            return [result]
+            print(user[0])
+            return [{"id": user[0], "email": user[1], "name": user[2]}]
         else:
+            # If no user_id is provided, fetch all users
             query_all = "SELECT * FROM users"
-            try:
-                results = await database.fetch_all(query_all)
-            except Exception as e:
-                print(e)
-            if not results:
+            cursor.execute(query_all)
+            users = cursor.fetchall()
+            cursor.close()
+            if not users:
                 raise HTTPException(status_code=404, detail="No users found")
-            return results
-    except Exception as e:
+            # Convert the result to a list of dictionaries
+            return [{"id": user[0], "email": user[1], "name": user[2]} for user in users]
+    except mysql.connector.Error as err:
         raise HTTPException(
-            status_code=500, detail=f"Database error: {e}"
-        )
+            status_code=500, detail=f"Database error: {err}")
 
 
 # Websockets
@@ -81,12 +92,15 @@ clients: Dict[int, WebSocket] = {}
 @app.get("/past_messages/", response_model=List[Dict])
 async def get_past_messages(sender_id: int = Query(...), reciever_id: int = Query(...)):
     try:
-        query = "SELECT message as text, receiver_id as recieverId, sender_id as senderId, timestamp  FROM messages WHERE (receiver_id = :reciever_id AND sender_id = :sender_id) OR (receiver_id = :sender_id AND sender_id = :reciever_id) ORDER BY timestamp"
-        past_messages = await database.fetch_all(query, values={"reciever_id": reciever_id, "sender_id": sender_id})
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT message as text, receiver_id as recieverId, sender_id as senderId, timestamp  FROM messages WHERE (receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s) ORDER BY timestamp"
+        cursor.execute(query, (sender_id, reciever_id, reciever_id, sender_id))
+        past_messages = cursor.fetchall()
+        cursor.close()
         return past_messages
-    except Exception as e:
+    except mysql.connector.Error as err:
         raise HTTPException(
-            status_code=500, detail=f"Database error: {e}")
+            status_code=500, detail=f"Database error: {err}")
 
 
 @app.websocket("/ws/{client_id}")
@@ -116,11 +130,11 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                         await target_websocket.send_text(json.dumps(data))
                     else:
                         await websocket.send_text(json.dumps({
-                            'error': f"Error: Client {target_client_id} not found"
+                            'error': "Error: Client {target_client_id} not found"
                         }))
                 else:
                     await websocket.send_text(json.dumps({
-                        'error': f"Error: Client {target_client_id} not found"
+                        'error': "Error: Client {target_client_id} not found"
                     }))
 
                 if client_id:
@@ -129,25 +143,23 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                         await client_websocket.send_text(json.dumps(data))
                     else:
                         await websocket.send_text(json.dumps({
-                            'error': f"Error: Client {client_id} not found"
+                            'error': "Error: Client {client_id} not found"
                         }))
                 else:
                     await websocket.send_text(json.dumps({
-                        'error': f"Error: Client {client_id} not found"
+                        'error': "Error: Client {client_id} not found"
                     }))
 
                 try:
-                    query = "INSERT INTO messages (message, sender_id, receiver_id, timestamp) VALUES (:text, :sender_id, :reciever_id, :timestamp)"
-                    values = {
-                        "text": data.get('text'),
-                        "sender_id": data.get('senderId'),
-                        "reciever_id": data.get('recieverId'),
-                        "timestamp": data.get('timestamp')
-                    }
-                    await database.execute(query, values)
-                except Exception as e:
+                    cursor = conn.cursor()
+                    query = "INSERT INTO messages (message, sender_id, receiver_id, timestamp) VALUES (%s, %s, %s, %s)"
+                    cursor.execute(query, (data.get('text'), data.get(
+                        'senderId'), data.get('recieverId'), data.get('timestamp')))
+                    conn.commit()
+                    cursor.close()
+                except mysql.connector.Error as err:
                     raise HTTPException(
-                        status_code=500, detail=f"Database error: {e}")
+                        status_code=500, detail=f"Database error: {err}")
 
             else:
                 print("Error with the data", data)
@@ -155,7 +167,11 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
     except WebSocketDisconnect:
         clients.pop(client_id, None)
 
+
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", host="::", port=8000, reload=True)
+    if (conn):
+        uvicorn.run("main:app", host="::", port=8000, reload=True)
+    else:
+        print("MYSQL CONNECTION ERROR")

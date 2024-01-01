@@ -119,3 +119,4 @@ ChitChat/.env
 # Ignore ChitChat client and server node_modules
 ChitChat/client/node_modules/
 ChitChat/server/node_modules/
+ChitChat/server/chitchat-admin.pem
