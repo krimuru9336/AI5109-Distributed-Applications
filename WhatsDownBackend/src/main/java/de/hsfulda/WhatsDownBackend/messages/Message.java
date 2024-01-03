@@ -1,5 +1,6 @@
 package de.hsfulda.WhatsDownBackend.messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.hsfulda.WhatsDownBackend.users.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,9 +26,11 @@ public class Message {
     private String content;
     @Column(name = "timestamp", columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime timestamp;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     private User sender;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     private User receiver;

@@ -85,5 +85,28 @@ public class MessageService {
 
         return newMessages;
     }
+
+    public Message editMessage(Long messageId, EditMessageDTO updatedMessage) {
+        if (updatedMessage.getContent() == null || updatedMessage.getContent().isEmpty()) {
+            return null;
+        }
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        if (optionalMessage.isPresent()) {
+            Message message = optionalMessage.get();
+            message.setContent(updatedMessage.getContent());
+            return messageRepository.save(message);
+        }
+        return null;
+    }
+
+    public boolean deleteMessage(Long messageId) {
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        if (optionalMessage.isPresent()) {
+            messageRepository.deleteById(messageId);
+            log.info("Deleted message with id {}", messageId);
+            return true;
+        }
+        return false;
+    }
 }
 

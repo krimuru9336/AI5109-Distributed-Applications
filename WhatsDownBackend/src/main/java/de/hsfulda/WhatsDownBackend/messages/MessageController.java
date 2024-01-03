@@ -44,4 +44,24 @@ public class MessageController {
         return ResponseEntity.ok(messages);
     }
 
+    @PutMapping("/edit/{messageId}")
+    public ResponseEntity<Message> editMessage(@PathVariable Long messageId, @RequestBody EditMessageDTO updatedMessage) {
+        Message editedMessage = messageService.editMessage(messageId, updatedMessage);
+        if (editedMessage != null) {
+            return ResponseEntity.ok(editedMessage);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @DeleteMapping("/delete/{messageId}")
+    public ResponseEntity<Void> deleteMessage(@PathVariable Long messageId) {
+        boolean isDeleted = messageService.deleteMessage(messageId);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }
