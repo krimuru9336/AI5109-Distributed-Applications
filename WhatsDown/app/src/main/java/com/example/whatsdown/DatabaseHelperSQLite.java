@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelperSQLite extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "your_database.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + TABLE_NAME + " (" +
                     COLUMN_NAME + " TEXT)";
 
-    public DatabaseHelper(Context context) {
+    public DatabaseHelperSQLite(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
