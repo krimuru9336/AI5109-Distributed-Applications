@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Service
 @Slf4j
@@ -14,6 +15,7 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final Map<String, Set<Long>> fetchedMessages = new HashMap<>();
 
     public MessageService(MessageRepository messageRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
@@ -67,6 +69,9 @@ public class MessageService {
     }
 
     public List<Message> getNewMessages(Long userId1, Long userId2, LocalDateTime lastFetchedTimestamp) {
+        String pairKey = userId1 + "-" + userId2;
+        Set<Long> fetchedMessageIds = fetchedMessages.getOrDefault(pairKey, new HashSet<>());
+
         Optional<User> user1Optional = userRepository.findById(userId1);
         Optional<User> user2Optional = userRepository.findById(userId2);
 
@@ -79,11 +84,22 @@ public class MessageService {
 
         List<Message> newMessages = messageRepository.findNewMessages(user1, user2, lastFetchedTimestamp);
 
-        newMessages.sort(Comparator.comparing(Message::getTimestamp));
+        List<Message> unfetchedMessages = new ArrayList<>(newMessages.stream()
+                .filter(message -> !fetchedMessageIds.contains(message.getId()))
+                .toList());
 
-        log.info("Found {} new messages between {} and {} since {}", newMessages.size(), user1, user2, lastFetchedTimestamp);
+        if (!unfetchedMessages.isEmpty()) {
+            unfetchedMessages.forEach(message -> fetchedMessageIds.add(message.getId()));
+            fetchedMessages.put(pairKey, fetchedMessageIds);
+        }
 
-        return newMessages;
+        unfetchedMessages.sort(Comparator.comparing(Message::getTimestamp));
+
+        log.info("Current fetched messages: {}", fetchedMessages);
+
+        log.info("Found {} new messages between {} and {} since {}", unfetchedMessages.size(), user1, user2, lastFetchedTimestamp);
+
+        return unfetchedMessages;
     }
 
     public Message editMessage(Long messageId, EditMessageDTO updatedMessage) {
@@ -107,6 +123,12 @@ public class MessageService {
             return true;
         }
         return false;
+    }
+
+    @Scheduled(fixedRate = 300000)
+    public void scheduledCleanUp() {
+        log.info("Running scheduled clean up");
+        fetchedMessages.clear();
     }
 }
 
