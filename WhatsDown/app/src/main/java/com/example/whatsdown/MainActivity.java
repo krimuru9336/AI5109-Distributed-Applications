@@ -5,21 +5,26 @@ import static com.example.whatsdown.Constants.BASE_URL;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.whatsdown.model.ChatMessage;
 import com.example.whatsdown.model.SendMessageRequest;
+import com.example.whatsdown.model.UpdateMessage;
 import com.example.whatsdown.model.User;
 import com.example.whatsdown.requests.ApiService;
 import com.example.whatsdown.requests.MessageCallback;
@@ -44,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
     private User loggedInUser;
     private User selectedUser;
     private final RetrieveChatController retrieveChatController = new RetrieveChatController(this);
+    private ChatMessage selectedMessage;
+    private ScrollView scrollView;
 
     private final Runnable fetchMessagesRunnable = new Runnable() {
         @Override
@@ -78,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         System.out.println("Logged in user name: " + loggedInUser.getName());
 
         chatContainer = findViewById(R.id.chat_container);
+        scrollView = findViewById(R.id.scroll_view);
 
         retrieveChatController.start(loggedInUser.getUserId(), selectedUser.getUserId());
 
@@ -97,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         messageHandler.removeCallbacksAndMessages(null);
     }
 
-    private void appendMessageToChat(String message, String timestamp, boolean isRightAligned) {
+    private void appendMessageToChat(ChatMessage message, String timestamp, boolean isRightAligned) {
         LinearLayout.LayoutParams messageLayoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -115,10 +123,16 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         int backgroundResource = isRightAligned ? R.drawable.right_message_background : R.drawable.left_message_background;
         messageLayout.setBackgroundResource(backgroundResource);
 
+        messageLayout.setOnLongClickListener(v -> {
+            selectedMessage = message;
+            showEditDeleteOptions(selectedMessage);
+            return true;
+        });
+
         TextView messageTextView = new TextView(this);
         messageTextView.setLayoutParams(messageLayoutParams);
         messageTextView.setPadding(8, 8, 8, 8);
-        messageTextView.setText(message);
+        messageTextView.setText(message.getContent());
         messageTextView.setTextColor(getResources().getColor(android.R.color.black));
 
         LinearLayout.LayoutParams timestampLayoutParams = new LinearLayout.LayoutParams(
@@ -151,8 +165,9 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         for (ChatMessage message : messages) {
             System.out.println("Message: " + message.getContent() + ", timestamp: " + message.getTimestamp());
             boolean isRightAligned = message.getSenderId() == loggedInUser.getUserId();
-            appendMessageToChat(message.getContent(), message.getTimestamp(), isRightAligned);
+            appendMessageToChat(message, message.getTimestamp(), isRightAligned);
         }
+        scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN));
     }
 
     @Override
@@ -202,6 +217,119 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
     public void onDestroy() {
         super.onDestroy();
         stopFetchingMessages();
+    }
+
+    private void showEditDeleteOptions(ChatMessage selectedMessage) {
+
+        // AlertDialog example
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select an option")
+                .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                    switch (which) {
+                        case 0: // Edit option selected
+                            editSelectedMessage(selectedMessage);
+                            break;
+                        case 1: // Delete option selected
+                            deleteSelectedMessage(selectedMessage);
+                            break;
+                    }
+                })
+                .show();
+    }
+
+    private void editSelectedMessage(ChatMessage message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Message");
+
+        EditText input = new EditText(this);
+        input.setText(message.getContent());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String updatedContent = input.getText().toString().trim();
+            if (!TextUtils.isEmpty(updatedContent)) {
+                int messageId = message.getId();
+                ApiService apiService = retrofit.create(ApiService.class);
+                UpdateMessage updateMessage = new UpdateMessage(updatedContent);
+                Call<ChatMessage> call = apiService.updateMessage(messageId, updateMessage);
+
+                call.enqueue(new Callback<ChatMessage>() {
+                    @Override
+                    public void onResponse(Call<ChatMessage> call, Response<ChatMessage> response) {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Message updated successfully", Toast.LENGTH_SHORT).show();
+                            clearChatUI();
+                            retrieveChatController.start(loggedInUser.getUserId(), selectedUser.getUserId());
+                        } else {
+                            Toast.makeText(MainActivity.this, "Failed to update message", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ChatMessage> call, Throwable t) {
+                        t.printStackTrace();
+                        Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Message cannot be empty", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+    private void deleteSelectedMessage(ChatMessage message) {
+        AlertDialog.Builder confirmDeleteDialog = new AlertDialog.Builder(this);
+        confirmDeleteDialog.setTitle("Confirm Delete");
+        confirmDeleteDialog.setMessage("Are you sure you want to delete this message?");
+
+        confirmDeleteDialog.setPositiveButton("Yes", (dialog, which) -> {
+            int messageId = message.getId();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            ApiService apiService = retrofit.create(ApiService.class);
+
+            Call<Void> call = apiService.deleteMessage(messageId);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(MainActivity.this, "Message deleted successfully", Toast.LENGTH_SHORT).show();
+                        clearChatUI();
+                        retrieveChatController.start(loggedInUser.getUserId(), selectedUser.getUserId());
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed to delete message", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    t.printStackTrace();
+                    Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        confirmDeleteDialog.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+
+        confirmDeleteDialog.show();
+    }
+
+    private void clearChatUI() {
+        chatContainer.removeAllViews();
     }
 
 }
