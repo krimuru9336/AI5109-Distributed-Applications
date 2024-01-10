@@ -104,10 +104,12 @@ public class MessageService {
 
     public Message editMessage(Long messageId, EditMessageDTO updatedMessage) {
         if (updatedMessage.getContent() == null || updatedMessage.getContent().isEmpty()) {
+            log.info("Content of updated message is empty");
             return null;
         }
         Optional<Message> optionalMessage = messageRepository.findById(messageId);
         if (optionalMessage.isPresent()) {
+            log.info("Updating message with id {} with content {}", messageId, updatedMessage.getContent());
             Message message = optionalMessage.get();
             message.setContent(updatedMessage.getContent());
             return messageRepository.save(message);
@@ -122,6 +124,7 @@ public class MessageService {
             log.info("Deleted message with id {}", messageId);
             return true;
         }
+        log.info("Message with id {} not found", messageId);
         return false;
     }
 
