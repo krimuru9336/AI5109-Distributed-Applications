@@ -1,0 +1,54 @@
+# Gradle
+.gradle/
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# IntelliJ
+*.iml
+/.idea/
+.idea/
+*.ipr
+*.iws
+*.iml
+/.idea_modules/
+
+# User-specific configurations
+.gradle/
+.idea/
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+
+# Mac
+.DS_Store
+
+# Firebase
+**/google-services.json
+
+# Crashlytics
+**/crashlytics.properties
+**/crashlytics-build.properties
+
+# Fastlane
+/fastlane/report.xml
+/fastlane/Preview.html
+/fastlane/screenshots/
+/fastlane/test_output/
+
+# Gradle Wrapper
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
+
+# Keystore files
+*.jks
+
+# Google Services (e.g. API key files)
+google-services.json
