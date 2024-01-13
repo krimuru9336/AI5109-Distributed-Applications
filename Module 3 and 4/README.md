@@ -33,54 +33,53 @@ To use the app, it is necessary to set up the connection to **Firebase**. **Auth
 2. Click on "**Register**" or if you already have an account on "Login":
 
 <p align="center">
-	<img src="./README.assets/01.png" alt="01" style="zoom:15%;" />
+	<img src="./README.assets/01.png" alt="01" height="500px">
 </p>
-
 3. Enter your credentials:
 
 <p align="center">
-	<img src="./README.assets/02.png" alt="02" style="zoom:15%;" />
+	<img src="./README.assets/02.png" alt="02" height="500px">
 </p>
 
 4. Send messages:
 
 <p align="center">
-<img src="./README.assets/03.png" alt="03" style="zoom:15%;" />
+	<img src="./README.assets/03.png" alt="03" height="500px">
 </p>
 
 5. Hold your messages to edit or delete your messages:
-<p align="center">
-	<img src="./README.assets/04.png" alt="04" style="zoom:15%;" />
-</p>
 
+<p align="center">
+	<img src="./README.assets/04.png" alt="04" height="500px">
+</p>
 6. If you clear the input, your message will be deleted:
 
 <p align="center">
-	<img src="./README.assets/05.png" alt="05" style="zoom:15%;" />
+	<img src="./README.assets/05.png" alt="05" height="500px">
 </p>
 
 7. Here you can see how the message was deleted:
 
 <p align="center">
-	<img src="./README.assets/06.png" alt="06" style="zoom:15%;" />
+	<img src="./README.assets/06.png" alt="06" height="500px">
 </p>
 
 8. If you click on the X you will be logged out:
 
 <p align="center">
-	<img src="./README.assets/07.png" alt="07" style="zoom:15%;" />
+	<img src="./README.assets/07.png" alt="07" height="500px">
 </p>
 
 9. If you click on Login you can then log in again:
 
 <p align="center">
-	<img src="./README.assets/08.png" alt="08" style="zoom:15%;" />
+	<img src="./README.assets/08.png" alt="08" height="500px">
 </p>
 
 10. After logging in, you will see the old chat again:
 
 <p align="center">
-	<img src="./README.assets/09.png" alt="09" style="zoom:15%;" />
+	<img src="./README.assets/09.png" alt="09" height="500px">
 </p>
 
 ## Further development
