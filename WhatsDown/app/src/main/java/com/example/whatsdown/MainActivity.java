@@ -2,14 +2,12 @@ package com.example.whatsdown;
 
 import static com.example.whatsdown.Constants.BASE_URL;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -45,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
     private DatabaseHelperSQLite databaseHelperSQLite;
     private LinearLayout chatContainer;
     private final Handler messageHandler = new Handler();
-    private static final int MESSAGE_FETCH_DELAY = 8000;
+    private static final int MESSAGE_FETCH_DELAY = 3000;
     private User loggedInUser;
     private User selectedUser;
     private final RetrieveChatController retrieveChatController = new RetrieveChatController(this);

@@ -59,7 +59,7 @@ public class RetrieveChatController implements Callback<List<ChatMessage>> {
         ApiService apiService = retrofit.create(ApiService.class);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, -10);
+        calendar.add(Calendar.SECOND, -3);
         Date lastFetchedDate = calendar.getTime();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());

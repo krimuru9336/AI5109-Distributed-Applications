@@ -1,6 +1,7 @@
 package com.example.whatsdown.requests;
 
 import com.example.whatsdown.model.ChatMessage;
+import com.example.whatsdown.model.CreateUser;
 import com.example.whatsdown.model.SendMessageRequest;
 import com.example.whatsdown.model.UpdateMessage;
 import com.example.whatsdown.model.User;
@@ -41,4 +42,7 @@ public interface ApiService {
 
     @DELETE("messages/delete/{id}")
     Call<Void> deleteMessage(@Path("id") int messageId);
+
+    @POST("/users")
+    Call<User> createUser(@Body CreateUser user);
 }

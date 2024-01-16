@@ -2,17 +2,21 @@ package com.example.whatsdown;
 
 import static com.example.whatsdown.Constants.BASE_URL;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.whatsdown.model.CreateUser;
 import com.example.whatsdown.model.User;
 import com.example.whatsdown.requests.ApiService;
 
@@ -106,5 +110,57 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, ChatsActivity.class);
         intent.putExtra("selectedUser", selectedUser);
         startActivity(intent);
+    }
+
+    public void onRegisterButtonClick(View view) {
+        showNameInputDialog();
+    }
+
+    private void showNameInputDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Register");
+
+        final EditText editTextName = new EditText(this);
+        editTextName.setHint("Enter your name");
+        alertDialogBuilder.setView(editTextName);
+
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Register", (dialog, id) -> {
+                    String userName = editTextName.getText().toString();
+
+                    if (userName.isEmpty()) {
+                        Toast.makeText(LoginActivity.this, "Enter your name", Toast.LENGTH_SHORT).show();
+                    } else {
+                        CreateUser user = new CreateUser(userName);
+                        Call<User> call = apiService.createUser(user);
+                        call.enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                if (response.isSuccessful()) {
+                                    User user = response.body();
+                                    getUsersFromApi();
+                                } else {
+                                    System.out.println("Error: " + response.message());
+                                    Toast.makeText(LoginActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+                                t.printStackTrace();
+                                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 }
