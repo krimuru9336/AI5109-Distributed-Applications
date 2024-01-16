@@ -31,6 +31,8 @@ The main functionality of the app is the chat interface:
 - Users can exchange text messages.
 - Messages are displayed in a chat-style interface.
 - Real-time message updates through periodic API calls.
+- Update messages
+- Delete messages
 
 ### User Login
 
@@ -62,5 +64,4 @@ The main functionality of the app is the chat interface:
 
 ## Further Development
 
-- Implementing features for deleting and editing messages
 - Support videos, images, gifs and group chats 
