@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class Message {
+    /*
+     * Jonas Wagner - 1315578
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

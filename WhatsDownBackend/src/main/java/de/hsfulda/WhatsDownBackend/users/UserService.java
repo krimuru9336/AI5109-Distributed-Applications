@@ -7,6 +7,9 @@ import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
+    /*
+     * Jonas Wagner - 1315578
+     */
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {

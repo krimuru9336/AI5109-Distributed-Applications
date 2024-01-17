@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
+    /*
+     * Jonas Wagner - 1315578
+     */
     List<Message> findBySenderAndReceiver(User sender, User receiver);
     @Query("SELECT m FROM Message m WHERE ((m.sender = :user1 AND m.receiver = :user2) OR (m.sender = :user2 AND m.receiver = :user1)) AND m.timestamp >= :lastFetchedTimestamp")
     List<Message> findNewMessages(

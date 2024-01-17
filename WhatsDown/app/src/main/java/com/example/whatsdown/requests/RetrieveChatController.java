@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class RetrieveChatController implements Callback<List<ChatMessage>> {
+    /*
+     * Jonas Wagner - 1315578
+     */
     private MessageCallback messageCallback;
     private List<ChatMessage> messages = new ArrayList<>();
 

@@ -3,7 +3,9 @@ package com.example.whatsdown.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
-
+    /*
+     * Jonas Wagner - 1315578
+     */
     private int userId;
     private String name;
 

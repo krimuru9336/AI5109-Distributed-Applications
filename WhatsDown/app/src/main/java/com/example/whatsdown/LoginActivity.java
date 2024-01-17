@@ -30,7 +30,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
-
+    /*
+     * Jonas Wagner - 1315578
+     */
     private Spinner userSpinner;
     private Button loginButton;
     private List<User> userList;

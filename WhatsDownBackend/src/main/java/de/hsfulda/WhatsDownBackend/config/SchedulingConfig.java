@@ -6,4 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableScheduling
 public class SchedulingConfig {
+    /*
+     * Jonas Wagner - 1315578
+     */
 }

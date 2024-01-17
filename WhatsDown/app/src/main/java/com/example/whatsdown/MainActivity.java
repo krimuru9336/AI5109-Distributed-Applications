@@ -39,6 +39,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements MessageCallback {
+    /*
+     * Jonas Wagner - 1315578
+     */
     private EditText inputText;
     private DatabaseHelperSQLite databaseHelperSQLite;
     private LinearLayout chatContainer;

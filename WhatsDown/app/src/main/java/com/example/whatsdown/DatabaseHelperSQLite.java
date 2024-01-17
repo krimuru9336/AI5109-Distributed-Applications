@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelperSQLite extends SQLiteOpenHelper {
+    /*
+     * Jonas Wagner - 1315578
+     */
     private static final String DATABASE_NAME = "your_database.db";
     private static final int DATABASE_VERSION = 1;
 

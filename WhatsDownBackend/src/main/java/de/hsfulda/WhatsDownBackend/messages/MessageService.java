@@ -12,7 +12,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Service
 @Slf4j
 public class MessageService {
-
+    /*
+     * Jonas Wagner - 1315578
+     */
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final Map<String, Set<Long>> fetchedMessages = new HashMap<>();

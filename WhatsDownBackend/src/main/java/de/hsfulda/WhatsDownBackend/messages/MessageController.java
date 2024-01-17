@@ -12,7 +12,9 @@ import java.util.List;
 @RequestMapping("/messages")
 @Slf4j
 public class MessageController {
-
+    /*
+     * Jonas Wagner - 1315578
+     */
     private final MessageService messageService;
 
     public MessageController(MessageService messageService) {

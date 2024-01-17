@@ -1,6 +1,9 @@
 package com.example.whatsdown.model;
 
 public class ChatMessage {
+    /*
+     * Jonas Wagner - 1315578
+     */
     private int id;
     private int senderId;
     private int receiverId;

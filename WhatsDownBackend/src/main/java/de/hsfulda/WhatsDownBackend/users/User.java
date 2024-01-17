@@ -11,6 +11,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class User {
+    /*
+     * Jonas Wagner - 1315578
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

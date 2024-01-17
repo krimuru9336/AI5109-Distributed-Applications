@@ -25,6 +25,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatsActivity extends AppCompatActivity {
+    /*
+     * Jonas Wagner - 1315578
+     */
     private LinearLayout userListContainer;
     private List<User> userList;
     private ApiService apiService;

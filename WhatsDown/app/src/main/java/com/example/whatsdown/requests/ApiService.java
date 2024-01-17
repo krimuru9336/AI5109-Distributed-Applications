@@ -18,6 +18,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    /*
+     * Jonas Wagner - 1315578
+     */
     @GET("/messages/retrieve")
     Call<List<ChatMessage>> getChatMessages(
             @Query("user1") String user1,
