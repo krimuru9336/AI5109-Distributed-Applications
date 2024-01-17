@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Contact App</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" href="/css/styles.css">
+</head>
+<body>
+<h1>Contact Form</h1>
+<h4>By: Kimiya Fazlali - 1440906</h4>
+<form action="/addContact" method="post">
+  <label for="name">Name:</label>
+  <input type="text" id="name" name="name">
+  <label for="phoneNumber">Phone Number:</label>
+  <input type="text" id="phoneNumber" name="phoneNumber">
+  <button type="submit">Submit</button>
+</form>
+
+</br>
+</br>
+<h2>Contact List</h2>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Phone Number</th>
+  </tr>
+  <tr th:each="contact : ${contacts}">
+    <td th:text="${contact.name}"></td>
+    <td th:text="${contact.phoneNumber}"></td>
+  </tr>
+</table>
+</body>
+</html>
+
