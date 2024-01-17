@@ -10,14 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EasyChat"
+        android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
-        <activity
-            android:name=".LoginPhoneNumberActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SplashActivity"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
