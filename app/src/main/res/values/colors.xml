@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#000000</color>
+    <color name="colorBlue">#000000</color>
+    <color name="colorGray">#B0C4DE</color>
+    <color name="white">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>  <color name="gray">#808080</color>
+    <color name="online">#00FF00</color>
+    <color name="offline">#FF6347</color>
+    <color name="greyText">#696969</color>
+    <color name="timingBGColorBlue">#000000</color>
+    <color name="timingBGColorWhite">#F0F8FF</color>
+    <color name="black_50">#80000000</color>
+    <color name="splashStart">#FF8C00</color>
+    <color name="splashEnd">#000000</color>
 </resources>
+
