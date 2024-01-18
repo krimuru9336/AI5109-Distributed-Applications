@@ -23,10 +23,10 @@ public class BaseActivity extends AppCompatActivity {
     protected final String[] permissionsContact = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     protected final String[] permissionsStorage = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     public Activity mActivity;
-    public FirebaseAuth auth; //Auth init
+    public FirebaseAuth auth; 
     public FirebaseAuth.AuthStateListener authStateListener;
-    public DatabaseReference reference; //Database related
-    public FirebaseUser firebaseUser; //Current User
+    public DatabaseReference reference; 
+    public FirebaseUser firebaseUser; 
     public Screens screens;
     public ImageView imgBack;
 
