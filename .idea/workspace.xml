@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="05979919-fdcd-4ce6-8289-ad0acafdfb54" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ChitChat/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/.idea/deploymentTargetDropDown.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/.idea/migrations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/google-services.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/proguard-rules.pro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/release/ChitChat.apk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/release/output-metadata.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/androidTest/java/com/example/chitchat/ExampleInstrumentedTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/ChatActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/ChatsFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/Contacts.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/ContactsFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/FindFriendsActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/GroupsFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/MainActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/MessageAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/Messages.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/MyloginActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/ProfileActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/RegisterActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/RequestsFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/SettingsActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/java/com/example/chitchat/TabsAccessorAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/buttons.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/chat.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/edit_profile.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/edit_status.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/email.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/ic_launcher_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/inputs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/login_photo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/online.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/onlinechat.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/password.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/phone.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/profile_image.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/receiver_messages_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/send_file.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/send_files.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/send_message.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/sender_messages_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/drawable/signup_photo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/activity_chat.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/activity_find_friends.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/activity_mylogin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/activity_profile.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/activity_register.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/activity_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/app_bar_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/custom_chat_bar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/custom_messages_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/fragment_chats.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/fragment_contacts.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/fragment_groups.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/fragment_requests.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/layout/users_display_layout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/menu/options_menu.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-hdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-mdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-xhdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/values-night/themes.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/values/themes.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/xml/backup_rules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/main/res/xml/data_extraction_rules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/app/src/test/java/com/example/chitchat/ExampleUnitTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/build.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/gradle.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/key" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ChitChat/settings.gradle.kts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2b8RydEa7CHzxdJ8SI3l5TDlBqv" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/umakrishnapillai/AndroidStudioProjects/AI5109-Distributed-Applications",
+    "settings.editor.selected.configurable": "vcs.Git"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="05979919-fdcd-4ce6-8289-ad0acafdfb54" name="Changes" comment="" />
+      <created>1705594974962</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1705594974962</updated>
+    </task>
+    <servers />
+  </component>
+</project>
