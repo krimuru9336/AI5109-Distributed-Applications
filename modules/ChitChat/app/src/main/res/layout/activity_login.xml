@@ -25,7 +25,7 @@
                 android:layout_alignParentTop="true"
                 android:scaleType="fitCenter"
                 android:padding="20dp"
-                android:layout_marginTop="80dp"/>
+                android:layout_marginTop="60dp"/>
 
             <EditText
                 android:id="@+id/login_email"
@@ -60,13 +60,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/login_password"
-                android:padding="10dp"
+                android:padding="8dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:text="Login"
                 android:textAllCaps="false"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textColor="@android:color/background_light"
                 android:background="@drawable/buttons"
                 />
@@ -78,14 +78,24 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/login_button"
                 android:text="New user? SIGN IN"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="17dp"
                 android:layout_marginLeft="17dp"
                 android:textAlignment="center"
-                android:textSize="22sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"
                 />
         </RelativeLayout>
     </ScrollView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© Firoj Kabir, 1300934"
+        android:layout_centerInParent="true"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
 </RelativeLayout>

@@ -6,74 +6,94 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-    <ImageView
-        android:id="@+id/register_image"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:src="@drawable/signup"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:scaleType="fitCenter"
-        android:padding="20dp"
-        android:layout_marginTop="80dp"/>
+        android:layout_alignParentTop="true">
 
-    <EditText
-        android:id="@+id/register_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/register_image"
-        android:hint="Email..."
-        android:inputType="textEmailAddress"
-        android:background="@drawable/inputs"
-        android:padding="10dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginLeft="17dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/register_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/register_email"
-        android:hint="Password..."
-        android:inputType="textPassword"
-        android:background="@drawable/inputs"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginLeft="17dp"/>
+            <ImageView
+                android:id="@+id/register_image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/signup"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitCenter"
+                android:padding="20dp"
+                android:layout_marginTop="60dp"/>
 
-    <Button
-        android:id="@+id/register_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/register_password"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:text="Sign up"
-        android:textAllCaps="false"
-        android:textSize="24sp"
-        android:textColor="@android:color/background_light"
-        android:background="@drawable/buttons"
-        />
+            <EditText
+                android:id="@+id/register_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/register_image"
+                android:hint="Email..."
+                android:inputType="textEmailAddress"
+                android:background="@drawable/inputs"
+                android:padding="10dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginLeft="17dp"/>
 
-    <TextView
-        android:id="@+id/login_link"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/register_button"
-        android:text="Already an user? LOGIN"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="17dp"
-        android:layout_marginLeft="17dp"
-        android:textAlignment="center"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        />
+            <EditText
+                android:id="@+id/register_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/register_email"
+                android:hint="Password..."
+                android:inputType="textPassword"
+                android:background="@drawable/inputs"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginLeft="17dp"/>
+
+            <Button
+                android:id="@+id/register_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/register_password"
+                android:padding="8dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:text="Sign up"
+                android:textAllCaps="false"
+                android:textSize="20sp"
+                android:textColor="@android:color/background_light"
+                android:background="@drawable/buttons"/>
+
+            <TextView
+                android:id="@+id/login_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/register_button"
+                android:text="Already an user? LOGIN"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginLeft="17dp"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"/>
+        </RelativeLayout>
+    </ScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="© Firoj Kabir, 1300934"
+                android:layout_centerInParent="true"
+                android:textSize="15sp"
+                android:textStyle="italic"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
 </RelativeLayout>

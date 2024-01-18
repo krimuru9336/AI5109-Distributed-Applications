@@ -38,4 +38,14 @@
 
     </androidx.viewpager.widget.ViewPager>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© Firoj Kabir, 1300934"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
 </RelativeLayout>
