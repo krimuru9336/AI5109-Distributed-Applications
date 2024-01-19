@@ -40,9 +40,9 @@ Make sure to configure your Firebase project properly:
 
 ## Screenshots
 
-![1st mobile](screenshots/mobile1.jpg)
+![1st mobile](screenshots/mobile1.jpg=x720)
 
-![2nd mobile](screenshots/mobile2.jpg)
+![2nd mobile](screenshots/mobile2.jpg=x720)
 
 ## Project Structure
 
