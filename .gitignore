@@ -34,3 +34,5 @@ build/
 .vscode/
 
 .env
+
+google-services.json
