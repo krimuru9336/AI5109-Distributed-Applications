@@ -46,8 +46,17 @@ Make sure to configure your Firebase project properly:
 </p>
 ## Project Structure
 
-- `app/src/main/java/com/example/firebasechatapp`: Java code
+- `app/src/main/java/com/example/chitchatapp`: Java code
 - `app/src/main/res`: XML layout files
+
+## Core logic
+
+- After opening app user has to sign in or register new account, here I am using firebase authentication.
+- user can enter email, password and name.
+- user will now be redirected to home screen. where there are list of chats/chatrooms that user has made with other people (this will also show group in future)
+- If there are no chat user can create one by clicking on "+" button
+- After clicking on any chat user will be redirected to the main chat app
+- here user can type messages and they will be sent to other person and vice-versa.
 
 ## Dependencies
 
