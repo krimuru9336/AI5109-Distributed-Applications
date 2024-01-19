@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1022984323453",
+    "project_id": "cchat-backend-4ccc4",
+    "storage_bucket": "cchat-backend-4ccc4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022984323453:android:31603de98060114cb20c14",
+        "android_client_info": {
+          "package_name": "com.example.cchat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtUYB4ukExEWQmVKQbIZ2zwZ_80WiFUZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
