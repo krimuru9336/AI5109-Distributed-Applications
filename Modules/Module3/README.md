@@ -40,9 +40,9 @@ Make sure to configure your Firebase project properly:
 
 ## Screenshots
 
-![Login Screen](screenshots/login_screen.png)
+![1st mobile](screenshots/mobile1.jpg)
 
-![Chat Screen](screenshots/chat_screen.png)
+![2nd mobile](screenshots/mobile2.jpg)
 
 ## Project Structure
 
