@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/background_light"
     tools:context=".ChatActivity">
+
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="?attr/colorPrimary">
+
+        <TextView
+            android:id="@+id/textViewChatTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chat Room"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"/>
+
+
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/listViewChat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_below="@+id/headerLayout"
         android:layout_above="@+id/inputLayout"
-        android:layout_alignParentTop="true"
         android:divider="@android:color/transparent"
         android:dividerHeight="16dp"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
+        android:background="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/inputLayout" />
 
     <RelativeLayout
@@ -34,7 +56,8 @@
             android:layout_toLeftOf="@+id/buttonSendMessage"
             android:layout_toStartOf="@+id/buttonSendMessage"
             android:hint="Type your message"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:background="@android:color/white"/>
 
         <Button
             android:id="@+id/buttonSendMessage"
@@ -43,7 +66,10 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="Send" />
+            android:text="Send"
+            android:background="?attr/colorPrimary"/>
+
+
     </RelativeLayout>
 
 </RelativeLayout>
