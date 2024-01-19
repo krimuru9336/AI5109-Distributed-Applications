@@ -39,11 +39,11 @@ Make sure to configure your Firebase project properly:
 2. Set up Firebase Realtime Database and adjust the security rules as needed.
 
 ## Screenshots
-
+<p float="left">
 <img src="screenshots/mobile1.jpg" width="200" height="400" />
 
 <img src="screenshots/mobile2.jpg" width="200" height="400" />
-
+</p>
 ## Project Structure
 
 - `app/src/main/java/com/example/firebasechatapp`: Java code
