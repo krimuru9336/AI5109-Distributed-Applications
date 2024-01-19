@@ -17,6 +17,7 @@ import com.example.cchat.adapter.ChatRecyclerAdapter;
 import com.example.cchat.adapter.SearchUserRecyclerAdapter;
 import com.example.cchat.model.ChatMessageModel;
 import com.example.cchat.model.ChatRoomModel;
+import com.example.cchat.model.SecretsModel;
 import com.example.cchat.model.UserModel;
 import com.example.cchat.utils.AndroidUtil;
 import com.example.cchat.utils.FirebaseUtil;
@@ -25,13 +26,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Properties;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -189,22 +191,32 @@ public class ChatActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         String url = "https://fcm.googleapis.com/fcm/send";
         RequestBody body = RequestBody.create(jsonObject.toString(), JSON);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .header("Authorization", "Bearer AAAA7i6eAX0:APA91bEyZp7UzLeU4b6Tum7mBllpULYLeDo6Jux8k4aNioe-QvJOxGAQ_M9oTd0l_EN8XN_yyKRh-WTmo1rrdlU3e6QKoMRx0gyPZe6JIF9tE1jE1KSppkJAWkFMPXDfZiUhtTVqFgjV")
-                .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.i("F", "Failed Api Call : " + e);
-            }
+        FirebaseUtil.getSecrets().get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                SecretsModel secrets = task.getResult().toObject(SecretsModel.class);
 
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.i("F", "Success Api Call");
+                String apiKey = secrets.getFcmAPIKey();
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(body)
+                        .header("Authorization", "Bearer " + apiKey)
+                        .build();
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        Log.i("F", "Failed Api Call : " + e);
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Log.i("F", "Success Api Call");
+                    }
+                });
             }
         });
+
     }
 }

@@ -51,6 +51,13 @@ public class FirebaseUtil {
         return FirebaseFirestore.getInstance().collection("chatrooms");
     }
 
+    public static CollectionReference secretsReference() {
+        return FirebaseFirestore.getInstance().collection("secrets");
+    }
+
+    public static DocumentReference getSecrets() {
+        return secretsReference().document("apiKeys");
+    }
     public static DocumentReference getOtherUserFromChatroom(List<String> userIds) {
         if(userIds.get(0).equals(FirebaseUtil.currentUserId())) {
             return allUserCollectionReference().document(userIds.get(1));
