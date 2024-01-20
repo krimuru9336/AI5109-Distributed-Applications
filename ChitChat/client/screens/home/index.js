@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import axios from 'axios';
 import UserList from './components/UserList';
 import { baseUrl } from "../../baseUrl";
