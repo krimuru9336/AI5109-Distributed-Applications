@@ -1,45 +1,61 @@
 # AI5109-Distributed-Applications
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+# RahilChatApplication - Firebase Chat Application
 
-## Basic Principles
+## Overview
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+This Android application is a real-time chat app developed using Android Studio and Firebase Realtime Database. Firebase provides a cloud-based database that allows seamless integration for building real-time applications.
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+## Features
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+- **User Authentication:**
+  - Users can sign up, log in, and log out securely using Firebase Authentication.
+  
+- **Realtime Chat:**
+  - Users can send and receive messages in real-time.
+  - Messages are stored in Firebase Realtime Database.
 
-## Working on Your Own Branch
+- **User List:**
+  - Display a list of users.
 
-Follow these steps to create and work on your own branch:
+## Technologies Used
+
+- **Android Studio:**
+  - The primary IDE for Android app development.
+
+- **Firebase:**
+  - Firebase Authentication: User authentication.
+  - Firebase Realtime Database: Store and sync data in real-time.
+
+- **Kotlin:**
+  - Programming language used for Android app development.
+
+## Project Structure
+
+- **`app/` folder:**
+  - Contains the main source code for the Android application.
+
+- **`app/src/main/res/` folder:**
+  - Resources, including layouts, strings, and drawables.
+
+- **`app/build.gradle` file:**
+  - Configuration file for app-specific build settings.
+
+- **`google-services.json` file:**
+  - Configuration file for Firebase services.
+
+## How to Run the App
 
 1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+2. **Open in Android Studio:**
+- Open Android Studio and select "Open an existing Android Studio project."
+- Choose the cloned project directory.
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+3. **Connect to Firebase:**
+- Create a Firebase project on the [Firebase Console](https://console.firebase.google.com/).
+- Add an Android app to your Firebase project and download the `google-services.json` file.
+- Place the `google-services.json` file in the `app/` directory of your Android project.
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
-
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
-
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+4. **Run the App:**
+- Connect an Android device or use an emulator.
+- Click the "Run" button in Android Studio to install and launch the app on your device.
