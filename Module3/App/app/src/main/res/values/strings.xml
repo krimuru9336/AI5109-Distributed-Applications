@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">ChitChat</string>
+    <string name="retrieve">Retrieve</string>
+    <string name="insert">Insert</string>
+    <string name="name">Name:</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="author">Christian Jumtow Matr. Nr: 1166358</string>
+    <string name="appname">ChitChat App</string>
+    <string name="ip">http://192.168.0.5</string>
+    <string name="port">8081</string>
+    <string name="type_your_message">Type your message</string>
+    <string name="send">Send</string>
+    <string name="back_to_user_selection">Go back to user selection</string>
+    <string name="avialable_chats">Available Chats</string>
+    <string name="enter_username_long">Enter your username:</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="connect">Connect</string>
+    <string name="attach_button_description">Attach Media to Message</string>
+</resources>

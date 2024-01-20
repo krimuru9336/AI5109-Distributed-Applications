@@ -1,0 +1,12 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background Color -->
+    <item android:drawable="@color/colorPrimary"/>
+
+    <!-- Icon -->
+    <item
+        android:drawable="@drawable/baseline_chevron_right_24"
+        android:gravity="center"
+        android:background="@color/colorSecondary"/>
+
+</layer-list>

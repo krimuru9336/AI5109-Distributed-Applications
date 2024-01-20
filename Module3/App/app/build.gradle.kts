@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.da.chitchat"
+    namespace = "com.example.chitchatapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.da.chitchat"
+        applicationId = "com.example.chitchatapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -19,7 +19,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -34,7 +37,8 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.sqlite:sqlite:2.4.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("io.socket:socket.io-client:2.1.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
