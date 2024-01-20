@@ -1,45 +1,58 @@
-# AI5109-Distributed-Applications
+# WhatsDown Chat App
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+Welcome to the WhatsDown repository, a real-time chatting app that allows users to connect and communicate seamlessly. The app is built using Android Studio with Kotlin for the mobile app and Firebase Cloud Firestore for real-time communication.
 
-## Basic Principles
+## Technology Used
+- **Mobile App:** Android Studio with Kotlin.
+- **Real-time Communication:** Firebase Cloud Firestore.
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+## Features
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+### User Authentication
+WhatsDown incorporates a user authentication system that enables users to create accounts, log in securely, and authenticate their identity within the chat application.
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+### Real-time Message Communication
+Users can send and receive text messages in real-time. Each message is accompanied by a timestamp, providing a dynamic and interactive chatting experience.
 
-## Working on Your Own Branch
+### TODO: Upcoming features: Media Content Support, Edit and Delete Messages, Group Chats, Notifications
 
-Follow these steps to create and work on your own branch:
+## Logic
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+### User Authentication
+- Firebase authentication API handles the registration process where users can register by providing their phone number.
+- Upon registration, Firebase Authentication sends an SMS message containing a one-time code to the user's phone.
+- Registered users can log in using their credentials, and Firebase authentication verifies the user's identity.
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+### Real-time Message Communication
+- Users can create or join chat rooms, and chat messages are associated with specific rooms.
+- The frontend sends new messages to Firebase Cloud Firestore.
+- The backend listens for changes in the database and pushes updates to all connected clients.
+- The frontend updates the UI in real-time when new messages are received.
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+### Message Structure
+- Users can send text messages and emojis as a message. 
+- Both the sender and receiver would see the message content along with the time the respective message got sent.
+- In the UI, sender would see their messages on the right side and the other's messages on the left.
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+## Project Structure
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+### Activity Files
+- **ChatActivity.java:** Main activity for individual chat conversations.
+- **LoginOtpActivity.java:** Handles user authentication using OTP.
+- **LoginPhoneNumberActivity.java:** Manages phone number-based user login.
+- **LoginUsernameActivity.java:** Controls user login using a username.
+- **MainActivity.java:** App's entry point and primary navigation hub.
+- **SearchUserActivity.java:** Allows users to search for other users to initiate chats.
+- **SplashActivity.java:** Displays a splash screen while the app initializes.
+
+### Fragment Files
+- **ChatFragment.java:** Manages chat UI and logic within the chat activity.
+- **ProfileFragment.java:** Handles user profile display and editing.
+
+## Getting Started
+
+1. Clone or download the repository.
+2. Set up your Firebase project and update the google-services.json file.
+3. Build and run the app on your Android device or emulator.
+
+Enjoy!
