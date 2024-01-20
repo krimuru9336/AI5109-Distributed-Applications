@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "476583528780",
+    "project_id": "rahilchatapplicationuniversity",
+    "storage_bucket": "rahilchatapplicationuniversity.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476583528780:android:aff8914af2f781c8ff67e9",
+        "android_client_info": {
+          "package_name": "com.example.rahilchatapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClY9MGQ8KhXuUlCu2SPd3QC2NxoF5w_EQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
