@@ -1,85 +1,70 @@
 package com.example.whatsdown;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
-    private EditText inputEditText;
-    private DatabaseHelper dbHelper;
+public class MainActivity extends AppCompatActivity {
+    BottomNavigationView bottomNavigationView;
+    ImageButton searchButton;
+
+    ChatFragment chatFragment;
+    ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        inputEditText = findViewById(R.id.inputEditText);
-        Button saveButton = findViewById(R.id.saveButton);
-        Button retrieveButton = findViewById(R.id.retrieveButton);
+        chatFragment = new ChatFragment();
+        profileFragment = new ProfileFragment();
 
-        dbHelper = new DatabaseHelper(this);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        searchButton = findViewById(R.id.main_search_btn);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveToDatabase(inputEditText.getText().toString());
-                inputEditText.getText().clear();
-            }
+        searchButton.setOnClickListener((v)->{
+            startActivity(new Intent(MainActivity.this,SearchUserActivity.class));
         });
 
-        retrieveButton.setOnClickListener(new View.OnClickListener() {
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                retrieveFromDatabase();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(item.getItemId()==R.id.menu_chat){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout,chatFragment).commit();
+                }
+                if(item.getItemId()==R.id.menu_profile){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout,profileFragment).commit();
+                }
+                return true;
             }
         });
+        bottomNavigationView.setSelectedItemId(R.id.menu_chat);
+
+//        getFCMToken();
+
     }
 
-    private void saveToDatabase(String text) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_NAME, text);
-        db.insert(DatabaseHelper.TABLE_NAME, null, values);
-        Toast.makeText(this, "Your name has been successfully saved!", Toast.LENGTH_SHORT).show();
-        db.close();
-    }
-
-    private void retrieveFromDatabase() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(
-                DatabaseHelper.TABLE_NAME,
-                new String[]{DatabaseHelper.COLUMN_NAME},
-                null,
-                null,
-                null,
-                null,
-                "timestamp DESC",
-                "1"
-        );
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int columnIndex = cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME);
-
-            if (columnIndex != -1) {
-                String text = cursor.getString(columnIndex);
-                Toast.makeText(this, "Hello Dear " + text, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Couldn't find any names in the DB", Toast.LENGTH_SHORT).show();
-            }
-
-            cursor.close();
-        } else {
-            Toast.makeText(this, "Couldn't find any names in the DB", Toast.LENGTH_SHORT).show();
-        }
-
-        db.close();
-    }
+//    void getFCMToken(){
+//        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+//            if(task.isSuccessful()){
+//                String token = task.getResult();
+//                FirebaseUtil.currentUserDetails().update("fcmToken",token);
+//
+//            }
+//        });
+//    }
 }

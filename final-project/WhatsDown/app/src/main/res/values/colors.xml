@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primary">#AD50BD</color>
+    <color name="light_grey">#8C848E</color>
+    <color name="off_white">#EAE8E4</color>
+
+    <color name="sender_chat_color">#009688</color>
+    <color name="receiver_chat_color">#A62A54</color>
 </resources>
