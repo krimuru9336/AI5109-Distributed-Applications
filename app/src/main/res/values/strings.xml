@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">DistributedApplicationsProject</string>
+    <string name="user_name">Nick Stolbov</string>
+    <string name="user_mat_nr">1269907</string>
+    <string name="user_info">Nick Stolbov, Matrikel Nr. 1269907</string>
+    <string name="label_username">Name</string>
+    <string name="hint_name">Enter name</string>
+    <string name="button_insert">Insert</string>
+    <string name="button_retrieve">Retrieve</string>
+
+    <string name="welcome">Welcome</string>
+    <string name="login_to_continue">Login to continue</string>
+    <string name="label_dropdown_users">Users:</string>
+    <string name="button_login">Login</string>
+    <string name="write_message_hint">Write message</string>
+    <string name="edit_message_hint">Edit message</string>
+    <string name="dialog_uploading">Uploading. Please wait…</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edited_msg">edited</string>
+    <string name="deleted_msg">Message was deleted</string>
+</resources>

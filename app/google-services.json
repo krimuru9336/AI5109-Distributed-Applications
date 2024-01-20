@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "76452627095",
+    "firebase_url": "https://distributed-applications-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "distributed-applications",
+    "storage_bucket": "distributed-applications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76452627095:android:84fc0361a6eb27f6bf9fd2",
+        "android_client_info": {
+          "package_name": "com.example.distributedapplicationsproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDOGELvc8-WIE-IhUaQ0nZZwrguFhLK18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

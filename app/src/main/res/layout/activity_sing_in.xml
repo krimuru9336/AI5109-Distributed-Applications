@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.SingInActivity">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:text="@string/welcome"
+                android:textColor="@color/primary_text"
+                android:textSize="40sp"
+                android:textStyle="bold">
+        </TextView>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/login_to_continue"
+                android:textColor="@color/secondary_text"
+                android:textSize="20sp">
+        </TextView>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="200dp"
+                android:text="@string/label_dropdown_users"
+                android:textColor="@color/primary_text"
+                android:textSize="20sp">
+
+        </TextView>
+
+        <Spinner
+                android:id="@+id/spinner_users"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:visibility="gone">
+        </Spinner>
+
+        <ProgressBar
+                android:id="@+id/progress_user_loaded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:progressTint="@color/accent"
+                android:visibility="visible">
+
+        </ProgressBar>
+
+        <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="@string/button_login"
+                android:onClick="onClickLogin"
+                android:enabled="false"/>
+    </LinearLayout>
+</ScrollView>
