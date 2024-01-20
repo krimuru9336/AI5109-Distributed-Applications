@@ -30,15 +30,15 @@ To run ChitChat application on your machine, follow these steps:
     - Navigate to the client directory
     - Run the command "npm i"
     - Afer the packages are installed run the command "npx expo start --tunnel", to start the client
-    - Install Expo Go on your phone from App Store/Play Store, and scan the QR code displayed on the terminal to open the application on your phone
+    - Install Expo Go on your phone from App Store (https://apps.apple.com/us/app/expo-go/id982107779) / Play Store (https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en&gl=US), and scan the QR code displayed on the terminal to open the application on your phone
     
 
 ## Features
 
 ### User Register
 
-- Users have to register for the first time with a unique mail and the session is stored in the localstorage for future user.
-- After Registration the user is navigated to the users screen where the a list of all the registered users is displayed.
+- Users have to register for the first time with a unique mail and the session is stored in the localstorage for future use.
+- After Registration the user is navigated to the users screen where the list of all the registered users is displayed.
 - The User can click and start the chat with any user
 
 ### Real-Time Messaging
