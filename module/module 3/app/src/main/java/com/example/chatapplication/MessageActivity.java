@@ -1,87 +1,21 @@
 package com.example.chatapplication;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.BROADCAST_DOWNLOAD_EVENT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.DELAY_ONE_SEC;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.DOWNLOAD_DATA;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EMPTY;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_DATA;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_DURATION;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_FILE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_NAME;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_PATH;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_SIZE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_TYPE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_DATETIME;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ID;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_IMGPATH;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_MESSAGE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_RECEIVER;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_SEEN;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_SENDER;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPING;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPINGWITH;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPING_DELAY;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_USER_ID;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXT_MP3;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXT_VCF;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.FALSE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.FCM_URL;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.ONE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_AUDIO;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_CONTACT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_DOCUMENT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_VIDEO;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_BLOCK_USERS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHATS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHAT_ATTACHMENT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHAT_PHOTO_UPLOAD;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_OTHERS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_TOKENS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_USERS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_VIDEO_THUMBS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_CODE_CONTACT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_CODE_PLAY_SERVICES;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_PERMISSION_RECORD;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.SLASH;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.STATUS_ONLINE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TRUE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TWO;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_CONTACT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_IMAGE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_RECORDING;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_TEXT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.VIBRATE_HUNDRED;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.ZERO;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.AssetFileDescriptor;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.MediaRecorder;
-import android.media.ThumbnailUtils;
+
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.text.Editable;
+
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -90,54 +24,16 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bytesbee.firebase.chat.activities.adapters.MessageAdapters;
-import com.bytesbee.firebase.chat.activities.async.BaseTask;
-import com.bytesbee.firebase.chat.activities.async.TaskRunner;
-import com.bytesbee.firebase.chat.activities.fcm.APIService;
-import com.bytesbee.firebase.chat.activities.fcm.RetroClient;
-import com.bytesbee.firebase.chat.activities.fcmmodels.Data;
-import com.bytesbee.firebase.chat.activities.fcmmodels.MyResponse;
-import com.bytesbee.firebase.chat.activities.fcmmodels.Sender;
-import com.bytesbee.firebase.chat.activities.fcmmodels.Token;
-import com.bytesbee.firebase.chat.activities.managers.DownloadUtil;
-import com.bytesbee.firebase.chat.activities.managers.FirebaseUploader;
-import com.bytesbee.firebase.chat.activities.managers.SessionManager;
-import com.bytesbee.firebase.chat.activities.managers.Utils;
-import com.bytesbee.firebase.chat.activities.models.Attachment;
-import com.bytesbee.firebase.chat.activities.models.AttachmentTypes;
-import com.bytesbee.firebase.chat.activities.models.Chat;
-import com.bytesbee.firebase.chat.activities.models.DownloadFileEvent;
-import com.bytesbee.firebase.chat.activities.models.LocationAddress;
-import com.bytesbee.firebase.chat.activities.models.Others;
-import com.bytesbee.firebase.chat.activities.models.User;
-import com.bytesbee.firebase.chat.activities.views.SingleClickListener;
-import com.bytesbee.firebase.chat.activities.views.files.FileUtils;
-import com.bytesbee.firebase.chat.activities.views.files.MediaFile;
-import com.bytesbee.firebase.chat.activities.views.files.PickerManager;
-import com.bytesbee.firebase.chat.activities.views.files.PickerManagerCallbacks;
-import com.devlomi.record_view.RecordView;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -150,33 +46,17 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
-import com.rtchagas.pingplacepicker.PingPlacePicker;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
-import com.vanniktech.emoji.EmojiEditText;
-import com.vanniktech.emoji.EmojiPopup;
-import com.wafflecopter.multicontactpicker.ContactResult;
-import com.wafflecopter.multicontactpicker.LimitColumn;
-import com.wafflecopter.multicontactpicker.MultiContactPicker;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MessageActivity extends BaseActivity implements View.OnClickListener, PickerManagerCallbacks {
 
@@ -199,8 +79,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
 
     private String onlineStatus, strUsername, strCurrentImage;
 
-    private Uri imageUri = null;
-    private StorageTask uploadTask;
+     private StorageTask uploadTask;
     private FirebaseStorage storage;
     private StorageReference storageReference, storageAttachment;
 
@@ -368,7 +247,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         seenMessage();
 
         final Handler handler = new Handler(Looper.getMainLooper());
-          handler.postDelayed(this::permissionRecording, 800);
+        handler.postDelayed(this::permissionRecording, 800);
     }
 
     private void initUI() {
@@ -402,13 +281,10 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.btnAttachmentLocation).setOnClickListener(this);
         findViewById(R.id.btnAttachmentDocument).setOnClickListener(this);
 
-
         initListener();
 
         pickerManager = new PickerManager(this, this, this);
     }
-
-
     private void clickToSend() {
         if (TextUtils.isEmpty(Objects.requireNonNull(newMessage.getText()).toString().trim())) {
             screens.showToast(R.string.strEmptyMsg);
@@ -417,8 +293,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         }
         newMessage.setText(EMPTY);
     }
-
-
     @Override
     public void onClick(View view) {
         final int id = view.getId();
@@ -467,82 +341,8 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
             hideAttachmentView();
         }
     }
-
-   
-
-
     @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_CONTACT:
-                if (permissionsAvailable(permissions))
-                    openContactPicker();
-                break;
-            case PERMISSION_AUDIO:
-                if (permissionsAvailable(permissions))
-                    openAudioPicker();
-                break;
-            case PERMISSION_DOCUMENT:
-                if (permissionsAvailable(permissions))
-                    openDocumentPicker();
-                break;
-            case PERMISSION_VIDEO:
-                if (permissionsAvailable(permissions))
-                    openVideoPicker();
-                break;
-            case REQUEST_PERMISSION_RECORD:
-                if (permissionsAvailable(permissions)) {
-                    try {
-                        if (messageAdapters != null)
-                            messageAdapters.notifyDataSetChanged();
-                    } catch (Exception ignored) {
 
-                    }
-                }
-                break;
-        }
-    }
-
-    final ActivityResultLauncher<Intent> intentLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                if (fileUri != null) { 
-                    imgUri = Uri.fromFile(fileUri);
-                } else { 
-                    Intent data = result.getData();
-                    assert data != null;
-                    imgUri = data.getData();
-                }
-
-                try {
-                    CropImage.activity(imgUri)
-                            .setGuidelines(CropImageView.Guidelines.ON_TOUCH)
-                            .setCropShape(CropImageView.CropShape.RECTANGLE)
-                            .setFixAspectRatio(true)
-                            .start(mActivity);
-                } catch (Exception e) {
-                    Utils.getErrors(e);
-                }
-            }
-        }
-    });
-
-    final ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-               
-                final Intent data = result.getData();
-                assert data != null;
-                final Uri uriData = data.getData();
-                Utils.sout("PickerManager uri: " + uriData.toString());
-                pickerManager.getPath(uriData, Build.VERSION.SDK_INT); 
-            }
-        }
-    });
 
     private void sendMessage(String type, String message, Attachment attachment) {
         if (blockUnblockCheckBeforeSend()) {
@@ -573,7 +373,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
 
         try {
             if (type.equalsIgnoreCase(TYPE_TEXT)) {
-                
+
             } else if (type.equalsIgnoreCase(TYPE_IMAGE)) {
                 hashMap.put(EXTRA_TYPE, TYPE_IMAGE);
                 hashMap.put(EXTRA_IMGPATH, message);
@@ -628,45 +428,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         } catch (Exception ignored) {
         }
     }
-
-    private void sendNotification(String receiver, final String username, final String message, final String type) {
-        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference(REF_TOKENS);
-        Query query = tokenRef.orderByKey().equalTo(receiver);
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Token token = snapshot.getValue(Token.class);
-
-                        final Data data = new Data(currentId, R.drawable.ic_stat_ic_notification, username, message, getString(R.string.strNewMessage), userId, type);
-
-                        assert token != null;
-                        final Sender sender = new Sender(data, token.getToken());
-
-                        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
-                            @Override
-                            public void onResponse(@NotNull Call<MyResponse> call, @NotNull Response<MyResponse> response) {
-                                assert response.code() != 200 || response.body() != null;
-                            }
-
-                            @Override
-                            public void onFailure(@NotNull Call<MyResponse> call, @NotNull Throwable t) {
-
-                            }
-                        });
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
     private void readMessages(final String imageUrl) {
         chats = new ArrayList<>();
 
@@ -734,198 +495,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    MenuItem itemBlockUnblock;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_groups, menu);
-        MenuItem itemViewUser = menu.findItem(R.id.itemGroupInfo);
-        itemBlockUnblock = menu.findItem(R.id.itemBlockUnblock);
-        MenuItem itemAdd = menu.findItem(R.id.itemAddGroup);
-        MenuItem itemEdit = menu.findItem(R.id.itemEditGroup);
-        MenuItem itemLeave = menu.findItem(R.id.itemLeaveGroup);
-        MenuItem itemDelete = menu.findItem(R.id.itemDeleteGroup);
-        itemAdd.setVisible(false);
-        itemEdit.setVisible(false);
-        itemLeave.setVisible(false);
-        itemDelete.setVisible(false);
-        itemViewUser.setTitle(R.string.strUserInfo);
-        checkUserIsBlock();
-        blockedByOpponent();
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        final int itemId = item.getItemId();
-        if (itemId == R.id.itemGroupInfo) {
-            screens.openViewProfileActivity(userId);
-        } else if (itemId == R.id.itemClearMyChats) {
-            Utils.showYesNoDialog(mActivity, R.string.strDelete, R.string.strDeleteOwnChats, this::deleteOwnChats);
-        } else if (itemId == R.id.itemBlockUnblock) {
-            if (itemBlockUnblock.getTitle().toString().equalsIgnoreCase(getString(R.string.strBlock))) {
-                blockUser();
-            } else {
-                unblockUser();
-            }
-        }
-        return true;
-    }
-
-    private boolean isBlocked = false, isOppBlocked = false;
-
-    private void checkUserIsBlock() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REF_USERS);
-        ref.child(currentId).child(REF_BLOCK_USERS).orderByChild(EXTRA_ID).equalTo(userId)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            if (ds.exists()) {
-                                itemBlockUnblock.setTitle(R.string.strUnblock);
-                                isBlocked = true;
-                            } else {
-                                isBlocked = false;
-                                itemBlockUnblock.setTitle(R.string.strBlock);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void blockedByOpponent() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REF_USERS);
-        ref.child(userId).child(REF_BLOCK_USERS).orderByChild(EXTRA_ID).equalTo(currentId)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            isOppBlocked = ds.exists();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void blockUser() {
-        try {
-            showProgress();
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put(EXTRA_ID, userId);
-
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REF_USERS);
-            ref.child(currentId).child(REF_BLOCK_USERS).child(userId).setValue(hashMap)
-                    .addOnSuccessListener(aVoid -> {
-                        hideProgress();
-                        isBlocked = true;
-                        screens.showToast(R.string.msgBlockSuccessfully);
-                        itemBlockUnblock.setTitle(R.string.strUnblock);
-                    }).addOnFailureListener(e -> {
-                        hideProgress();
-                        screens.showToast(e.getMessage());
-                    });
-        } catch (Exception e) {
-            hideProgress();
-            Utils.getErrors(e);
-        }
-    }
-
-    private void unblockUser() {
-        try {
-            showProgress();
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REF_USERS);
-            ref.child(currentId).child(REF_BLOCK_USERS).orderByChild(EXTRA_ID).equalTo(userId)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                if (dataSnapshot.exists()) {
-                                    hideProgress();
-                                    dataSnapshot.getRef().removeValue()
-                                            .addOnSuccessListener(aVoid -> {
-                                                isBlocked = false;
-                                                screens.showToast(R.string.msgUnblockSuccessfully);
-                                                itemBlockUnblock.setTitle(R.string.strBlock);
-                                            })
-                                            .addOnFailureListener(e -> screens.showToast(e.getMessage()));
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            hideProgress();
-                        }
-                    });
-        } catch (Exception e) {
-            hideProgress();
-            Utils.getErrors(e);
-        }
-    }
-
- 
-    private void deleteOwnChats() {
-        showProgress();
-        final Query chatsSender = FirebaseDatabase.getInstance().getReference(REF_CHATS).child(strSender).orderByChild(EXTRA_SENDER).equalTo(currentId);
-        chatsSender.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Chat chat = snapshot.getValue(Chat.class);
-                            assert chat != null;
-                            if (!Utils.isEmpty(chat.getAttachmentType())) {
-                                Utils.deleteUploadedFilesFromCloud(storage, chat);
-                                snapshot.getRef().removeValue();
-                            }
-                        }
-                    }
-                    hideProgress();
-                } catch (Exception ignored) {
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        final Query chatsReceiver = FirebaseDatabase.getInstance().getReference(REF_CHATS).child(strReceiver).orderByChild(EXTRA_SENDER).equalTo(currentId);
-        chatsReceiver.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    if (dataSnapshot.exists()) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Chat chat = snapshot.getValue(Chat.class);
-                            assert chat != null;
-                            if (!Utils.isEmpty(chat.getAttachmentType())) {
-                                Utils.deleteUploadedFilesFromCloud(storage, chat);
-                            }
-                            snapshot.getRef().removeValue();
-                        }
-                    }
-                } catch (Exception ignored) {
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
+   MenuItem itemBlockUnblock;
     private void readTyping() {
         reference = FirebaseDatabase.getInstance().getReference(REF_OTHERS).child(currentId);
         reference.addValueEventListener(new ValueEventListener() {
@@ -951,67 +521,10 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
             }
         });
     }
-
-   
-    private boolean recordPermissionsAvailable() {
-        boolean available = true;
-        for (String permission : permissionsRecord) {
-            if (ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED) {
-                available = false;
-                break;
-            }
-        }
-        return available;
-    }
-
-    private final ArrayList<Integer> positionList = new ArrayList<>();
-
-
-    private final BroadcastReceiver downloadCompleteReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null && intent.getAction() != null)
-                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent.getAction())) {
-                    if (positionList.size() > ZERO && messageAdapters != null) {
-                        for (int pos : positionList) {
-                            if (pos != -1) {
-
-                                messageAdapters.notifyItemChanged(pos);
-                            }
-                        }
-                    }
-                    positionList.clear();
-                }
-        }
-    };
-
-    public void downloadFile(DownloadFileEvent downloadFileEvent) {
-        if (permissionsAvailable(permissionsStorage)) {
-            new DownloadUtil().loading(this, downloadFileEvent);
-            positionList.add(downloadFileEvent.getPosition());
-        } else {
-            ActivityCompat.requestPermissions(this, permissionsStorage, 47);
-        }
-    }
-
-    private final BroadcastReceiver downloadEventReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            DownloadFileEvent downloadFileEvent = (DownloadFileEvent) intent.getSerializableExtra(DOWNLOAD_DATA);
-            try {
-                if (downloadFileEvent != null) {
-                    downloadFile(downloadFileEvent);
-                }
-            } catch (Exception ignored) {
-            }
-        }
-    };
-
-  
     private TextView percentText;
     private ProgressBar mProgressBar;
     private AlertDialog mdialog;
     private ProgressDialog progressBar;
-
     @Override
     public void PickerManagerOnUriReturned() {
         progressBar = new ProgressDialog(this);
@@ -1019,13 +532,12 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         progressBar.setCancelable(false);
         progressBar.show();
     }
-
     @Override
     public void PickerManagerOnStartListener() {
         final Handler mPickHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
-                       if (progressBar.isShowing()) {
+                if (progressBar.isShowing()) {
                     progressBar.cancel();
                 }
                 final AlertDialog.Builder mPro = new AlertDialog.Builder(new ContextThemeWrapper(mActivity, R.style.myDialog));
@@ -1068,50 +580,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
             Utils.getErrors(e);
         }
     }
-
-    @Override
-    public void PickerManagerOnCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String reason) {
-        if (mdialog != null && mdialog.isShowing()) {
-            mdialog.cancel();
-        }
-        Utils.sout("Picker Path :: " + new File(path).exists() + " >> " + path + " :drive: " + wasDriveFile + " :<Success>: " + wasSuccessful);
-
-        int fileType = 0;
-        try {
-            fileType = Objects.requireNonNull(MediaFile.getFileType(path)).fileType;
-        } catch (Exception e) {
-            
-        }
-
-        if (wasSuccessful) {
-           
-            final int file_size = Integer.parseInt(String.valueOf(new File(path).length() / 1024));
-
-            if (MediaFile.isAudioFileType(fileType)) {
-                if (file_size > Utils.getAudioSizeLimit()) {
-                    screens.showToast(String.format(getString(R.string.msgFileTooBig), Utils.MAX_SIZE_AUDIO));
-                } else {
-                    myFileUploadTask(path, AttachmentTypes.AUDIO, null);
-                }
-            } else if (MediaFile.isVideoFileType(fileType)) {
-                if (file_size > Utils.getVideoSizeLimit()) {
-                    screens.showToast(String.format(getString(R.string.msgFileTooBig), Utils.MAX_SIZE_VIDEO));
-                } else {
-                    uploadThumbnail(Uri.parse(path).getPath());
-                }
-            } else {
-                if (file_size > Utils.getDocumentSizeLimit()) {
-                    screens.showToast(String.format(getString(R.string.msgFileTooBig), Utils.MAX_SIZE_DOCUMENT));
-                } else {
-                    myFileUploadTask(path, AttachmentTypes.DOCUMENT, null);
-                }
-            }
-
-        } else {
-            screens.showToast(R.string.msgChooseFileFromOtherLocation);
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -1121,13 +589,11 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         } catch (Exception ignored) {
         }
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         Utils.readStatus(STATUS_ONLINE);
     }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -1143,7 +609,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         } catch (Exception ignored) {
         }
     }
-
     @Override
     public void onBackPressed() {
         try {
@@ -1157,7 +622,6 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
             super.onBackPressed();
         }
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
