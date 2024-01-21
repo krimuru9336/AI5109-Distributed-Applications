@@ -2,7 +2,7 @@
 
 This repository contains source code for the "Distributed Applications" module in the Winter Semester 2023/2024 at Fulda University of Applied Sciences.
 
-#MODULE 3 - Implementation of Real-Time Message Communication App
+# MODULE 3 - Implementation of Real-Time Message Communication App - ChatApp
 
 This Android application showcases a real-time message communication feature, allowing users to engage in text-based conversations with timestamps. The project focuses on simplicity and functionality, omitting complex media elements such as images or videos.
 
