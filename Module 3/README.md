@@ -3,7 +3,7 @@
 ## Table of Content
 
 	- [Introduction](#introduction)
-	- [Requirements](#equirements)
+	- [Requirements](#requirements)
 	- [Features](#features)
 	- [Technologies Used](#technologies-used)
 	- [Installation](#installation)
@@ -12,12 +12,12 @@
 	- [Further Development](#further-development)
 
 
-## Introduction
+## Introduction <a name="introduction"></a>
 
 This Android app allows users to chat in real-time using Google Firebase Authentication and Realtime Database. In this phase it supports only text messages and timestamps.
 
 
-## Requirements
+## Requirements <a name="requirements"></a>
 
 - Android Studio
 - Android SDK 24 or higher
@@ -27,7 +27,7 @@ This Android app allows users to chat in real-time using Google Firebase Authent
 - Knowledge of Kotlin and Android development
 
 	
-## Features
+## Features <a name="features"></a>
 
 1. Real-time message communication
 2. User authentication with Google Firebase (Login with Google account or login with email address)
@@ -35,7 +35,7 @@ This Android app allows users to chat in real-time using Google Firebase Authent
 4. Simple and intuitive user interface
 4. Logout from account and login again
 	
-## Technologies Used
+## Technologies Used <a name="technologies-used"></a>
 
 - Android Studio: The IDE which is used to develop this Android app.
 - Kotlin: The primary programming language for Android app development.
@@ -44,7 +44,7 @@ This Android app allows users to chat in real-time using Google Firebase Authent
 	- Authentication: Enables user authentication with secure login methods.
 	- Realtime Database: A NoSQL cloud database to store and sync app data in real-time.
 
-## Installation
+## Installation <a name="installation"></a>
 
 1. Downloading the project:
 	- Open a terminal window and navigate to the directory where you want to clone the repository.
@@ -62,7 +62,7 @@ This Android app allows users to chat in real-time using Google Firebase Authent
 	- The app will be installed on the device or emulator and launched.
 
 
-## Usage
+## Usage <a name="usage"></a>
 
 To use the Real-Time Chat App, follow these steps:
 
@@ -86,7 +86,7 @@ To use the Real-Time Chat App, follow these steps:
     - Tap a message to view the sender, timestamp, and content.
 
 
-## Project Structure
+## Project Structure <a name="project-structure"></a>
 
 The project is organized into the following folders:
 
@@ -96,7 +96,7 @@ The project is organized into the following folders:
 - `google-services.json`: File containing Firebase configuration information.  It is downloaded from the Firebase console during the project setup process.
 - `README.md`: This document.
 
-## Further Development
+## Further Development <a name="further-development"></a>
 
 As the project evolves, consider implementing the following features for enhanced functionality:
 
