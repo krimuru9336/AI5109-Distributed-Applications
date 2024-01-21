@@ -1,3 +1,24 @@
 <resources>
-    <string name="app_name">ChatApplication</string>
+    <string name="application_name">ChatApplication</string>
+    <string name="application_description">Distributed Application Project </string>
+    <string name="application_company">Soyam_dev</string>
+    <string name="signIn">SIGN IN</string>
+    <string name="signUp">SIGN UP</string>
+    <string name="register">REGISTER</string>
+    <string name="forgetPassword">Forget Password?</string>
+    <string name="newSignUp"><![CDATA[<font color=#9e9e9e>Don\'t have account?</font> <b><font color=#0671da>Sign up</font></b>]]></string>
+    <string name="cDescription" />
+    <string name="newSignUp"><![CDATA[<font color=#9e9e9e>Don\'t have account?</font> <b><font color=#0671da>Sign up</font></b>]]></string>
+    <string name="existUser"><![CDATA[<font color=#9e9e9e>Already have account?</font> <b><font color=#0671da>Sign In</font></b>]]></string>
+    <string name="invalidEmailPassword">Invalid email or password!</string>
+    <string name="email">EMAIL</string>
+    <string name="userName">USERNAME</string>
+    <string name="password">PASSWORD</string>
+    <string name="submit">Submit</string>
+    <string name="allFieldsRequired">All fields are required...</string>
+    <string name="please_wait_msg">Please wait…</string>
+    <string name="press_to_exit">Press again to exit app</string>
+    <string name="chats">Chats</string>
+
+
 </resources>
