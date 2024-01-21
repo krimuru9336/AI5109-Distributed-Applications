@@ -1,45 +1,53 @@
 # AI5109-Distributed-Applications
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+This repository contains source code for the "Distributed Applications" module in the Winter Semester 2023/2024 at Fulda University of Applied Sciences.
 
-## Basic Principles
+# MODULE 3 - Implementation of Real-Time Message Communication App - ChatApp
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+This Android application showcases a real-time message communication feature, allowing users to engage in text-based conversations with timestamps. The project focuses on simplicity and functionality, omitting complex media elements such as images or videos.
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+## Features
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+- **Real-Time Messaging:** Users can send and receive text messages seamlessly in real-time.
+- **Timestamps:** Each message is accompanied by a timestamp, providing contextual information about when the message was sent.
 
-## Working on Your Own Branch
+## Implementation Details
 
-Follow these steps to create and work on your own branch:
+The implementation of the real-time message communication logic has been meticulously carried out over a period of 10 hours. The development leverages Android Studio, serving as a robust platform for crafting Android mobile applications.
+
+## Getting Started
+
+To set up the project on your local machine, follow these steps:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
+   https://github.com/krimuru9336/AI5109-Distributed-Applications.git
    ```
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+2. **Open in Android Studio:**
+   - Launch Android Studio.
+   - Opt for "Open an existing Android Studio project."
+   - Select the cloned directory.
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+3. **Build and Run:**
+   - Build the project using the "Build" option in the top menu.
+   - Run the application on an Android emulator or a connected Android device.
+  
+4. **Firebase Setup:**
+  - Set up a Firebase project (if not already done) and configure your application by replacing the google-services.json file with your project-specific configuration.
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+5. **Run the Application:**
+    - Run the application on an emulator or physical Android device to test the registration, login, and messaging functionalities.
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+
+## Usage
+
+Once the application is operational, users can:
+
+- Input text messages in the provided field.
+- Utilize the send button to transmit messages.
+- Witness incoming messages in real-time, complete with timestamps.
+
+## Author
+Name: Ritty Tharakkal Raphel
+Matriculation Number: 1459915
