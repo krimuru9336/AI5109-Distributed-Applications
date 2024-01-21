@@ -1,59 +1,67 @@
 package com.example.chatapplication;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.BROADCAST_DOWNLOAD_EVENT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.DELAY_ONE_SEC;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.DOWNLOAD_DATA;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EMPTY;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_DATA;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_DURATION;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_FILE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_NAME;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_PATH;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_SIZE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_TYPE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_DATETIME;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ID;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_IMGPATH;
+// import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.BROADCAST_DOWNLOAD_EVENT;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.DELAY_ONE_SEC;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.DOWNLOAD_DATA;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EMPTY;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_DATA;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_DURATION;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_FILE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_NAME;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_PATH;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_SIZE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ATTACH_TYPE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_DATETIME;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ID;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_IMGPATH;
+
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_MESSAGE;
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_RECEIVER;
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_SEEN;
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_SENDER;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPING;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPINGWITH;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPING_DELAY;
+
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPING;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPINGWITH;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_TYPING_DELAY;
+
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_USER_ID;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXT_MP3;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXT_VCF;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.FALSE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.FCM_URL;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.ONE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_AUDIO;
+
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXT_MP3;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXT_VCF;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.FALSE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.FCM_URL;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.ONE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_AUDIO;
+
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_CONTACT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_DOCUMENT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_VIDEO;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_BLOCK_USERS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHATS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHAT_ATTACHMENT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHAT_PHOTO_UPLOAD;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_OTHERS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_TOKENS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_USERS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_VIDEO_THUMBS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_CODE_CONTACT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_CODE_PLAY_SERVICES;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_PERMISSION_RECORD;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.SLASH;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.STATUS_ONLINE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TRUE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TWO;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_CONTACT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_IMAGE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_RECORDING;
+
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_DOCUMENT;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.PERMISSION_VIDEO;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_BLOCK_USERS;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHATS;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHAT_ATTACHMENT;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHAT_PHOTO_UPLOAD;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_OTHERS;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_TOKENS;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_USERS;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_VIDEO_THUMBS;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_CODE_CONTACT;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_CODE_PLAY_SERVICES;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.REQUEST_PERMISSION_RECORD;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.SLASH;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.STATUS_ONLINE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.TRUE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.TWO;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_CONTACT;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_IMAGE;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_RECORDING;
+
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_TEXT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.VIBRATE_HUNDRED;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.ZERO;
+
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.VIBRATE_HUNDRED;
+// import static com.bytesbee.firebase.chat.activities.constants.IConstants.ZERO;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -417,6 +425,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         }
         newMessage.setText(EMPTY);
     }
+
 
     @Override
     public void onClick(View view) {
