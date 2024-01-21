@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "103382155119",
+    "project_id": "whatsdownapp-backend",
+    "storage_bucket": "whatsdownapp-backend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103382155119:android:953016fc8068c81330329a",
+        "android_client_info": {
+          "package_name": "com.example.whatsdownapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ3aT1b3nimyQNPKepuE9iJ47wQab7okY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
