@@ -1,4 +1,4 @@
-# Distributed Applications - Final Project: "CampusChat: Android Chat Application" \n By Mohammed Amine Malloul
+# Distributed Applications - Final Project: "CampusChat: Android Chat Application" By Mohammed Amine Malloul
 
 ## Overview 
 CampusChat is an Android-based chat application designed for easy and efficient communication within campus communities. Utilizing Firebase for database management and user authentication, the application supports text and multimedia messaging in a user-friendly environment.
