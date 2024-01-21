@@ -2,22 +2,22 @@
 
 ## Table of Content
 
-	- [Introduction](#introduction)
-	- [Requirements](#requirements)
-	- [Features](#features)
-	- [Technologies Used](#technologies-used)
-	- [Installation](#installation)
-	- [Usage](#usage)
-	- [Project Structure](#project-structure)
-	- [Further Development](#further-development)
+- [Introduction](#introduction)
+- [Requirements](#requirements)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Further Development](#further-development)
 
 
-## Introduction <a name="introduction"></a>
+## Introduction 
 
 This Android app allows users to chat in real-time using Google Firebase Authentication and Realtime Database. In this phase it supports only text messages and timestamps.
 
 
-## Requirements <a name="requirements"></a>
+## Requirements 
 
 - Android Studio
 - Android SDK 24 or higher
