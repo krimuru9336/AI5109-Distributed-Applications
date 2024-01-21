@@ -1,4 +1,4 @@
-package com.bytesbee.firebase.chat.activities;
+package com.bytesbee.firebase.ripplechat.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;

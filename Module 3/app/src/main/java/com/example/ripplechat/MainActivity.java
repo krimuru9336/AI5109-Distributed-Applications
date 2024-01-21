@@ -1,4 +1,4 @@
-package com.bytesbee.firebase.chat.activities;
+package com.bytesbee.firebase.ripplechat.activities;
 
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_USERS;
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.STATUS_ONLINE;

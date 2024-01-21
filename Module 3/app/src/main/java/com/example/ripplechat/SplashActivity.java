@@ -1,4 +1,4 @@
-package com.bytesbee.firebase.chat.activities;
+package com.bytesbee.firebase.ripplechat.activities;
 
 import android.graphics.PixelFormat;
 import android.os.Bundle;

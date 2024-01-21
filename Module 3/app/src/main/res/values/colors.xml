@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#009688</color>
-    <color name="colorPrimaryDark">#00796B</color>
-    <color name="colorAccent">#000000</color>
-    <color name="colorBlue">#F65929</color>
-    <color name="colorGray">#B0C4DE</color>
-    <color name="white">#FFFFFF</color>
-    <color name="colorBlack">#B2DFDB</color>  <color name="gray">#808080</color>
-    <color name="online">#00FF00</color>
-    <color name="offline">#FF6347</color>
-    <color name="greyText">#696969</color>
-    <color name="timingBGColorBlue">#000000</color>
-    <color name="timingBGColorWhite">#F0F8FF</color>
-    <color name="black_50">#4B3D3</color>
-    <color name="splashStart">#658B5A</color>
-    <color name="splashEnd">#8B6A5A</color>
-</resources>
+    <color name="colorPrimary">#3498db</color>
+    <color name="colorPrimaryDark">#2980b9</color>
+    <color name="colorAccent">#3498db</color>
 
+    <color name="colorBlue">#3498db</color>
+    <color name="colorGray">#2c3e50</color>
+    <color name="white">#ecf0f1</color>
+    <color name="colorBlack">#34495e</color>
+    <color name="gray">#95a5a6</color>
+
+    <color name="online">#27ae60</color>
+    <color name="offline">#3498db</color>
+    <color name="greyText">#7f8c8d</color>
+
+    <color name="timingBGColorBlue">#3498db</color>
+    <color name="timingBGColorWhite">#ecf0f1</color>
+    <color name="black_50">#80000000</color>
+    <color name="splashStart">#f39c12</color>
+    <color name="splashEnd">#2c3e50</color>
+</resources>
