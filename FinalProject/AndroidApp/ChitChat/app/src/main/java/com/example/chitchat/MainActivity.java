@@ -17,14 +17,54 @@ public class MainActivity extends AppCompatActivity {
 
     TextInputEditText inputMsgDB;
     MessageRepository messageRepository;
-    ConstraintLayout layout;
+
+    private WebSocketHandler webSocketHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        layout = findViewById(R.id.layout_act1);
-        inputMsgDB = findViewById(R.id.input_msg_db);
         messageRepository = new MessageRepository(this);
+
+        webSocketHandler = WebSocketHandler.getInstance(getApplicationContext());
+        webSocketHandler.connect();
+
+        Button connectBtn = findViewById(R.id.connectButton);
+        NameListener nl = new NameListener();
+        webSocketHandler.setNameListener(nl,this);
+
+        connectBtn.setOnClickListener(view -> {
+            if (!webSocketHandler.isConnected()) {
+                Toast.makeText(view.getContext(), "No server connection...!", Toast.LENGTH_LONG).show();
+                return;
+            }
+            webSocketHandler.getUsername();
+        });
+    }
+
+    public void nextActivity(String username) {
+        Intent intent = new Intent(MainActivity.this, ChatUsersActivity.class);
+        intent.putExtra("USERNAME", username);
+        startActivity(intent);
+        webSocketHandler.preventDC();
+        finish();
+    }
+
+    public void showUsernameToast(String username, MainActivity mainActivity) {
+        if (mainActivity != null) {
+            mainActivity.runOnUiThread(() ->
+                    Toast.makeText(mainActivity, "Your username is "+username+"!",
+                            Toast.LENGTH_LONG).show());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Disconnect from the WebSocketManager when the activity is destroyed
+        if (webSocketHandler != null) {
+            webSocketHandler.disconnect();
+        }
     }
     public void saveMsg(View view){
         String msg = inputMsgDB.getText().toString();

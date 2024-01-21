@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ChitChat</string>
+    <string name="type">Type …</string>
+    <string name="header">Module 3 - Simon Keller (fdai5676) 1165562</string>
+    <string name="enter_username">Enter your username</string>
+    <string name="connect">Connect</string>
+    <string name="users_online">Users online</string>
+    <string name="send_msg">➤</string>
+    <string name="my_name_placeholder">Username</string>
+    <string name="ip">http://192.168.178.30</string>
+    <string name="port">8081</string>
+    <string name="return_to_user_overview">Return to the user overview</string>
 </resources>
