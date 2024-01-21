@@ -10,8 +10,17 @@
     "test": "jest"
   },
   "dependencies": {
+    "@gluestack-style/react": "^1.0.41",
+    "@gluestack-ui/config": "^1.0.13",
+    "@gluestack-ui/themed": "^1.0.37",
+    "@react-native-async-storage/async-storage": "^1.21.0",
+    "axios": "^1.6.5",
     "react": "18.2.0",
-    "react-native": "0.73.1"
+    "react-native": "0.73.1",
+    "react-native-dotenv": "^3.4.9",
+    "react-native-gifted-chat": "^2.4.0",
+    "react-native-svg": "^13.4.0",
+    "socket.io-client": "^4.7.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

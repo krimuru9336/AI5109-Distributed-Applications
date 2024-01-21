@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from flask import Flask, request,jsonify
 from flask_socketio import SocketIO,emit,send, join_room
 from flask_cors import CORS
@@ -74,16 +74,18 @@ def handle_message(data):
     recipientUid = data.get('recipientUid')
     msg = data.get("message")
     print(recipientUid)
+    timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
     if recipientUid:
         recipientSid = userIdToSid[recipientUid]
-        roomName = f"user_room_{recipientSid}"
+        print(":::: ", recipientUid)
+        roomName = recipientSid
         join_room(roomName)
         print(f"Sending message: '{msg}' to room: '{roomName}'")
-        emit("data", {'message': msg, 'id': userSid}, room=recipientSid)
+        emit("data", {'message': msg, 'sender': userSid, 'timestamp': timestamp}, room=recipientSid)
     else:
         print(f"Broadcasting message: {msg}")
         # If recipientSid is not provided, broadcast the message to all connected clients
-        emit("data", {'message': msg, 'id': userSid}, broadcast=True)
+        emit("data", {'message': msg, 'sender': userSid,  'id': userSid, 'timestamp': timestamp}, broadcast=True)
 
 
 @socketio.on("disconnect")
@@ -94,7 +96,7 @@ def disconnected():
 
 @app.route("/", methods=["GET"])
 def getServerStatus():
-    return "Server is up!"      
+    return jsonify(userIdToSid), 201
 
 @app.route("/login", methods=['POST'])
 def login():
