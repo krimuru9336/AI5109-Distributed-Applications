@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#6879D8</color>
+    <color name="secondary">#A1A6C1</color>
+    <color name="off_white">#FAFAFA</color>
+    <color name="chat_receiver_clr">#6A7FF5</color>
+    <color name="chat_sender_clr">#898EA9</color>
+</resources>

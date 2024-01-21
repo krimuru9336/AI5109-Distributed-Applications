@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/left_chat_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input"
+        android:backgroundTint="@color/chat_sender_clr"
+        android:padding="8dp"
+        android:layout_marginEnd="80dp">
+        <TextView
+            android:id="@+id/left_chat_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/off_white"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/left_chat_timestamp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/off_white"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/right_chat_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input"
+        android:backgroundTint="@color/chat_receiver_clr"
+        android:layout_alignParentEnd="true"
+        android:padding="8dp"
+        android:layout_marginStart="80dp">
+        <TextView
+            android:id="@+id/right_chat_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/off_white"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/right_chat_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/off_white"
+            android:layout_marginTop="5dp"
+            android:textSize="11sp"/>
+    </LinearLayout>
+
+</RelativeLayout>
