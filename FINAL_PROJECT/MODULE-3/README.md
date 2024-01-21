@@ -32,6 +32,13 @@ To set up the project on your local machine, follow these steps:
 3. **Build and Run:**
    - Build the project using the "Build" option in the top menu.
    - Run the application on an Android emulator or a connected Android device.
+  
+4. **Firebase Setup:**
+  - Set up a Firebase project (if not already done) and configure your application by replacing the google-services.json file with your project-specific configuration.
+
+5. **Run the Application:**
+    - Run the application on an emulator or physical Android device to test the registration, login, and messaging functionalities.
+
 
 ## Usage
 
