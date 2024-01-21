@@ -5,4 +5,19 @@
     <string name="insert">Insert</string>
     <string name="retrieve">Retrieve</string>
     <string name="name">Name:</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="chat">Chats</string>
+    <string name="add_chat">New Chat</string>
+    <string name="about">About</string>
+    <string name="about_description">CampusChat is a versatile chat application for Android, designed to make communication within the campus community easy, secure, and engaging. It features text and multimedia messaging, powered by Firebase for robust and real-time interactions. Ideal for both one-on-one and group conversations, CampusChat offers a platform that caters to both individual and collaborative communication needs.</string>
+    <string name="about_number">Number: fdai7691</string>
+    <string name="about_name">NAME: Mohammed Amine Malloul</string>
+    <string name="about_title2">This application was developed by:</string>
+    <string name="about_title1">About</string>
+    <string name="this_application_is_still_under_development">This Application is still under Development..</string>
+    <string name="logout_button">Logout button</string>
+    <string name="users">Users</string>
+    <string name="send_message_button">Send message button</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="back_button">back Button</string>>
 </resources>

@@ -1,0 +1,69 @@
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:padding="16dp">-->
+
+    <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_title1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:textSize="35sp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_title2"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView
+            android:id="@+id/tvDeveloperName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_name"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvDeveloperNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_number"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvAppInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_description"
+            android:layout_marginTop="20dp"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/this_application_is_still_under_development"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center_horizontal"/>
+
+
+
+
+        <!-- You can add more TextViews or other views as needed -->
+
+    </LinearLayout>
+<!--</ScrollView>-->

@@ -1,4 +1,4 @@
-package demo.campuschat;
+package demo.Module1;
 
 import android.provider.BaseColumns;
 

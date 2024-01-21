@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- bottom_navigation_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/baseline_info_outline_24"
+        android:title="@string/about" />
+    <item
+        android:id="@+id/nav_chat"
+        android:icon="@drawable/baseline_chat_bubble_outline_24"
+        android:title="@string/chat" />
+    <item
+        android:id="@+id/nav_add_conversation"
+        android:icon="@drawable/baseline_add_24"
+        android:title="@string/add_chat" />
+
+</menu>

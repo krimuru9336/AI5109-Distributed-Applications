@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:id="@+id/user_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/back_button"
+            android:src="@drawable/baseline_arrow_back_ios_24" />
+
+        <TextView
+            android:id="@+id/user_info_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/back_button"
+            android:text="User Name"
+            android:textColor="@color/black"
+            android:textSize="23sp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/user_info_name"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="?android:attr/listDivider" />
+
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layout_message_input"
+        android:layout_below="@id/user_info"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="15dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_messages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </ScrollView>
+
+
+
+    <LinearLayout
+        android:id="@+id/layout_message_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <EditText
+            android:id="@+id/edittext_chatbox"
+            android:layout_width="331dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/border_background"
+            android:hint="@string/type_a_message"
+            android:inputType="text"
+            android:paddingStart="10dp"
+            android:layout_marginEnd="10dp"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageButton
+            android:id="@+id/button_chatbox_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/send_message_button"
+            android:src="@drawable/baseline_arrow_upward_24" />
+
+    </LinearLayout>
+
+</RelativeLayout>

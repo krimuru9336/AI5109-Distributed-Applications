@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- You can add an ImageView for a profile picture here if needed -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Chat partner name -->
+            <TextView
+                android:id="@+id/chat_partner_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="Chat Partner Name" />
+
+            <!-- Timestamp aligned to the right -->
+            <TextView
+                android:id="@+id/timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="Timestamp"
+                android:layout_gravity="end" />
+        </LinearLayout>
+            <!-- Last message preview below the name and timestamp -->
+        <TextView
+            android:id="@+id/last_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="Last message preview" />
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginStart="10dp"
+        android:background="?android:attr/listDivider" />
+
+
+    <!-- You can add additional icons or indicators here -->
+
+</LinearLayout>
