@@ -1,4 +1,4 @@
-Module 3:
+Module 3: Intermediate DOcumentation
 
 Realtime chat application
 
