@@ -5,7 +5,6 @@ import static com.bytesbee.firebase.chat.activities.constants.IConstants.ONE;
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_USERS;
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.STATUS_ONLINE;
 import static com.bytesbee.firebase.chat.activities.constants.IConstants.ZERO;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -49,7 +48,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
