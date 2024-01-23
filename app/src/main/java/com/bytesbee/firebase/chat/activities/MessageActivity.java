@@ -545,7 +545,7 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
                 sendNotification(receiver, strUsername, msg, type);
             }
             notify = false;
-        } catch (Exception ignored) {
+        } catch (Exception ignored) {ßßß
         }
     }
 
@@ -692,110 +692,9 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         return true;
     }
 
-    private boolean isBlocked = false, isOppBlocked = false;
 
-    private void checkUserIsBlock() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REF_USERS);
-        ref.child(currentId).child(REF_BLOCK_USERS).orderByChild(EXTRA_ID).equalTo(userId)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            if (ds.exists()) {
-                                itemBlockUnblock.setTitle(R.string.strUnblock);
-                                isBlocked = true;
-                            } else {
-                                isBlocked = false;
-                                itemBlockUnblock.setTitle(R.string.strBlock);
-                            }
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void blockedByOpponent() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REF_USERS);
-        ref.child(userId).child(REF_BLOCK_USERS).orderByChild(EXTRA_ID).equalTo(currentId)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            isOppBlocked = ds.exists();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-    private void blockUser() {
-        try {
-            showProgress();
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put(EXTRA_ID, userId);
-
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REF_USERS);
-            ref.child(currentId).child(REF_BLOCK_USERS).child(userId).setValue(hashMap)
-                    .addOnSuccessListener(aVoid -> {
-                        hideProgress();
-                        isBlocked = true;
-                        screens.showToast(R.string.msgBlockSuccessfully);
-                        itemBlockUnblock.setTitle(R.string.strUnblock);
-                    }).addOnFailureListener(e -> {
-                        hideProgress();
-                        screens.showToast(e.getMessage());
-                    });
-        } catch (Exception e) {
-            hideProgress();
-            Utils.getErrors(e);
-        }
-    }
-
-    private void unblockUser() {
-        try {
-            showProgress();
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference(REF_USERS);
-            ref.child(currentId).child(REF_BLOCK_USERS).orderByChild(EXTRA_ID).equalTo(userId)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                if (dataSnapshot.exists()) {
-                                    hideProgress();
-                                    dataSnapshot.getRef().removeValue()
-                                            .addOnSuccessListener(aVoid -> {
-                                                isBlocked = false;
-                                                screens.showToast(R.string.msgUnblockSuccessfully);
-                                                itemBlockUnblock.setTitle(R.string.strBlock);
-                                            })
-                                            .addOnFailureListener(e -> screens.showToast(e.getMessage()));
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            hideProgress();
-                        }
-                    });
-        } catch (Exception e) {
-            hideProgress();
-            Utils.getErrors(e);
-        }
-    }
-
- 
-    
-
-        final Query chatsReceiver = FirebaseDatabase.getInstance().getReference(REF_CHATS).child(strReceiver).orderByChild(EXTRA_SENDER).equalTo(currentId);
+    final Query chatsReceiver = FirebaseDatabase.getInstance().getReference(REF_CHATS).child(strReceiver).orderByChild(EXTRA_SENDER).equalTo(currentId);
         chatsReceiver.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -847,60 +746,5 @@ public class MessageActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-   
-    private boolean recordPermissionsAvailable() {
-        boolean available = true;
-        for (String permission : permissionsRecord) {
-            if (ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED) {
-                available = false;
-                break;
-            }
-        }
-        return available;
-    }
-
-    private final ArrayList<Integer> positionList = new ArrayList<>();
-
-
-    private final BroadcastReceiver downloadCompleteReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null && intent.getAction() != null)
-                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent.getAction())) {
-                    if (positionList.size() > ZERO && messageAdapters != null) {
-                        for (int pos : positionList) {
-                            if (pos != -1) {
-
-                                messageAdapters.notifyItemChanged(pos);
-                            }
-                        }
-                    }
-                    positionList.clear();
-                }
-        }
-    };
-
-    public void downloadFile(DownloadFileEvent downloadFileEvent) {
-        if (permissionsAvailable(permissionsStorage)) {
-            new DownloadUtil().loading(this, downloadFileEvent);
-            positionList.add(downloadFileEvent.getPosition());
-        } else {
-            ActivityCompat.requestPermissions(this, permissionsStorage, 47);
-        }
-    }
-
-    private final BroadcastReceiver downloadEventReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            DownloadFileEvent downloadFileEvent = (DownloadFileEvent) intent.getSerializableExtra(DOWNLOAD_DATA);
-            try {
-                if (downloadFileEvent != null) {
-                    downloadFile(downloadFileEvent);
-                }
-            } catch (Exception ignored) {
-            }
-        }
-    };
-
-  
-   
+ 
 }
