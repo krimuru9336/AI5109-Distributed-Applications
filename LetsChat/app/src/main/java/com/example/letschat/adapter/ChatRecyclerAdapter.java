@@ -84,8 +84,8 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
             rightChatTimestamp = itemView.findViewById(R.id.right_chat_timestamp);
             leftChatTimestamp = itemView.findViewById(R.id.left_chat_timestamp);
 
-            rightChatTextView.setOnLongClickListener(v->{
-                Log.d("Click", "Long Clicked Message");
+            rightChatLayout.setOnLongClickListener(v->{
+                Log.d("Click", "Long Clicked message");
                 if (listener != null) {
                     listener.onLongPress(getAdapterPosition(), getItem(getAbsoluteAdapterPosition()));
                     return true;

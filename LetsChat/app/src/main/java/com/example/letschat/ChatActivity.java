@@ -1,16 +1,16 @@
 package com.example.letschat;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.letschat.adapter.ChatRecyclerAdapter;
 import com.example.letschat.model.ChatMessage;
@@ -102,26 +102,25 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     void sendMessageToUser(String message) {
 
         ChatMessage chatMessage = new ChatMessage(message, FirebaseUtil.currentUserId(), Timestamp.now(), FirebaseUtil.createMessageId(), false);
-        chatRoom.setLastMsgTimestamp(Timestamp.now());
         chatRoom.setLastMsgSenderId(FirebaseUtil.currentUserId());
-        chatRoom.setLastMsgText(message);
         chatRoom.setLastMsg(chatMessage);
 
         FirebaseUtil.getChatRoomReference(chatRoomId).set(chatRoom);
 
         FirebaseUtil.getChatMessageReference(chatRoomId).add(chatMessage)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
-                if (task.isSuccessful()) {
-                    messageInput.setText("");
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            messageInput.setText("");
 
-                }
-            }
-        });
+                        }
+                    }
+                });
 
     }
-    void setUpChatRecyclerView(){
+
+    void setUpChatRecyclerView() {
         Query query = FirebaseUtil.getChatMessageReference(chatRoomId)
                 .orderBy("timestamp", Query.Direction.DESCENDING);
 
@@ -129,7 +128,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                 .setQuery(query, ChatMessage.class).build();
 
 
-        chatRecyclerAdapter = new ChatRecyclerAdapter(options,getApplicationContext());
+        chatRecyclerAdapter = new ChatRecyclerAdapter(options, getApplicationContext());
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);
@@ -143,8 +142,14 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     public void onLongPress(int position, ChatMessage chatMessage) {
         showBottomSheet(chatMessage);
     }
+
     private void showBottomSheet(ChatMessage chatMessage) {
-        MessageOptionsBottomSheet bottomSheet = MessageOptionsBottomSheet.newInstance(chatMessage, chatRoom);
-        bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+        // no need to show edit or delete menu options . i.e : not allowed for already deleted message
+        if (!chatMessage.isDeleted()) {
+            MessageOptionsBottomSheet bottomSheet = MessageOptionsBottomSheet.newInstance(chatMessage, chatRoom);
+            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+        }
+
     }
+
 }

@@ -7,4 +7,6 @@
     <color name="off_white">#FAFAFA</color>
     <color name="chat_receiver_clr">#6A7FF5</color>
     <color name="chat_sender_clr">#898EA9</color>
+    <color name="red">#DF5978</color>
+    <color name="blue">#4268AC</color>
 </resources>

@@ -37,7 +37,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
 
                         boolean lastMessageSentByMe = model.getLastMsgSenderId().equals(FirebaseUtil.currentUserId());
                         boolean isDeletedLastMsg = model.getLastMsg().isDeleted();
-                        String lastMessageText = "";
+                        String lastMessageText = model.getLastMsg().getMessage();
 
                         User otherUser = task.getResult().toObject(User.class);
 
@@ -51,8 +51,6 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
                         }
                         if (isDeletedLastMsg) {
                             lastMessageText = "This message was deleted.";
-                        } else {
-                            lastMessageText = model.getLastMsgText();
                         }
 
                         if (lastMessageSentByMe) {
@@ -61,7 +59,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
 
                         holder.lastMsgText.setText(lastMessageText);
 
-                        holder.lastMsgTime.setText(FirebaseUtil.timestampToString(model.getLastMsgTimestamp()));
+                        holder.lastMsgTime.setText(FirebaseUtil.timestampToString(model.getLastMsg().getTimestamp()));
 
                         holder.itemView.setOnClickListener(v -> {
                             //navigate to chat activity

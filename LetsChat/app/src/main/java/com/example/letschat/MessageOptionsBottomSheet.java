@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +27,9 @@ public class MessageOptionsBottomSheet extends BottomSheetDialogFragment {
     ChatMessage selectedMessage;
     ChatRoom chatRoom;
     TextView editBtn, deleteBtn;
+    LinearLayout mainOptionsLayout;
+
+    View view;
 
     public MessageOptionsBottomSheet() {
         // Required empty public constructor
@@ -41,50 +46,37 @@ public class MessageOptionsBottomSheet extends BottomSheetDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.bottom_sheet_message_options, container, false);
+        view = inflater.inflate(R.layout.bottom_sheet_message_options, container, false);
 
         deleteBtn = view.findViewById(R.id.deleteMessage);
         deleteBtn.setOnClickListener(v -> onDeleteClicked());
+        editBtn = view.findViewById(R.id.editMessage);
+        editBtn.setOnClickListener(v -> onEditClicked());
 
         return view;
     }
 
+    private void onEditClicked() {
+        if (selectedMessage != null && chatRoom != null) {
+            Log.d("Click Edit", selectedMessage.getMessage());
+            view.setVisibility(View.GONE);
+            // Show the edit dialog, passing the original message
+            EditMessageDialog editMessageDialog = new EditMessageDialog(selectedMessage, chatRoom);
+            editMessageDialog.show(getChildFragmentManager(), "EditMessageDialog");
+        }
+
+    }
+
     private void onDeleteClicked() {
         if (selectedMessage != null && chatRoom != null) {
-            Log.d("Click", selectedMessage.getMessage());
-            boolean isLastMessage = chatRoom.getLastMsg().getId().equals( selectedMessage.getId());
+            Log.d("Click Deletion", selectedMessage.getMessage());
+            view.setVisibility(View.GONE);
+            DeleteMessageDialog deleteMessageDialog = new DeleteMessageDialog(selectedMessage, chatRoom);
+            deleteMessageDialog.show(getChildFragmentManager(), "DeleteMessageDialog");
 
-            // Implement the logic to delete the selected message
-            FirebaseUtil.getChatMessageReference(chatRoom.getChatRoomId())
-                    .whereEqualTo("id", selectedMessage.getId())
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            document.getReference().update("deleted", true)
-                                    .addOnSuccessListener(aVoid -> {
-                                        if(isLastMessage){
-                                           updateChatRoomLastMessage(chatRoom);
-                                        }
-                                        Log.d("Delete", "Message deleted successfully");
-                                        dismiss(); // Close the bottom sheet after performing the action
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e("Delete", "Error deleting message", e);
-                                    });
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Delete", "Error querying for message", e);
-                    });
         }
     }
 
-    private void updateChatRoomLastMessage(ChatRoom chatRoom) {
-
-        chatRoom.getLastMsg().setDeleted(true);
-
-        FirebaseUtil.getChatRoomReference(chatRoom.getChatRoomId()).set(chatRoom);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

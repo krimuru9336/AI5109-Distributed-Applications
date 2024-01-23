@@ -1,21 +1,16 @@
 package com.example.letschat;
 
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.letschat.adapter.RecentChatRecyclerAdapter;
-import com.example.letschat.adapter.SearchUserRecyclerAdapter;
 import com.example.letschat.model.ChatRoom;
-import com.example.letschat.model.User;
 import com.example.letschat.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
