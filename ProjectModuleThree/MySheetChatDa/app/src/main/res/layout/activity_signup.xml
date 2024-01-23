@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Signup"
+    android:orientation="vertical"
+    android:background="@drawable/light_blue_background"
+    android:gravity="center"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/old_phone_logo"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtUsername"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:hint="Username"
+            android:inputType="textPersonName"
+            android:padding="5dp"
+            android:textColor="@color/colorChatTeal1"
+            android:textColorHint="@color/colorChatTeal2"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtEmail"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="5dp"
+            android:textColor="@color/colorChatTeal1"
+            android:textColorHint="@color/colorChatTeal2"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtPassword"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="5dp"
+            android:textColor="@color/colorChatTeal1"
+            android:textColorHint="@color/colorChatTeal2"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtAlreadyAccount"
+            android:layout_gravity="right"
+            android:text="Already have an Account"
+            android:textColor="@color/colorChatTeal4"
+            android:padding="10dp"
+            android:textStyle="italic"
+            android:gravity="right"/>
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSignUp"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:text="Sign Up"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/colorPrimary"
+            app:cornerRadius = "8dp" />
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

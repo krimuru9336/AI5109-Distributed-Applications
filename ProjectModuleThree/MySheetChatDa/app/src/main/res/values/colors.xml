@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Primary Colors -->
+    <color name="colorPrimary">#2196F3</color> <!-- Blue primary color -->
+    <color name="colorPrimaryDark">#1976D2</color> <!-- Darker variant of the primary color -->
+
+    <!-- Background Colors -->
+    <color name="backgroundPrimary">#F5F5F5</color> <!-- Light gray background -->
+    <color name="backgroundSecondary">#FFFFFF</color> <!-- White background for messages -->
+
+    <!-- Blue Colors -->
+    <color name="colorChatBlue1">#2196F3</color> <!-- Primary blue -->
+    <color name="colorChatBlue2">#1976D2</color> <!-- Darker blue -->
+    <color name="colorChatBlue3">#64B5F6</color> <!-- Light blue -->
+    <color name="colorChatBlue4">#0D47A1</color> <!-- Deep blue -->
+
+    <!-- Teal Colors -->
+    <color name="colorChatTeal1">#009688</color> <!-- Primary teal -->
+    <color name="colorChatTeal2">#00796B</color> <!-- Darker teal -->
+    <color name="colorChatTeal3">#26A69A</color> <!-- Light teal -->
+    <color name="colorChatTeal4">#004D40</color> <!-- Deep teal -->
+
+    <!-- Text Colors -->
+    <color name="textPrimary">#212121</color> <!-- Dark primary text color -->
+    <color name="textSecondary">#757575</color> <!-- Secondary text color, lighter than primary -->
+
+    <!-- Accent Colors -->
+    <color name="accentColor">#FF4081</color> <!-- Pink accent color for important elements -->
+
+    <!-- Divider Color -->
+    <color name="dividerColor">#BDBDBD</color> <!-- Light gray divider color -->
+
+    <!-- Chat Bubble Colors -->
+    <color name="incomingBubble">#E1F5FE</color> <!-- Light blue for incoming messages -->
+    <color name="outgoingBubble">#FFC107</color> <!-- Amber for outgoing messages -->
+
+
+
+</resources>
