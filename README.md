@@ -1,45 +1,63 @@
-# AI5109-Distributed-Applications
+# Kotlin Jetpack Compose App
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+## Introduction
 
-## Basic Principles
+This is a modern Android application built using Kotlin and Jetpack Compose, Google's modern toolkit for building native Android UI.
+Project is created for Disptributed Applications class in Fulda University of Applied Sciences
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+## Getting Started
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+### Prerequisites
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+- Android Studio Arctic Fox 2020.3.1 or later
+- JDK 11
+- An Android device or emulator
 
-## Working on Your Own Branch
+### Installation
 
-Follow these steps to create and work on your own branch:
+1. Clone the repository: `git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git`
+2. Open the project in Android Studio
+3. Run the app on your device or emulator
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/Stinktopf/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+## Usage
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+This app is a demonstration of Jetpack Compose. It includes examples of various components and layouts.
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+## Development
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+### Running the tests
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+To run the tests, right-click on the `test` or `androidTest` directories and select `Run 'Tests in ...'`.
+
+### Break down into end to end tests
+
+The `androidTest` directory contains instrumented tests that run on an Android device. These tests simulate user interactions and check that the app behaves as expected.
+
+### Coding style tests
+
+The `test` directory contains local unit tests that run on your development machine. These tests check that the app's logic functions correctly.
+
+## Deployment
+
+To deploy the app to a device, select `Run 'app'` from the Run menu in Android Studio.
+
+## Built With
+
+- [Kotlin](https://kotlinlang.org/) - The main programming language
+- [Jetpack Compose](https://developer.android.com/jetpack/compose) - The UI toolkit
+
+## Contributing
+
+Please read `CONTRIBUTING.md` for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning.
+
+## Authors
+
+- Azamat Afzalov - Initial work - [Azamat-afzalov](https://github.com/Azamat-afzalov)
+
+## License
+
+This project is licensed under the MIT License - see the `LICENSE.md` file for details
