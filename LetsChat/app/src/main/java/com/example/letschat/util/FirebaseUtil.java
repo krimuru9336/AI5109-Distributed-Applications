@@ -9,7 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
+import java.util.UUID;
 
 public class FirebaseUtil {
     public static String currentUserId() {
@@ -50,6 +50,10 @@ public class FirebaseUtil {
             return userId2 + "_" + userId1;
         }
 
+    }
+
+    public static String createMessageId() {
+        return UUID.randomUUID().toString();
     }
 
     public static DocumentReference getOtherUserFromChatRoom(List<String> userIds) {

@@ -19,9 +19,6 @@ import com.example.letschat.util.AndroidUtil;
 import com.example.letschat.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom, RecentChatRecyclerAdapter.ChatRoomModelViewHolder> {
 
@@ -39,29 +36,37 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
                     if (task.isSuccessful()) {
 
                         boolean lastMessageSentByMe = model.getLastMsgSenderId().equals(FirebaseUtil.currentUserId());
+                        boolean isDeletedLastMsg = model.getLastMsg().isDeleted();
+                        String lastMessageText = "";
+
                         User otherUser = task.getResult().toObject(User.class);
 
                         if (otherUser != null) {
-                            if(otherUser.getUserId().equals(FirebaseUtil.currentUserId())){
+                            if (otherUser.getUserId().equals(FirebaseUtil.currentUserId())) {
                                 holder.usernameText.setText(String.format("%s (Me)", otherUser.getUsername()));
-                            }else{
+                            } else {
                                 holder.usernameText.setText(otherUser.getUsername());
                             }
 
                         }
-                        if (lastMessageSentByMe) {
-                            holder.lastMsgText.setText(String.format("You: %s", model.getLastMsg()));
-
+                        if (isDeletedLastMsg) {
+                            lastMessageText = "This message was deleted.";
                         } else {
-                            holder.lastMsgText.setText(model.getLastMsg());
+                            lastMessageText = model.getLastMsgText();
                         }
+
+                        if (lastMessageSentByMe) {
+                            lastMessageText = isDeletedLastMsg ? "You deleted this message." : String.format("You: %s", lastMessageText);
+                        }
+
+                        holder.lastMsgText.setText(lastMessageText);
 
                         holder.lastMsgTime.setText(FirebaseUtil.timestampToString(model.getLastMsgTimestamp()));
 
-                        holder.itemView.setOnClickListener(v->{
+                        holder.itemView.setOnClickListener(v -> {
                             //navigate to chat activity
                             Intent intent = new Intent(context, ChatActivity.class);
-                            AndroidUtil.passUserDataAsIntent(intent,otherUser);
+                            AndroidUtil.passUserDataAsIntent(intent, otherUser);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         });

@@ -2,6 +2,7 @@ package com.example.letschat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,11 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.letschat.adapter.ChatRecyclerAdapter;
-import com.example.letschat.adapter.SearchUserRecyclerAdapter;
 import com.example.letschat.model.ChatMessage;
 import com.example.letschat.model.ChatRoom;
 import com.example.letschat.model.User;
@@ -26,10 +25,9 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapter.OnChatItemClickListener {
 
     User otherUser;
     EditText messageInput;
@@ -41,6 +39,8 @@ public class ChatActivity extends AppCompatActivity {
     ChatRoom chatRoom;
 
     ChatRecyclerAdapter chatRecyclerAdapter;
+
+    FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,13 +100,17 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     void sendMessageToUser(String message) {
+
+        ChatMessage chatMessage = new ChatMessage(message, FirebaseUtil.currentUserId(), Timestamp.now(), FirebaseUtil.createMessageId(), false);
         chatRoom.setLastMsgTimestamp(Timestamp.now());
         chatRoom.setLastMsgSenderId(FirebaseUtil.currentUserId());
-        chatRoom.setLastMsg(message);
+        chatRoom.setLastMsgText(message);
+        chatRoom.setLastMsg(chatMessage);
+
         FirebaseUtil.getChatRoomReference(chatRoomId).set(chatRoom);
 
-        ChatMessage chatMessage = new ChatMessage(message, FirebaseUtil.currentUserId(), Timestamp.now());
-        FirebaseUtil.getChatMessageReference(chatRoomId).add(chatMessage).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        FirebaseUtil.getChatMessageReference(chatRoomId).add(chatMessage)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
             public void onComplete(@NonNull Task<DocumentReference> task) {
                 if (task.isSuccessful()) {
@@ -124,11 +128,23 @@ public class ChatActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<ChatMessage> options = new FirestoreRecyclerOptions.Builder<ChatMessage>()
                 .setQuery(query, ChatMessage.class).build();
 
+
         chatRecyclerAdapter = new ChatRecyclerAdapter(options,getApplicationContext());
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);
+        chatRecyclerAdapter.setOnChatItemClickListener(this);
         recyclerView.setAdapter(chatRecyclerAdapter);
         chatRecyclerAdapter.startListening();
+
+    }
+
+    @Override
+    public void onLongPress(int position, ChatMessage chatMessage) {
+        showBottomSheet(chatMessage);
+    }
+    private void showBottomSheet(ChatMessage chatMessage) {
+        MessageOptionsBottomSheet bottomSheet = MessageOptionsBottomSheet.newInstance(chatMessage, chatRoom);
+        bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
     }
 }

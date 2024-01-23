@@ -1,17 +1,24 @@
 package com.example.letschat.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.firebase.Timestamp;
 
 import java.util.List;
 
-public class ChatRoom {
+public class ChatRoom implements Parcelable {
 
     String chatRoomId;
     List<String> userIds;
     Timestamp lastMsgTimestamp;
     String lastMsgSenderId;
-    String lastMsg;
+    String lastMsgText;
+
+    ChatMessage lastMsg;
 
     public ChatRoom() {
     }
@@ -55,11 +62,57 @@ public class ChatRoom {
         this.lastMsgSenderId = lastMsgSenderId;
     }
 
-    public String getLastMsg() {
+    public String getLastMsgText() {
+        return lastMsgText;
+    }
+
+    public void setLastMsgText(String lastMsgText) {
+        this.lastMsgText = lastMsgText;
+    }
+
+    public ChatMessage getLastMsg() {
         return lastMsg;
     }
 
-    public void setLastMsg(String lastMsg) {
+    public void setLastMsg(ChatMessage lastMsg) {
         this.lastMsg = lastMsg;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(chatRoomId);
+        dest.writeStringList(userIds);
+        dest.writeParcelable(lastMsgTimestamp, flags);
+        dest.writeString(lastMsgSenderId);
+        dest.writeString(lastMsgText);
+        dest.writeParcelable(lastMsg, flags);
+    }
+
+    // Parcelable creator
+    public static final Creator<ChatRoom> CREATOR = new Creator<ChatRoom>() {
+        @Override
+        public ChatRoom createFromParcel(Parcel in) {
+            return new ChatRoom(in);
+        }
+
+        @Override
+        public ChatRoom[] newArray(int size) {
+            return new ChatRoom[size];
+        }
+    };
+
+    // Parcelable constructor
+    protected ChatRoom(Parcel in) {
+        chatRoomId = in.readString();
+        userIds = in.createStringArrayList();
+        lastMsgTimestamp = in.readParcelable(Timestamp.class.getClassLoader());
+        lastMsgSenderId = in.readString();
+        lastMsgText = in.readString();
+        lastMsg = in.readParcelable(ChatMessage.class.getClassLoader() );
     }
 }
