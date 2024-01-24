@@ -1,0 +1,5 @@
+org\example\UserService.class
+org\example\UserRepository.class
+org\example\App.class
+org\example\UserController.class
+org\example\User.class

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1085588214595",
+    "project_id": "zaptalk-306a3",
+    "storage_bucket": "zaptalk-306a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085588214595:android:3c134bb916629da97a95f6",
+        "android_client_info": {
+          "package_name": "com.shafi.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBumFWBMxI_gM4VD1FDfGFe36IXaiKMucU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
