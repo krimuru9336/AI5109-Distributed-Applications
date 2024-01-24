@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">1042468585378</string>
+    <string name="google_api_key" translatable="false">AIzaSyD42DHPaGEXenmzzlilhe5WSwLa3g2OlP8</string>
+    <string name="google_app_id" translatable="false">1:1042468585378:android:3f4e284638199f150cbcfb</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyD42DHPaGEXenmzzlilhe5WSwLa3g2OlP8</string>
+    <string name="google_storage_bucket" translatable="false">whatsdown-f2c47.appspot.com</string>
+    <string name="project_id" translatable="false">whatsdown-f2c47</string>
+</resources>
