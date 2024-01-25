@@ -133,7 +133,7 @@ class ChatViewModel() : ViewModel() {
                         message.receiverEmail.lowercase()
                     ).sortedBy { it }
 
-                val query = chatsRef.whereArrayContains("participants", "testuser1@gmail.com")
+                val query = chatsRef.whereArrayContains("participants", currentUser.value?.email!!.lowercase().toString())
 
                 query.get().addOnSuccessListener { querySnapshot ->
                     if (!querySnapshot.isEmpty) {
@@ -169,7 +169,7 @@ class ChatViewModel() : ViewModel() {
                         message.receiverEmail.lowercase()
                     ).sortedBy { it }
 
-                val query = chatsRef.whereArrayContains("participants", "testuser1@gmail.com")
+                val query = chatsRef.whereArrayContains("participants", currentUser.value?.email!!.lowercase().toString())
 
                 query.get().addOnSuccessListener { querySnapshot ->
                     if (!querySnapshot.isEmpty) {
