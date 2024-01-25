@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
-        "Appbar"
+        "fastapi",
+        "pydantic",
+        "sqlalchemy",
+        "uvicorn"
     ]
 }
