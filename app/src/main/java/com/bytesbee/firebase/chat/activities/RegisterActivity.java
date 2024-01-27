@@ -47,7 +47,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         final Button mBtnRegister = findViewById(R.id.btnRegister);
         final TextView mTxtExistingUser = findViewById(R.id.txtExistingUser);
 
-//        mTxtExistingUser.setText(HtmlCompat.fromHtml(getString(R.string.strExistUser), HtmlCompat.FROM_HTML_MODE_LEGACY));
+// mTxtExistingUser.setText(HtmlCompat.fromHtml(getString(R.string.strExistUser), HtmlCompat.FROM_HTML_MODE_LEGACY));
         Utils.setHTMLMessage(mTxtExistingUser, getString(R.string.strExistUser));
 
         mBtnRegister.setOnClickListener(this);
