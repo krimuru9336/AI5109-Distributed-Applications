@@ -1,14 +1,11 @@
 package com.example.chatapplication;
 
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_STATUS;
-
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.bytesbee.firebase.chat.activities.managers.Screens;
-import com.bytesbee.firebase.chat.activities.managers.SessionManager;
+
 import com.github.appintro.AppIntro2;
 import com.github.appintro.AppIntroCustomLayoutFragment;
 import com.github.appintro.AppIntroPageTransformerType;
