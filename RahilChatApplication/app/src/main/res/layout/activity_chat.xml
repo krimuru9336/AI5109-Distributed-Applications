@@ -37,7 +37,5 @@
             android:layout_height="40dp"
             android:src="@drawable/send"
             android:layout_weight="20"/>
-
     </LinearLayout>
-
 </RelativeLayout>

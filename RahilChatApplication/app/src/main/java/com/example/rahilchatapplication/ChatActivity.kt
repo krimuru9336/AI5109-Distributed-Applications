@@ -1,20 +1,22 @@
 package com.example.rahilchatapplication
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.example.rahilchatapplication.Message
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var chatRecyclerView: RecyclerView
@@ -27,6 +29,19 @@ class ChatActivity : AppCompatActivity() {
     var receiverRoom: String? = null
     var senderRoom: String? = null
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentLocalDateTime(): LocalDateTime {
+        return LocalDateTime.now()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatLocalDateTime(localDateTime: LocalDateTime): String {
+        val formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm")
+        return localDateTime.format(formatter)
+    }
+
+    @SuppressLint("MissingInflatedId")
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -34,6 +49,7 @@ class ChatActivity : AppCompatActivity() {
         val name = intent.getStringExtra("name")
         val receiverUid = intent.getStringExtra("uid")
         val senderUid = FirebaseAuth.getInstance().currentUser?.uid
+
         senderRoom = receiverUid + senderUid
         receiverRoom = senderUid + receiverUid
 
@@ -66,10 +82,11 @@ class ChatActivity : AppCompatActivity() {
                 }
             })
 
-
         sendButton.setOnClickListener{
             val message = messageBox.text.toString()
-            val messageObject = Message(message, senderUid)
+            val currentDateTime = getCurrentLocalDateTime()
+            val formattedDateTime = formatLocalDateTime(currentDateTime)
+            val messageObject = Message(message, senderUid, formattedDateTime, senderRoom)
             mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                 .setValue((messageObject)).addOnSuccessListener {
                     mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
