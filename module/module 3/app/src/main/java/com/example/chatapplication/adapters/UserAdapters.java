@@ -11,12 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bytesbee.firebase.chat.activities.R;
-import com.bytesbee.firebase.chat.activities.managers.Screens;
-import com.bytesbee.firebase.chat.activities.managers.Utils;
-import com.bytesbee.firebase.chat.activities.models.Chat;
-import com.bytesbee.firebase.chat.activities.models.User;
-import com.bytesbee.firebase.chat.activities.views.SingleClickListener;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
