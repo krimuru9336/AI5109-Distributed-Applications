@@ -14,10 +14,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bytesbee.firebase.chat.activities.constants.IConstants;
-import com.bytesbee.firebase.chat.activities.managers.Screens;
-import com.bytesbee.firebase.chat.activities.managers.SessionManager;
-import com.bytesbee.firebase.chat.activities.managers.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
