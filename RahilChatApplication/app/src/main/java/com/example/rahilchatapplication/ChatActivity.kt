@@ -56,6 +56,7 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.title = name
 
         chatRecyclerView = findViewById<RecyclerView>(R.id.chatRecyclerView)
+        chatRecyclerView.isNestedScrollingEnabled = false;
         messageBox = findViewById<EditText>(R.id.messageBox)
         sendButton = findViewById<ImageView>(R.id.btnSendMessage)
         messageList = ArrayList()

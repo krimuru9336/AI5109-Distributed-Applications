@@ -39,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edt_email"
         android:hint="Password"
+        android:inputType="textPassword"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"/>
 
