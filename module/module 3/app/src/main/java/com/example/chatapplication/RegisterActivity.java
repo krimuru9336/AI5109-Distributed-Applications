@@ -1,21 +1,6 @@
 package com.example.chatapplication;
 
 
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ACTIVE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_CREATED_AT;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_EMAIL;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_ID;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_IMAGEURL;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_IS_ONLINE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_PASSWORD;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_SEARCH;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_SIGNUP_TYPE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_USERNAME;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_VERSION;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.IMG_DEFAULTS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_USERS;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.STATUS_ONLINE;
-import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_EMAIL;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bytesbee.firebase.chat.activities.managers.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
