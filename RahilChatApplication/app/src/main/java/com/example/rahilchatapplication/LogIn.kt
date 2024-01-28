@@ -49,7 +49,7 @@ class LogIn : AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     finish()
                     startActivity(intent)
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LogIn, "Login successful", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@LogIn, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
