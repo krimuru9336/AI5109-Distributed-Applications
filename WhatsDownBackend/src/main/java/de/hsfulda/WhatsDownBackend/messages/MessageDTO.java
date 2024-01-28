@@ -3,6 +3,7 @@ package de.hsfulda.WhatsDownBackend.messages;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -14,4 +15,6 @@ public class MessageDTO {
     private Long senderId;
     private Long receiverId;
     private String content;
+    private String mediaType;
+    private MultipartFile media;
 }

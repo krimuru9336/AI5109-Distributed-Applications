@@ -2,11 +2,15 @@ package de.hsfulda.WhatsDownBackend.messages;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/messages")
@@ -16,15 +20,33 @@ public class MessageController {
      * Jonas Wagner - 1315578
      */
     private final MessageService messageService;
+    private final Map<String, String> mappingFileTypeToMediaType = new HashMap<>();
 
     public MessageController(MessageService messageService) {
         this.messageService = messageService;
+        mappingFileTypeToMediaType.put("image/jpeg", "Image");
+        mappingFileTypeToMediaType.put("image/jpg", "Image");
+        mappingFileTypeToMediaType.put("image/png", "Image");
+        mappingFileTypeToMediaType.put("image/gif", "Gif");
+        mappingFileTypeToMediaType.put("video/gif", "Gif");
+        mappingFileTypeToMediaType.put("video/mp4", "Video");
+        mappingFileTypeToMediaType.put("video/mov", "Video");
+        mappingFileTypeToMediaType.put("video/avi", "Video");
+        mappingFileTypeToMediaType.put("video/m4v", "Video");
     }
 
-    @PostMapping("/send")
-    public ResponseEntity<Message> sendMessage(@RequestBody MessageDTO message) {
+    @PostMapping(value = "/send", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Message> sendMessage(@RequestParam Long senderId, @RequestParam Long receiverId, @RequestParam String content, @RequestParam(required = false) MultipartFile media) {
+        MessageDTO message = new MessageDTO();
+        message.setSenderId(senderId);
+        message.setReceiverId(receiverId);
+        message.setContent(content);
+
+        String fileType = media.getContentType();
+        message.setMediaType(mappingFileTypeToMediaType.get(fileType));
+
         log.info("Message received: {}", message);
-        Message sentMessage = messageService.sendMessage(message);
+        Message sentMessage = messageService.sendMessage(message, media);
         if (sentMessage != null) {
             return ResponseEntity.ok(sentMessage);
         } else {

@@ -27,6 +27,10 @@ public class Message {
     private Long receiverId;
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
+    @Column(name = "media_type", nullable = false)
+    private String mediaType;
+    @Column(name = "media_url")
+    private String mediaUrl;
     @Column(name = "timestamp", columnDefinition = "datetime default CURRENT_TIMESTAMP")
     private LocalDateTime timestamp;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -38,3 +42,19 @@ public class Message {
     @JoinColumn(name = "receiver_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     private User receiver;
 }
+
+/*
+CREATE TABLE message (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    content TEXT NOT NULL,
+    media_type VARCHAR(255) NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES user(user_id),
+    FOREIGN KEY (receiver_id) REFERENCES user(user_id)
+);
+
+ALTER TABLE message
+ADD COLUMN media_url VARCHAR(255) NULL;
+ */

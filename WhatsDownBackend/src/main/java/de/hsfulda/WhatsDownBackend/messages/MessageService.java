@@ -2,12 +2,14 @@ package de.hsfulda.WhatsDownBackend.messages;
 
 import de.hsfulda.WhatsDownBackend.users.User;
 import de.hsfulda.WhatsDownBackend.users.UserRepository;
+import de.hsfulda.WhatsDownBackend.util.AzureBlobStorageUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -17,14 +19,21 @@ public class MessageService {
      */
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final AzureBlobStorageUtil azureBlobStorageUtil;
     private final Map<String, Set<Long>> fetchedMessages = new HashMap<>();
+    private final Map<String, String> mappingMediaTypeToContainerName = new HashMap<>();
 
-    public MessageService(MessageRepository messageRepository, UserRepository userRepository) {
+    public MessageService(MessageRepository messageRepository, UserRepository userRepository, AzureBlobStorageUtil azureBlobStorageUtil) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
+        this.azureBlobStorageUtil = azureBlobStorageUtil;
+
+        mappingMediaTypeToContainerName.put("Image", "images");
+        mappingMediaTypeToContainerName.put("Video", "videos");
+        mappingMediaTypeToContainerName.put("Gif", "gifs");
     }
 
-    public Message sendMessage(MessageDTO message) {
+    public Message sendMessage(MessageDTO message, MultipartFile media) {
         Optional<User> senderOptional = userRepository.findById(message.getSenderId());
         Optional<User> receiverOptional = userRepository.findById(message.getReceiverId());
 
@@ -42,6 +51,14 @@ public class MessageService {
         newMessage.setTimestamp(LocalDateTime.now());
         newMessage.setSenderId(sender.getUserId());
         newMessage.setReceiverId(receiver.getUserId());
+        newMessage.setMediaType(message.getMediaType());
+
+        String containerName = mappingMediaTypeToContainerName.get(message.getMediaType());
+
+        if (media != null && !media.isEmpty()) {
+            String mediaUrl = azureBlobStorageUtil.uploadMedia(media, containerName);
+            newMessage.setMediaUrl(mediaUrl);
+        }
 
         return messageRepository.save(newMessage);
     }
@@ -64,6 +81,14 @@ public class MessageService {
         entireChat.addAll(messagesFromUser2ToUser1);
 
         entireChat.sort(Comparator.comparing(Message::getTimestamp));
+
+        entireChat.forEach(message -> {
+            if (message.getMediaUrl() != null) {
+                String sasToken = azureBlobStorageUtil.generateSasTokenFromUrl(message.getMediaUrl(), mappingMediaTypeToContainerName.get(message.getMediaType()));
+                String sasMediaUrl = message.getMediaUrl() + "?" + sasToken;
+                message.setMediaUrl(sasMediaUrl);
+            }
+        });
 
         log.info("Found {} messages between {} and {}", entireChat.size(), user1, user2);
 
@@ -88,6 +113,13 @@ public class MessageService {
 
         List<Message> unfetchedMessages = new ArrayList<>(newMessages.stream()
                 .filter(message -> !fetchedMessageIds.contains(message.getId()))
+                .peek(message -> {
+                    if (message.getMediaUrl() != null) {
+                        String sasToken = azureBlobStorageUtil.generateSasTokenFromUrl(message.getMediaUrl(), mappingMediaTypeToContainerName.get(message.getMediaType()));
+                        String sasMediaUrl = message.getMediaUrl() + "?" + sasToken;
+                        message.setMediaUrl(sasMediaUrl);
+                    }
+                })
                 .toList());
 
         if (!unfetchedMessages.isEmpty()) {
