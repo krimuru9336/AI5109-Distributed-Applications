@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/chat_bg"
+    tools:ignore="SpUsage">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">      
+
+            <com.bytesbee.firebase.ripplechat.activities.views.MaterialRippleLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/padding10"
+                android:paddingBottom="@dimen/padding10"
+                app:mrl_rippleColor="@color/grey_50"
+                app:mrl_rippleOverlay="true"
+                app:mrl_rippleRoundedCorners="@dimen/padding3">
+
+                <LinearLayout
+                    android:id="@+id/viewProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="@dimen/padding40"
+                        android:layout_height="@dimen/padding40"
+                        android:foreground="@drawable/circle_my_selector"
+                        android:src="@drawable/profile_avatar"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="@dimen/padding1"
+                        tools:ignore="UnusedAttribute" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/padding10"
+                        android:paddingRight="@dimen/padding10">
+
+                        <TextView
+                            android:id="@+id/txtUsername"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/roboto_bold"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:text="@string/strUsername"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_sixteen" />
+
+                        <TextView
+                            android:id="@+id/txtTyping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txtUsername"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/roboto_regular"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:text="@string/strTyping"
+                            android:textColor="@color/white"
+                            android:visibility="visible" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </com.bytesbee.firebase.ripplechat.activities.views.MaterialRippleLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appLayout"
+        android:background="@android:color/transparent"
+        android:overScrollMode="ifContentScrolls"
+        android:paddingBottom="@dimen/padding60" />
+
+   
+    <LinearLayout
+        android:id="@+id/btnBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomChatLayout"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/padding10"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:visibility="gone">
+
+        
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottomChatLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:animateLayoutChanges="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/padding8"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/rlChatView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/padding2"
+                android:layout_marginRight="@dimen/padding2"
+                android:layout_toStartOf="@+id/recordButton"
+                android:background="@drawable/background_link_preview">
+
+                <RelativeLayout
+                    android:id="@+id/leftLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="@dimen/padding8"
+                    android:paddingRight="@dimen/padding8">
+                   
+                </RelativeLayout>
+            </RelativeLayout>
+
+            
+
+           
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlAdminMsgView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/lblOnlyAdminMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:fontFamily="@font/roboto_regular"
+                android:gravity="center"
+                android:padding="@dimen/padding15"
+                android:text="@string/only_admin_can_send_messages" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
