@@ -13,6 +13,8 @@ This Android application is a real-time chat app developed using Android Studio 
   
 - **Realtime Chat:**
   - Users can send and receive messages in real-time.
+  - Users can edit their message and resend it.
+  - Users can delete the message they have sent.
   - Messages are stored in Firebase Realtime Database.
 
 - **User List:**
