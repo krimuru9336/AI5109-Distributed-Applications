@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ChitChat</string>
+    <string name="retrieve">Retrieve</string>
+    <string name="insert">Insert</string>
+    <string name="name">Name:</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="author">Sven Schickentanz</string>
+    <string name="appname">Module 4 - ChitChat App</string>
+    <string name="ip">http://localhost</string>
+    <string name="port">8081</string>
+    <string name="type_your_message">Type your message</string>
+    <string name="send">Send</string>
+    <string name="back_to_user_selection">Go back to user selection</string>
+    <string name="connected_users">Connected Users</string>
+    <string name="enter_username_long">Enter your username:</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="connect">Connect</string>
+</resources>

@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/banner_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/Banner"
+        android:id="@+id/app_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/appname"
+        android:textSize="16sp"
+        android:padding="16dp" />
+
+    <TextView
+        style="@style/Banner"
+        android:id="@+id/author_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/author"
+        android:textSize="16sp"
+        android:padding="16dp" />
+</LinearLayout>
