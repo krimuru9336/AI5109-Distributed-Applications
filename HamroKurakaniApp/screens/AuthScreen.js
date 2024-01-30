@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
     Box,
     FormControl,
@@ -7,66 +7,60 @@ import {
     Input,
     InputField,
     Button,
-    ButtonText
+    ButtonText,
+    VStack,
+    Toast,
+    ToastTitle,
+    ToastDescription,
+    useToast
 } from '@gluestack-ui/themed'
 import { API_URL } from "@env"
-import axios from 'axios';
+import axios from 'axios'
+import AuthContext from '../context/AuthContext'
 
 export default function AuthScreen({ onSuccessfulLogin }) {
     const [selectedTab, setSelectedTab] = useState("login");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const { setAccessToken } = useContext(AuthContext);
+    const toast = useToast();
 
     const handleSubmit = () => {
         (async () => {
             if (selectedTab == "login") {
                 try {
-                    // // const res = await axios.post(`http://localhost:5000/login`);
-                    // const res = await axios("http://localhost:8080");
-                    // console.log("RES:: ", res)
-
-                    const response = await axios.get('http://127.0.0.1:5000/');
-                    // const json = await response.json();
-                    console.log('JSON::: ', response.data)
-
+                    const response = await axios.post(`${API_URL}/login`, { username, password });
+                    setAccessToken(response.data.accessToken)
                 } catch (err) {
-                    console.log("this is here")
                     console.log(err)
                 }
             } else if (selectedTab == "register") {
-
+                const response = await axios.post(`${API_URL}/register`, {
+                    username,
+                    password
+                });
+                toast.show({
+                    placement: "bottom",
+                    render: ({ id }) => {
+                        const toastId = `toast-${id}`;
+                        return (
+                            <Toast nativeID={toastId} action="success" variant="solid">
+                                <VStack space="xs">
+                                    <ToastTitle>Register Successful</ToastTitle>
+                                    <ToastDescription>
+                                        You have registered successfully. Please login.
+                                    </ToastDescription>
+                                </VStack>
+                            </Toast>
+                        )
+                    }
+                })
             }
         })()
     }
 
-    // const handleSubmit = () => {
-    //     onSuccessfulLogin(username)
-    // }
-
     return (
         <Box h="$32" w="$72">
-            <Box>
-                <Button
-                    size="md"
-                    variant="link"
-                    action="primary"
-                    isDisabled={false}
-                    isFocusVisible={false}
-                    onPress={() => { setSelectedTab("login") }}
-                >
-                    <ButtonText>Login</ButtonText>
-                </Button>
-                <Button
-                    size="md"
-                    variant="link"
-                    action="primary"
-                    isDisabled={false}
-                    isFocusVisible={false}
-                    onPress={() => { setSelectedTab("register") }}
-                >
-                    <ButtonText>Register</ButtonText>
-                </Button>
-            </Box>
             <Box>
                 <FormControl size="md" isDisabled={false} isInvalid={false} isReadOnly={false} isRequired={false} >
                     <FormControlLabel mb='$1'>
@@ -90,7 +84,7 @@ export default function AuthScreen({ onSuccessfulLogin }) {
                             type="password"
                             placeholder="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChangeText={(val) => setPassword(val)}
                         />
                     </Input>
                 </FormControl>
@@ -106,6 +100,31 @@ export default function AuthScreen({ onSuccessfulLogin }) {
                         <ButtonText>{selectedTab}</ButtonText>
                     </Button>
                 </FormControl>
+            </Box>
+            <Box>
+                {
+                    selectedTab == "login" ?
+                        <Button
+                            size="md"
+                            variant="link"
+                            action="primary"
+                            isDisabled={false}
+                            isFocusVisible={false}
+                            onPress={() => { setSelectedTab("register") }}
+                        >
+                            <ButtonText>Register Instead</ButtonText>
+                        </Button> :
+                        <Button
+                            size="md"
+                            variant="link"
+                            action="primary"
+                            isDisabled={false}
+                            isFocusVisible={false}
+                            onPress={() => { setSelectedTab("login") }}
+                        >
+                            <ButtonText>Login Instead</ButtonText>
+                        </Button>
+                }
             </Box>
         </Box>
     )

@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from flask import Flask, request,jsonify
 from flask_socketio import SocketIO,emit,send, join_room
 from flask_cors import CORS
@@ -111,7 +111,6 @@ def login():
         dbCur.execute(select_user, (username,))
         users = dbCur.fetchall()
         user = users[0] if len(users) > 0 else None
-        print(generate_password_hash(password=password))
         if user and check_password_hash(user[2], password):
             access_token = create_access_token(identity=username, expires_delta=datetime.timedelta(days=30))
             return jsonify({"message": "Login successfully", "accessToken": access_token}), 201

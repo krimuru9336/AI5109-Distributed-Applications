@@ -25,7 +25,7 @@ function App() {
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      {true ? (
+      {accessToken ? (
         <ChatScreen username={username} />
       ) : (
         <AuthScreen
