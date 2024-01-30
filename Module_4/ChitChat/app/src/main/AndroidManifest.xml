@@ -16,7 +16,7 @@
         android:theme="@style/Theme.ChitChat"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,8 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChatOverviewActivity" />
-        <activity android:name=".MessageActivity" />
+        <activity android:name=".activities.ChatOverviewActivity" />
+        <activity android:name=".activities.MessageActivity" />
     </application>
 
 </manifest>

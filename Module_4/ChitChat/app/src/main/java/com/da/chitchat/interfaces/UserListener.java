@@ -1,4 +1,4 @@
-package com.da.chitchat;
+package com.da.chitchat.interfaces;
 
 import java.util.List;
 

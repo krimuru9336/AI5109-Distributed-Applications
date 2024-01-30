@@ -1,6 +1,8 @@
-package com.da.chitchat;
+package com.da.chitchat.singletons;
 
 import android.content.Context;
+
+import com.da.chitchat.WebSocketManager;
 
 public class WebSocketManagerSingleton {
 

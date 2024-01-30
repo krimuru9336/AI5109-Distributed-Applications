@@ -1,7 +1,13 @@
-package com.da.chitchat;
+package com.da.chitchat.listeners;
 
 import android.os.Handler;
 import android.os.Looper;
+
+import com.da.chitchat.Message;
+import com.da.chitchat.UserMessageStore;
+import com.da.chitchat.adapters.MessageAdapter;
+import com.da.chitchat.interfaces.MessageListener;
+import com.da.chitchat.interfaces.OnDataChangedListener;
 
 public class UserMessageListener implements MessageListener {
     private MessageAdapter messageAdapter;

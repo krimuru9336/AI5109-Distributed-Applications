@@ -1,4 +1,4 @@
-package com.da.chitchat;
+package com.da.chitchat.adapters;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -9,6 +9,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.da.chitchat.Message;
+import com.da.chitchat.R;
+import com.da.chitchat.UserMessageStore;
+import com.da.chitchat.interfaces.OnDataChangedListener;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;

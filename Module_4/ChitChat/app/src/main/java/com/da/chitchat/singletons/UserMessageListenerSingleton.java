@@ -1,4 +1,6 @@
-package com.da.chitchat;
+package com.da.chitchat.singletons;
+
+import com.da.chitchat.listeners.UserMessageListener;
 
 public class UserMessageListenerSingleton {
 

@@ -1,4 +1,4 @@
-package com.da.chitchat;
+package com.da.chitchat.adapters;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.da.chitchat.activities.MessageActivity;
+import com.da.chitchat.R;
 
 import java.util.List;
 

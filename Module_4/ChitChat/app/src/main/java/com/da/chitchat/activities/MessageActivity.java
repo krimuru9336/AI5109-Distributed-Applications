@@ -1,4 +1,4 @@
-package com.da.chitchat;
+package com.da.chitchat.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.da.chitchat.Message;
+import com.da.chitchat.R;
+import com.da.chitchat.listeners.UserMessageListener;
+import com.da.chitchat.singletons.UserMessageListenerSingleton;
+import com.da.chitchat.WebSocketManager;
+import com.da.chitchat.singletons.WebSocketManagerSingleton;
+import com.da.chitchat.adapters.MessageAdapter;
+import com.da.chitchat.interfaces.OnDataChangedListener;
 
 public class MessageActivity extends AppCompatActivity implements OnDataChangedListener {
     private EditText messageEditText;

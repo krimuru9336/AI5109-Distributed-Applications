@@ -2,6 +2,12 @@ package com.da.chitchat;
 
 import android.content.Context;
 
+import com.da.chitchat.activities.MainActivity;
+import com.da.chitchat.interfaces.MessageListener;
+import com.da.chitchat.interfaces.NameListener;
+import com.da.chitchat.interfaces.UserListener;
+import com.da.chitchat.singletons.UserMessageListenerSingleton;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

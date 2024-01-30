@@ -1,4 +1,4 @@
-package com.da.chitchat;
+package com.da.chitchat.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,12 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.da.chitchat.R;
+import com.da.chitchat.listeners.UserListListener;
+import com.da.chitchat.WebSocketManager;
+import com.da.chitchat.singletons.WebSocketManagerSingleton;
+import com.da.chitchat.adapters.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
