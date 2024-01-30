@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.da.chitchat.activities.MessageActivity;
 import com.da.chitchat.R;
+import com.da.chitchat.activities.MessageActivity;
 
 import java.util.List;
 
@@ -62,11 +62,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
 
+            // Set click listener for the item view
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     String clickedUser = userList.get(position);
-                    
+
+                    // Handle click (e.g., open new activity for messages)
                     openMessageActivity(clickedUser);
                 }
             });

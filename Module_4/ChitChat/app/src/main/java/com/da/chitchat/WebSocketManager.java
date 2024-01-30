@@ -16,7 +16,9 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class WebSocketManager {
 
@@ -28,6 +30,8 @@ public class WebSocketManager {
     private String ownUsername;
 
     public WebSocketManager(Context ctx) {
+
+
         ownUsername = "";
         activityChangeCounter = 0;
         try {
@@ -64,16 +68,43 @@ public class WebSocketManager {
         ownUsername = userId;
     }
 
-    public void sendMessage(String targetUserId, String message) {
+    public void sendMessage(String targetUserId, String message, UUID id) {
         JSONObject jsonMessage = new JSONObject();
         try {
             jsonMessage.put("targetUserId", targetUserId);
             jsonMessage.put("message", message);
+            jsonMessage.put("messageId", id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         socket.emit("message", jsonMessage);
+    }
+
+    public void deleteMessage(String targetUserId, UUID id) {
+        JSONObject jsonMessage = new JSONObject();
+        try {
+            jsonMessage.put("targetUserId", targetUserId);
+            jsonMessage.put("messageId", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        socket.emit("delete", jsonMessage);
+    }
+
+    public void editMessage(String targetUserId, UUID id, String input, Date editDate) {
+        JSONObject jsonMessage = new JSONObject();
+        try {
+            jsonMessage.put("targetUserId", targetUserId);
+            jsonMessage.put("messageId", id);
+            jsonMessage.put("message", input);
+            jsonMessage.put("editDate", editDate.getTime());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        socket.emit("edit", jsonMessage);
     }
 
     public void checkUsername(String username) {
@@ -156,7 +187,7 @@ public class WebSocketManager {
         this.messageListener = listener;
 
         if (!eventListenerSet) {
-            // User gets a message
+            // Receive message from user
             socket.on("message", args -> {
                 if (args.length > 0 && args[0] instanceof JSONObject) {
                     try {
@@ -168,8 +199,57 @@ public class WebSocketManager {
 
                                 if (messageListener != null) {
                                     Message msg = new Message(messageObj.getString("message"),
-                                            messageObj.getString("senderUserId"), true);
+                                            messageObj.getString("senderUserId"), true,
+                                            UUID.fromString(messageObj.getString("messageId")));
                                     messageListener.onMessageReceived(msg);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            // User deletes sent message
+            socket.on("delete", args -> {
+                if (args.length > 0 && args[0] instanceof JSONObject) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) args[0];
+
+                        if (jsonObject.has("data") && jsonObject.has("action")) {
+                            if (jsonObject.getString("action").equals("delete")) {
+                                JSONObject messageObj = jsonObject.getJSONObject("data");
+
+                                if (messageListener != null) {
+                                    String target = messageObj.getString("senderUserId");
+                                    UUID messageId = UUID.fromString(messageObj.getString("messageId"));
+                                    messageListener.onMessageDelete(target, messageId);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            // User edits sent message
+            socket.on("edit", args -> {
+                if (args.length > 0 && args[0] instanceof JSONObject) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) args[0];
+
+                        if (jsonObject.has("data") && jsonObject.has("action")) {
+                            if (jsonObject.getString("action").equals("edit")) {
+                                JSONObject messageObj = jsonObject.getJSONObject("data");
+
+                                if (messageListener != null) {
+                                    String target = messageObj.getString("senderUserId");
+                                    UUID messageId = UUID.fromString(messageObj.getString("messageId"));
+                                    String message = messageObj.getString("message");
+                                    Date editDate = new Date(messageObj.getLong("editDate"));
+                                    messageListener.onMessageEdit(target, messageId, message, editDate);
                                 }
                             }
                         }

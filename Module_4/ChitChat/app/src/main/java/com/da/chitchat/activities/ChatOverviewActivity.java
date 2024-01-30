@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.da.chitchat.R;
+import com.da.chitchat.adapters.UserAdapter;
 import com.da.chitchat.listeners.UserListListener;
 import com.da.chitchat.WebSocketManager;
 import com.da.chitchat.singletons.WebSocketManagerSingleton;
-import com.da.chitchat.adapters.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

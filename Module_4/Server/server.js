@@ -49,7 +49,8 @@ io.on('connection', (socket) => {
     // Handle incoming messages
     socket.on('message', (message) => {
         try {
-            const { targetUserId, message: messageText } = message;
+            console.log(message);
+            const { targetUserId, messageId, message: messageText } = message;
             const senderUserId = users.find(user => user.id === socket.id)?.userId;
 
             // Find the socket ID of the target user
@@ -61,8 +62,61 @@ io.on('connection', (socket) => {
                     data: {
                         senderUserId,
                         message: messageText,
+                        messageId,
                     },
                     action: 'message',
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    // Handle deleting messages
+    socket.on('delete', (message) => {
+        try {
+            console.log(message);
+            const { targetUserId, messageId } = message;
+            const senderUserId = users.find(user => user.id === socket.id)?.userId;
+
+            // Find the socket ID of the target user
+            const targetSocketId = users.find(({ userId }) => userId === targetUserId);
+
+            // If the target user is found, send the message to that user
+            if (targetSocketId) {
+                io.to(targetSocketId.id).emit('delete', {
+                    data: {
+                        senderUserId,
+                        messageId,
+                    },
+                    action: 'delete',
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    // Handle editing messages
+    socket.on('edit', (message) => {
+        try {
+            console.log(message);
+            const { targetUserId, messageId, message: messageText, editDate } = message;
+            const senderUserId = users.find(user => user.id === socket.id)?.userId;
+
+            // Find the socket ID of the target user
+            const targetSocketId = users.find(({ userId }) => userId === targetUserId);
+
+            // If the target user is found, send the message to that user
+            if (targetSocketId) {
+                io.to(targetSocketId.id).emit('edit', {
+                    data: {
+                        senderUserId,
+                        messageId,
+                        message: messageText,
+                        editDate,
+                    },
+                    action: 'edit',
                 });
             }
         } catch (error) {

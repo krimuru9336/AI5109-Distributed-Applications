@@ -6,7 +6,7 @@
     <string name="enter_name">Enter Name</string>
     <string name="author">Sven Schickentanz</string>
     <string name="appname">Module 4 - ChitChat App</string>
-    <string name="ip">http://localhost</string>
+    <string name="ip">http://192.168.0.204</string>
     <string name="port">8081</string>
     <string name="type_your_message">Type your message</string>
     <string name="send">Send</string>
@@ -15,4 +15,14 @@
     <string name="enter_username_long">Enter your username:</string>
     <string name="enter_username">Enter Username</string>
     <string name="connect">Connect</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="deleteMessageText">Message has been deleted.</string>
+    <string name="deleteDialogText">Do you really want to delete the message?</string>
+    <string name="deleteDialogTextIncoming">It will only be deleted for yourself.</string>
+    <string name="deleteDialogTitle">Delete Message</string>
+    <string name="editDialogTitle">Edit Message</string>
+    <string name="clear_text">Clear Text</string>
+    <string name="edit_your_message">Edit your message</string>
+    <string name="last_edited_on">Last edited on:</string>
 </resources>

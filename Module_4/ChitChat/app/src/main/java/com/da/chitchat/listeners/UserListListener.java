@@ -3,8 +3,8 @@ package com.da.chitchat.listeners;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.da.chitchat.UserMessageStore;
 import com.da.chitchat.adapters.UserAdapter;
+import com.da.chitchat.UserMessageStore;
 import com.da.chitchat.interfaces.UserListener;
 
 import java.util.List;
