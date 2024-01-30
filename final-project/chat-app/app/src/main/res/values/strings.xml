@@ -46,6 +46,8 @@
     <string name="enter_text">Your Name:</string>
     <string name="save_to_db">Insert</string>
     <string name="retrieve_from_db">Retrieve</string>
-    <string name="author_information">Sahan Wijesinghe (fdai7675)</string>
+    <string name="author_information">Sahan Wijesinghe (1453575)</string>
     <string name="app_info">WhatsDown</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
