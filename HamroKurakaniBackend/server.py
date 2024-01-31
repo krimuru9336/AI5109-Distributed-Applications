@@ -58,7 +58,10 @@ dbCur = dbCnx.cursor()
 insert_new_user = (
 "INSERT INTO users (id, username, password)"
 "VALUES (%s, %s, %s)")
+
 select_user = "SELECT * from users WHERE username=%s"
+
+select_every_users_expect_own = "SELECT id, username FROM users WHERE username!=%s"
 
 userIdToSid = {}
 
@@ -138,6 +141,24 @@ def register():
         dbCur.execute(insert_new_user, (userId, username, hashedPassword))
         dbCnx.commit()
         return jsonify({"message": "User registered successfully"}), 201
+    except Exception as ex:
+        if ex.errno == 1062:
+            return "Username already taken.", 400
+        else:
+            return f"Unexpected {ex=}, {type(ex)=}", 400
+        
+@app.route("/chats", methods=['GET'])
+@jwt_required()
+def chats():
+    current_username = get_jwt_identity()
+    try:
+        dbCur.execute(select_every_users_expect_own, (current_username, ))
+        # getting columns name
+        columns = [column[0] for column in dbCur.description]
+        rows = dbCur.fetchall()
+        # converting users as list of list to list of key value pairs 
+        users = [dict(zip(columns, row)) for row in rows]
+        return jsonify({"chats": users}), 201
     except Exception as ex:
         if ex.errno == 1062:
             return "Username already taken.", 400

@@ -12,7 +12,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import AuthContext from './context/AuthContext';
 
 import AuthScreen from './screens/AuthScreen';
-import ChatScreen from './screens/ChatScreen';
+import ChatListScreen from './screens/ChatListScreen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -26,7 +26,7 @@ function App() {
   return (
     <SafeAreaView style={backgroundStyle}>
       {accessToken ? (
-        <ChatScreen username={username} />
+        <ChatListScreen username={username} />
       ) : (
         <AuthScreen
           onSuccessfulLogin={(username) => {
