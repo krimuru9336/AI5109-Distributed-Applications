@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="This is sent message"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:padding="10dp"/>
 
         <TextView
