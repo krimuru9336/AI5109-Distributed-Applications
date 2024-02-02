@@ -6,15 +6,17 @@ class Message {
     var message: String? = null
     var senderId: String? = null
     var time: String? = null
-    var roomId: String? = null
+    var senderRoomId: String? = null
+    var receiverRoomId: String? = null
 
     constructor(){}
 
-    constructor(message: String?, senderId: String?, time: String?, roomId: String?){
+    constructor(message: String?, senderId: String?, time: String?, senderRoomId: String?, receiverRoomId: String?){
         this.message = message
         this.senderId = senderId
         this.time = time
-        this.roomId = roomId
+        this.senderRoomId = senderRoomId
+        this.receiverRoomId = receiverRoomId
 
     }
 }

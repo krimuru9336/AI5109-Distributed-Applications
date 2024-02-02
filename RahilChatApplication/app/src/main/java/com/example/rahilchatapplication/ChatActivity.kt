@@ -87,7 +87,7 @@ class ChatActivity : AppCompatActivity() {
             val message = messageBox.text.toString()
             val currentDateTime = getCurrentLocalDateTime()
             val formattedDateTime = formatLocalDateTime(currentDateTime)
-            val messageObject = Message(message, senderUid, formattedDateTime, senderRoom)
+            val messageObject = Message(message, senderUid, formattedDateTime, senderRoom, receiverRoom)
             mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                 .setValue((messageObject)).addOnSuccessListener {
                     mDbRef.child("chats").child(receiverRoom!!).child("messages").push()

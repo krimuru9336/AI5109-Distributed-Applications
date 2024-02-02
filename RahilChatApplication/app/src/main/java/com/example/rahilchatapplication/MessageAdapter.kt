@@ -106,7 +106,8 @@ class MessageAdapter(private val context: Context, private val messageList: Arra
 
     private fun editMessage(message: Message, editedMessage: String) {
         val contentToEdit = message.message
-        val senderRoom = message.roomId
+        val senderRoom = message.senderRoomId
+        val receiverRoom = message.receiverRoomId
         mDbRef = FirebaseDatabase.getInstance().reference
         mDbRef.child("chats").child(senderRoom!!).child("messages")
             .orderByChild("message").equalTo(contentToEdit)
@@ -123,11 +124,28 @@ class MessageAdapter(private val context: Context, private val messageList: Arra
                     Toast.makeText(context, "Failed to edit message", Toast.LENGTH_SHORT).show()
                 }
             })
+
+        mDbRef.child("chats").child(receiverRoom!!).child("messages")
+            .orderByChild("message").equalTo(contentToEdit)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (childSnapshot in snapshot.children) {
+                        // Update the message content in the database
+                        childSnapshot.ref.child("message").setValue(editedMessage)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, "Failed to edit message", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+
     }
 
     private fun deleteMessage(currentMessage: Message) {
         val contentToDelete  =  currentMessage.message
-        val senderRoom = currentMessage.roomId
+        val senderRoom = currentMessage.senderRoomId
         mDbRef = FirebaseDatabase.getInstance().reference
         mDbRef.child("chats").child(senderRoom!!).child("messages")
             .orderByChild("message").equalTo(contentToDelete)
