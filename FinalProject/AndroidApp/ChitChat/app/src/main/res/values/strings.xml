@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ChitChat</string>
     <string name="type">Type …</string>
-    <string name="header">Module 3 - Simon Keller (fdai5676) 1165562</string>
+    <string name="header">Module 4 - Simon Keller (fdai5676) 1165562</string>
     <string name="enter_username">Enter your username</string>
     <string name="connect">Connect</string>
     <string name="users_online">Users online</string>
@@ -10,4 +10,15 @@
     <string name="ip">http://192.168.178.30</string>
     <string name="port">8081</string>
     <string name="return_to_user_overview">Return to the user overview</string>
+    <string name="edit_text">Edit</string>
+    <string name="delete_for_me">Delete for me</string>
+    <string name="delete_for_all">Delete for all</string>
+    <string name="delete_for_me_desc">This will delete the message for you only.</string>
+    <string name="delete_for_all_desc">This will delete the message for all users.</string>
+    <string name="edit_input_text">Edit your message here …</string>
+    <string name="edit_input_clear_text">Clear …</string>
+    <string name="edited_on">Edited on </string>
+    <string name="deleted_on">Deleted on </string>
+    <string name="changed_on">Changed on </string>
+
 </resources>

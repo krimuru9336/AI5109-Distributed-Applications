@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/context_edit"
+        android:title="@string/edit_text"
+        />
+    <item
+        android:id="@+id/context_delete_for_me"
+        android:title="@string/delete_for_me"
+        />
+
+    <item
+        android:id="@+id/context_delete_for_all"
+        android:title="@string/delete_for_all"
+        />
+</menu>

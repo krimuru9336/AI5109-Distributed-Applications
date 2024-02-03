@@ -1,8 +1,10 @@
 package com.example.chitchat;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+
+import java.util.UUID;
+
 public class MessageListener {
     private ChatAdapter chatAdapter;
     private static MessageListener ml;
@@ -29,6 +31,28 @@ public class MessageListener {
                 if (this.chatAdapter.currentUsername().equals(sender)) {
                     this.chatAdapter.showNewMessage();
                 }
+            }
+        });
+    }
+
+    public void onMessageEdit(String chatDest, UUID msgID, String newContent, long newTimestamp) {
+
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (chatAdapter != null && chatAdapter.currentUsername().equals(chatDest)) {
+                chatAdapter.editMsg(msgID, newContent, newTimestamp);
+            } else {
+                MessageStore.editMsg(chatDest, msgID, newContent, newTimestamp);
+            }
+        });
+    }
+
+    public void onMessageDelete(String chatDest, UUID msgID, long newTimestamp) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if(this.chatAdapter != null && chatAdapter.currentUsername().equals(chatDest)){
+                this.chatAdapter.deleteMsg(msgID,newTimestamp);
+            }
+            else{
+                MessageStore.deleteMsg(chatDest,msgID,newTimestamp);
             }
         });
     }

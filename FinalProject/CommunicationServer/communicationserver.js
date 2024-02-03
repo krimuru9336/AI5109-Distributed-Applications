@@ -93,6 +93,7 @@ sio.on('connection',(socket) => {
 			const usernameDest = message.usernameDest;
 			const messageContent = message.messageContent;
 			const timestamp = message.timestamp;
+			const msgID = message.msgID;
 			console.log(usernameDest);
 			console.log(messageContent);
 			const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
@@ -103,17 +104,71 @@ sio.on('connection',(socket) => {
 						usernameSource: usernameSource,
 						message: messageContent,
 						timestamp: timestamp,
+						msgID: msgID,
 					},
 					action:'message',
 				});
 			}
 		}
 		catch(error){
-			console.log("Message.");
+			console.log("Message error.");
 			console.log(error);
 		}
 	});
 	
+    socket.on('delete',(message) => {
+		try {
+			console.log("Delete");
+			const usernameDest = message.usernameDest;
+			const msgID = message.msgID;
+			const timestamp = message.timestamp;
+
+			const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
+			const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
+			if(socketidDest){
+				sio.to(socketidDest).emit('delete',{
+					data: {
+						usernameSource: usernameSource,
+						timestamp: timestamp,
+						msgID: msgID,
+					},
+					action:'delete',
+				});
+			}
+		}
+		catch(error){
+			console.log("Delete error.");
+			console.log(error);
+		}
+	});
+	
+	socket.on('edit',(message) => {
+		try {
+			console.log("Edit");
+			const usernameDest = message.usernameDest;
+			const msgID = message.msgID;
+			const messageContent = message.messageContent;
+			const timestamp = message.timestamp;
+
+			const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
+			const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
+			if(socketidDest){
+				sio.to(socketidDest).emit('edit',{
+					data: {
+						usernameSource: usernameSource,
+						timestamp: timestamp,
+						msgID: msgID,
+						messageContent: messageContent,
+					},
+					action:'edit',
+				});
+			}
+		}
+		catch(error){
+			console.log("Edit error.");
+			console.log(error);
+		}
+	});
 });
 
 // Start the server

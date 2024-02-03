@@ -45,6 +45,13 @@
 * the message includes the senders username and timestamp, when the message was written
 * to return to the users overview, click the arrow on the top left
 
+### Editing / Deleting messages
+* when clicking and holding on a message, you can choose different actions for your message by clicking onto them
+* you can delete incoming messages for yourself
+* you can delete outgoing (your) messages for yourself, for all and also delete them
+* the timestamp of editing/deleting will be shown
+* deleted messages cannot be edited, deleted or restored anymore
+
 # Node Server
 * node server is used for user discovery via websockets and for sending messages between users
 * written in JavaScript using the [Express](https://expressjs.com/) framework
