@@ -23,10 +23,12 @@ CREATE TABLE usergroups (
 CREATE TABLE messages (
     id VARCHAR(255),
     sender_id VARCHAR(255) NOT NULL,
+    sender_username VARCHAR(255),
     receiver_user_id VARCHAR(255),
     receiver_group_id VARCHAR(255),
     content VARCHAR(255) NOT NULL,
     is_edited BOOLEAN DEFAULT FALSE,
+    sent_at DATETIME DEFAULT NOW(),
     PRIMARY KEY(id),
     FOREIGN KEY (sender_id) REFERENCES users(id),
     FOREIGN KEY (receiver_user_id) REFERENCES users(id),

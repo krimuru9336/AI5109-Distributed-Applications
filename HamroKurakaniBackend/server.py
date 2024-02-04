@@ -58,13 +58,21 @@ dbCur = dbCnx.cursor()
 insert_new_user = (
 "INSERT INTO users (id, username, password)"
 "VALUES (%s, %s, %s)")
-
+insert_new_message = (
+"INSERT INTO messages (id, sender_id, sender_username, receiver_user_id, receiver_group_id, content)"
+"VALUES (%s, %s, %s, %s, %s, %s)")
 select_user_by_username = "SELECT * from users WHERE username=%s"
 select_user_by_id = "SELECT * from users WHERE id=%s"
-
 select_every_users_expect_own = "SELECT id, username FROM users WHERE id!=%s"
+select_message_by_id = "SELECT * FROM messages WHERE id=%s"
 
+# these two are vise versa of each other
 userIdToSid = {}
+sidToUserId = {}
+
+def getUniqueId():
+    uuidObj = uuid.uuid4()
+    return str(uuidObj)
 
 @socketio.on("connect")
 def connected():
@@ -76,6 +84,7 @@ def connected():
         userId = decoded_token["sub"] # this also performs token verification
         print("client has connected with socket id:", request.sid)
         userIdToSid[userId] = request.sid
+        sidToUserId[request.sid] = userId
     except:
         return False
 
@@ -84,18 +93,41 @@ def handle_message(data):
     userSid = request.sid
     recipient_id = data.get('recipient_id')
     msg = data.get("message")
-    timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    if recipient_id:
-        recipientSid = userIdToSid[recipient_id]
-        roomName = recipientSid
-        join_room(roomName)
-        print(f"Sending message: '{msg}' to room: '{roomName}'")
-        emit("data", {'message': msg, 'sender': userSid, 'timestamp': timestamp}, room=recipientSid)
+    recipientSid = userIdToSid[recipient_id]
+    senderId = sidToUserId[userSid]
+
+    if recipientSid and senderId:
+        try:
+            dbCur.execute(select_user_by_id, (senderId,))
+            senders = dbCur.fetchall()
+            sender = senders[0] if len(senders) > 0 else None
+
+            if sender == None:
+                return False
+            
+            senderUsername = sender[1]
+            messageId = getUniqueId()
+
+            # Storing the message
+            dbCur.execute(insert_new_message, (messageId, senderId, senderUsername, None, None, msg))
+            dbCnx.commit()
+
+            # retreiving a stored
+            dbCur.execute(select_message_by_id, (messageId,))
+            messages = dbCur.fetchall()
+            newMessage = messages[0]
+
+            roomName = recipientSid
+            join_room(roomName)
+            print(f"Sending message: '{msg}' to room: '{roomName}'")
+            emit("data", { 'message': newMessage[5], 'sender': newMessage[2], 'timestamp': newMessage[7].strftime('%Y-%m-%dT%H:%M:%SZ') }, room=recipientSid)
+        except:
+            return False; 
     else:
         print(f"Broadcasting message: {msg}")
-        # If recipientSid is not provided, broadcast the message to all connected clients
-        emit("data", {'message': msg, 'sender': userSid,  'id': userSid, 'timestamp': timestamp}, broadcast=True)
+        # # If recipientSid is not provided, broadcast the message to all connected clients
+        # emit("data", {'message': msg, 'sender': userSid,  'id': userSid, 'timestamp': timestamp}, broadcast=True)
 
 
 @socketio.on("disconnect")
@@ -106,7 +138,7 @@ def disconnected():
 
 @app.route("/", methods=["GET"])
 def getServerStatus():
-    return jsonify(userIdToSid), 201
+    return jsonify({"userIdToSid": userIdToSid, "sidToUserId": sidToUserId }), 201
 
 @app.route("/login", methods=['POST'])
 def login():
@@ -141,8 +173,7 @@ def register():
     if(password == None):
         return "Password is required!", 400
     
-    userUuid = uuid.uuid4()
-    userId = str(userUuid)
+    userId = getUniqueId()
     hashedPassword = generate_password_hash(password=password)
 
     try:

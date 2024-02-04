@@ -88,7 +88,7 @@ function App({ route }) {
 
     const send = useCallback(() => {
         socket.emit("data", {
-            recipientUid: recipientId,
+            recipient_id: recipientId,
             message: newMessage
         })
         setNewMessage("")
@@ -110,9 +110,8 @@ function App({ route }) {
                 <Input
                     variant="outline"
                     size="md"
-                    onChangeText={(text) => { setNewMessage(text) }}
                 >
-                    <InputField placeholder="Enter Message" />
+                    <InputField placeholder="Enter Message" onChangeText={(text) => { setNewMessage(text) }} />
                 </Input>
                 <Button onPress={send} title='send' />
             </View>
