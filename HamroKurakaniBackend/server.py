@@ -116,13 +116,17 @@ def handle_message(data):
 
             # retreiving a stored
             dbCur.execute(select_message_by_id, (messageId,))
-            messages = dbCur.fetchall()
+            # messages = dbCur.fetchall()
+
+            rows = dbCur.fetchall()
+            columns = [column[0] for column in dbCur.description]
+            messages = [dict(zip(columns, row)) for row in rows]
             newMessage = messages[0]
 
             roomName = recipientSid
             join_room(roomName)
             print(f"Sending message: '{msg}' to room: '{roomName}'")
-            emit("data", { 'message': newMessage[5], 'sender': newMessage[2], 'timestamp': newMessage[7].strftime('%Y-%m-%dT%H:%M:%SZ') }, room=recipientSid)
+            emit("data", {"content":newMessage["content"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=recipientSid)
         except:
             return False; 
     else:

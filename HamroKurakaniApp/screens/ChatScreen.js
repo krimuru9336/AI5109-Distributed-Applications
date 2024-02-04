@@ -71,13 +71,35 @@ import { TextInput, View, Button, Text } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import SocketContext from '../context/SocketContext';
 import { Input, InputField } from '@gluestack-ui/themed';
+import AuthContext from '../context/AuthContext';
+import { API_URL } from "@env";
 
 function App({ route }) {
     const [newMessage, setNewMessage] = useState("");
     const [allMessages, setAllMessages] = useState([]);
     const [myUserId, setByUserId] = useState("samman");
     const { socket } = useContext(SocketContext);
+    const { accessToken } = useContext(AuthContext);
     const recipientId = route.params.receipientId;
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await axios.get(`${API_URL}/chat_history`, {
+                    params: {
+                        user_id: recipientId
+                    },
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+
+                setAllMessages(response.data.chats);
+            } catch (err) {
+                console.log(err)
+            }
+        })()
+    }, [])
 
     useEffect(() => {
         if (!socket) return
@@ -100,9 +122,9 @@ function App({ route }) {
                 {
                     allMessages.map((m, idx) =>
                         <View key={`${m.message}-${idx}`} style={{ backgroundColor: "pink", color: "black" }}>
-                            <Text>MESSAGE: {m.message}</Text>
-                            <Text>SENT BY: {m.sender}</Text>
-                            <Text>TIMESTAMP: {m.timestamp}</Text>
+                            <Text>MESSAGE: {m.content}</Text>
+                            <Text>SENT BY: {m.sender_username}</Text>
+                            <Text>TIMESTAMP: {m.sent_at}</Text>
                         </View>)
                 }
             </View>
