@@ -18,9 +18,10 @@ To run Chatapp application on your machine, follow these steps:
 3. **Setup:**
     - Run the SQL queries below in MySQL:
     -CREATE DATABASE `chatapp`;
+
     -CREATE TABLE `users` ( `id` int NOT NULL AUTO_INCREMENT,`username` varchar(45) NOT NULL,`password` varchar(45) NOT NULL,PRIMARY KEY (`id`)) ;
 
-    -CREATE TABLE `messages` (`id` int NOT NULL AUTO_INCREMENT,`text` varchar(255) NOT NULL,`receiver_id` int NOT NULL,`user_id` int NOT NULL, `timestamp` datetime DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `id_UNIQUE` (`id`),KEY `receiver_id` (`receiver_id`),KEY `user_id` (`user_id`),CONSTRAINT `receiver_id` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`),CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))
+    -CREATE TABLE `messages` (`id` int NOT NULL AUTO_INCREMENT,`text` varchar(255) NOT NULL,`receiver_id` int NOT NULL,`user_id` int NOT NULL, `timestamp` datetime DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `id_UNIQUE` (`id`),KEY        `receiver_id` (`receiver_id`),KEY `user_id` (`user_id`),CONSTRAINT `receiver_id` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`),CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))
 
 
     - Open the project in Visual Studio or any other IDE.
@@ -31,13 +32,13 @@ To run Chatapp application on your machine, follow these steps:
 
     - Navigate to the client directory
     - Run the command "npm i"
-    - Afer the packages are installed run the command "npx expo start --tunnel", to start the client
+    - After the packages are installed run the command "npx expo start --tunnel", to start the client
     - Install Expo Go on your phone from App Store (https://apps.apple.com/us/app/expo-go/id982107779) / Play Store (https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en&gl=US), and scan the QR code displayed on the terminal to open the application on your phone
     
 
 ## Features
 
-### User Registeration
+### User Registration
 
 - Users have to register for the first time with a unique name and the session is stored in the localstorage for future use.
 - After Registration the user is navigated to the users screen where the list of all the registered users is displayed.
