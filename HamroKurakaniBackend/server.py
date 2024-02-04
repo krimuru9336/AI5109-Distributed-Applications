@@ -65,6 +65,7 @@ select_user_by_username = "SELECT * from users WHERE username=%s"
 select_user_by_id = "SELECT * from users WHERE id=%s"
 select_every_users_expect_own = "SELECT id, username FROM users WHERE id!=%s"
 select_message_by_id = "SELECT * FROM messages WHERE id=%s"
+select_messages_by_sender_receiver_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_user_id = %s) OR (receiver_user_id = %s AND sender_id = %s)"
 
 # these two are vise versa of each other
 userIdToSid = {}
@@ -110,7 +111,7 @@ def handle_message(data):
             messageId = getUniqueId()
 
             # Storing the message
-            dbCur.execute(insert_new_message, (messageId, senderId, senderUsername, None, None, msg))
+            dbCur.execute(insert_new_message, (messageId, senderId, senderUsername, recipient_id, None, msg))
             dbCnx.commit()
 
             # retreiving a stored
@@ -203,6 +204,24 @@ def chats():
             return "Username already taken.", 400
         else:
             return f"Unexpected {ex=}, {type(ex)=}", 400
+
+@app.route("/chat_history", methods=['GET'])
+@jwt_required()
+def chat_history():
+    current_userid = get_jwt_identity()
+    second_userid = request.args.get('user_id')
+    try:
+        dbCur.execute(select_messages_by_sender_receiver_id, (current_userid, second_userid, current_userid, second_userid))
+        columns = [column[0] for column in dbCur.description]
+        rows = dbCur.fetchall()
+        chats = [dict(zip(columns, row)) for row in rows]
+        return jsonify({"chats": chats}), 201
+    except Exception as ex:
+        if ex.errno == 1062:
+            return "Username already taken.", 400
+        else:
+            return f"Unexpected {ex=}, {type(ex)=}", 400
+
 
 if __name__ == "__main__":
     socketio.run(app, debug=False)
