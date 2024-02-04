@@ -7,6 +7,7 @@ import mysql.connector
 from mysql.connector import Error 
 import json
 from datetime import datetime
+from typing import Any
 
 app = FastAPI()
 
@@ -30,11 +31,20 @@ class User(BaseModel):
     username:str
     password:str
 
+class UserID(BaseModel):
+    id:int
+
 class Message(BaseModel):
-    user_id: int 
+    _id: str 
+    createdAt: str
     receiver_id: int
-    message: str
-    timestamp: datetime
+    user: UserID
+
+class DeleteData(BaseModel):
+    message_id:str
+
+class EditMessage(BaseModel):
+    message: Any
 
 
 # Register a new user
@@ -104,31 +114,35 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int):
         while True:
             data = await websocket.receive_text()
             data = json.loads(data)
-            sender_id = int(user_id)
             receiver_id = data.get('receiver_id')
-            timestamp = datetime.utcnow()
-            
-            # Save the message to the database
-            cursor = connection.cursor()
-            query = """
-            INSERT INTO messages (text,receiver_id,user_id,timestamp)
-            VALUES (%s, %s, %s, %s)
-            """
-            values = (json.dumps(data), receiver_id, sender_id, timestamp)
-            cursor.execute(query, values)
-            connection.commit()
-            cursor.close()
+            if(data.get('type') == 'send'):
+                sender_id = int(user_id)                
+                timestamp = datetime.utcnow()
 
-            # Broadcast the message to the reciever
-            if receiver_id:
-                receiver_socket = connections.get(receiver_id)
-                if receiver_socket:
-                    print("SENDING")
-                    await receiver_socket.send_json(data)
-            # if sender_id:
-            #     sender_socket = connections.get(sender_id)
-            #     if sender_socket:
-            #         await sender_socket.send_json(data)
+                # Save the message to the database
+                cursor = connection.cursor()
+                query = """
+                INSERT INTO messages (text,receiver_id,user_id,timestamp)
+                VALUES (%s, %s, %s, %s)
+                """
+                values = (json.dumps(data), receiver_id, sender_id, timestamp)
+                cursor.execute(query, values)
+                connection.commit()
+                cursor.close()
+
+                # Broadcast the message to the reciever
+                if receiver_id:
+                    receiver_socket = connections.get(receiver_id)
+                    if receiver_socket:
+                        await receiver_socket.send_json(data)
+            elif(data.get('type') == 'refresh'):
+                if receiver_id:
+                    receiver_socket = connections.get(receiver_id)
+                    if receiver_socket:
+                        await receiver_socket.send_json({
+                            'type':'refresh'
+                        })
+
             
     except WebSocketDisconnect:
         # Remove disconnected WebSocket
@@ -180,6 +194,50 @@ async def get_chat_history(sender_id ,receiver_id):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal Server Error",
+        )
+
+    finally:
+        cursor.close()
+
+
+
+@app.post("/delete-message/")
+async def delete_message(data:DeleteData):
+    print(data.message_id)
+    cursor= connection.cursor()
+    try:
+        cursor.execute("DELETE FROM messages WHERE text LIKE %s", ['%' + data.message_id + '%'])
+        connection.commit()
+
+    except Error as e:
+        print(f"Error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Deleting message Failed: Internal Server Error",
+        )
+
+    finally:
+        cursor.close()
+
+
+@app.put("/edit-message/")
+async def edit_message(data:EditMessage):
+    cursor= connection.cursor()
+    message_id = data.message.get('_id', '')
+    print(message_id)
+    print(json.dumps(data.message))
+    try:
+        if(message_id):
+            cursor.execute("update messages set text = %s WHERE text LIKE %s ", [json.dumps(data.message), '%'+ message_id + '%'])
+            connection.commit()
+        else:
+            print('message_id missing')
+
+    except Error as e:
+        print(f"Error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Deleting message Failed: Internal Server Error",
         )
 
     finally:
