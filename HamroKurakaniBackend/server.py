@@ -61,11 +61,16 @@ insert_new_user = (
 insert_new_message = (
 "INSERT INTO messages (id, sender_id, sender_username, receiver_user_id, receiver_group_id, content)"
 "VALUES (%s, %s, %s, %s, %s, %s)")
+
 select_user_by_username = "SELECT * from users WHERE username=%s"
 select_user_by_id = "SELECT * from users WHERE id=%s"
 select_every_users_expect_own = "SELECT id, username FROM users WHERE id!=%s"
 select_message_by_id = "SELECT * FROM messages WHERE id=%s"
 select_messages_by_sender_receiver_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_user_id = %s) OR (receiver_user_id = %s AND sender_id = %s)"
+
+update_message_by_id = "UPDATE messages SET content=%s, is_edited=True WHERE id=%s"
+
+delete_message_by_id = "DELETE FROM messages WHERE id=%s"
 
 # these two are vise versa of each other
 userIdToSid = {}
@@ -89,8 +94,8 @@ def connected():
     except:
         return False
 
-@socketio.on('data')
-def handle_message(data):
+@socketio.on('new_message')
+def handle_new_message(data):
     userSid = request.sid
     recipient_id = data.get('recipient_id')
     msg = data.get("message")
@@ -126,7 +131,7 @@ def handle_message(data):
             roomName = recipientSid
             join_room(roomName)
             print(f"Sending message: '{msg}' to room: '{roomName}'")
-            emit("data", {"content":newMessage["content"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=recipientSid)
+            emit("new_message", {"content":newMessage["content"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=recipientSid)
         except:
             return False; 
     else:
@@ -134,6 +139,37 @@ def handle_message(data):
         # # If recipientSid is not provided, broadcast the message to all connected clients
         # emit("data", {'message': msg, 'sender': userSid,  'id': userSid, 'timestamp': timestamp}, broadcast=True)
 
+@socketio.on('edit')
+def handle_edit_message(data):
+    userSid = request.sid
+    message_id = data.get('message_id')
+    msg = data.get("message")
+
+    try:
+        dbCur.execute(update_message_by_id, (msg, message_id,))
+        dbCnx.commit()
+
+        dbCur.execute(select_message_by_id, (message_id,))
+
+        rows = dbCur.fetchall()
+        columns = [column[0] for column in dbCur.description]
+        messages = [dict(zip(columns, row)) for row in rows]
+        updated_message = messages[0]
+                
+        emit("edit", {"id": updated_message["id"], "content":updated_message["content"], "sender_username": updated_message['sender_username'], 'sent_at': updated_message['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=userSid)
+    except:
+        return False; 
+
+@socketio.on('delete')
+def handle_delete_message(data):
+    userSid = request.sid
+    message_id = data.get('message_id')
+    try:
+        dbCur.execute(delete_message_by_id, (message_id,))
+        dbCnx.commit()                
+        emit("delete", {"id": message_id}, room=userSid)
+    except:
+        return False; 
 
 @socketio.on("disconnect")
 def disconnected():
