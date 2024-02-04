@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="owner_ritty_tharakkal_raphel_nstatus_student_nstudent_id_1459915_nuniversity_fulda_university_of_applied_science_nfor_study_purpose">Owner: Ritty Tharakkal Raphel\nStatus: Student\nStudent ID: 1459915\nUniversity: Fulda University Of Applied Science\nFor study purpose</string>
+    <string name="dstore">DSTORE</string>
+    <string name="retrieve">Retrieve</string>
+    <string name="store">Store</string>
+    <string name="enter_text">Enter text</string>
+</resources>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "424611347445",
+    "project_id": "zaptalkfinal",
+    "storage_bucket": "zaptalkfinal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424611347445:android:6c810f0a052038bb60bebc",
+        "android_client_info": {
+          "package_name": "com.example.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEDjna4A4rDEZvTKkaTd462nGTfUsfC6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
