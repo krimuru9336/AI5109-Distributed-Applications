@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ZapTalk</string>
+    <string name="join_chat">Choose User</string>
+    <string name="chat">Talk</string>
+</resources>
