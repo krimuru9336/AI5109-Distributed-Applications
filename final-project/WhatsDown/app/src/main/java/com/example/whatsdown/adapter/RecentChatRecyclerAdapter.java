@@ -20,7 +20,6 @@ import com.example.whatsdown.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import org.w3c.dom.Text;
 
 public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter <ChatroomModel, RecentChatRecyclerAdapter.ChatroomModelViewHolder>{
 
@@ -34,26 +33,31 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter <Chatroo
     protected void onBindViewHolder(@NonNull ChatroomModelViewHolder holder, int position, @NonNull ChatroomModel model) {
         FirebaseUtil.getOtherUserFromChatroom(model.getUserIds())
                 .get().addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         boolean lastMessageSentByMe = model.getLastMessageSenderId().equals(FirebaseUtil.currentUserId());
+                        boolean isLastMessageDeleted = model.getLastMessage().isDeleted();
+                        String lastMessageText = model.getLastMessage().getMessage();
 
                         UserModel otherUserModel = task.getResult().toObject(UserModel.class);
 
                         holder.usernameText.setText(otherUserModel.getUsername());
-                        if(lastMessageSentByMe)
-                            holder.lastMessageText.setText("You : "+model.getLastMessage());
-                        else
-                            holder.lastMessageText.setText(model.getLastMessage());
-                        holder.lastMessageTime.setText(FirebaseUtil.timestampToString(model.getLastMessageTimestamp()));
+                        if (isLastMessageDeleted) {
+                            lastMessageText = "This message was deleted.";
+                        }
+
+                        if (lastMessageSentByMe)
+                            lastMessageText = isLastMessageDeleted ? "You deleted this message." : String.format("You: %s", lastMessageText);
+                        holder.lastMessageText.setText(lastMessageText);
+
+                        holder.lastMessageTime.setText(FirebaseUtil.timestampToString(model.getLastMessage().getTimestamp()));
 
                         holder.itemView.setOnClickListener(v -> {
                             //navigate to chat activity
                             Intent intent = new Intent(context, ChatActivity.class);
-                            AndroidUtil.PassUserModelAsIntent(intent,otherUserModel);
+                            AndroidUtil.PassUserModelAsIntent(intent, otherUserModel);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         });
-
                     }
                 });
     }

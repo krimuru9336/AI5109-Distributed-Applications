@@ -2,10 +2,12 @@ package com.example.whatsdown;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,7 +28,7 @@ import com.google.firebase.firestore.Query;
 
 import java.util.Arrays;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapter.OnChatItemClickListener{
 
     UserModel otherUser;
     String chatroomId;
@@ -38,7 +40,8 @@ public class ChatActivity extends AppCompatActivity {
     TextView otherUsername;
     RecyclerView recyclerView;
     ChatRecyclerAdapter adapter;
-//    ImageView imageView;
+
+    FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,6 @@ public class ChatActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.back_btn);
         otherUsername = findViewById(R.id.other_username);
         recyclerView = findViewById(R.id.chat_recycler_view);
-//        imageView = findViewById(R.id.profile_pic_image_view);
 
         backBtn.setOnClickListener((v)->{
             onBackPressed();
@@ -84,6 +86,7 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);
+        adapter.setOnChatItemClickListener(this);
         recyclerView.setAdapter(adapter);
         adapter.startListening();
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -97,19 +100,18 @@ public class ChatActivity extends AppCompatActivity {
 
     void sendMessageToUser(String message){
 
-        chatroomModel.setLastMessageTimestamp(Timestamp.now());
+        ChatMessageModel chatMessage = new ChatMessageModel(FirebaseUtil.createMessageId(), message, FirebaseUtil.currentUserId(), Timestamp.now(),false);
+        chatroomModel.setLastMessage(chatMessage);
         chatroomModel.setLastMessageSenderId(FirebaseUtil.currentUserId());
-        chatroomModel.setLastMessage(message);
         FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
 
-        ChatMessageModel chatMessageModel = new ChatMessageModel(message,FirebaseUtil.currentUserId(),Timestamp.now());
-        FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
+
+        FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessage)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
                         if(task.isSuccessful()){
                             messageInput.setText("");
-//                            sendNotification(message);
                         }
                     }
                 });
@@ -130,5 +132,16 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onLongPress(int position, ChatMessageModel chatMessage) {
+        showMessageEditBottomSheet(chatMessage);
+    }
+    private void showMessageEditBottomSheet(ChatMessageModel chatMessage) {
+        if (!chatMessage.isDeleted()){
+            MessageEditBottomSheet bottomSheet = MessageEditBottomSheet.newInstance(chatMessage, chatroomModel);
+            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+        }
     }
 }

@@ -6,6 +6,7 @@
     <color name="light_grey">#8C848E</color>
     <color name="off_white">#EAE8E4</color>
 
+    <color name="delete_button_color">#DF2828</color>
     <color name="sender_chat_color">#009688</color>
     <color name="receiver_chat_color">#A62A54</color>
 </resources>

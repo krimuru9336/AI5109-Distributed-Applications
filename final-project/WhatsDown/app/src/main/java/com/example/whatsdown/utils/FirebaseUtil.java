@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.UUID;
 
 public class FirebaseUtil {
     public static String currentUserId(){
@@ -59,6 +60,10 @@ public class FirebaseUtil {
 
     public static String timestampToString(Timestamp timestamp){
         return new SimpleDateFormat("HH:MM").format(timestamp.toDate());
+    }
+
+    public static String createMessageId() {
+        return UUID.randomUUID().toString();
     }
 
 //    public static void logout(){
