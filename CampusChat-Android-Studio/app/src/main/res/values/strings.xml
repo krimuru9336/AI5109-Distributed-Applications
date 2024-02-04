@@ -19,5 +19,7 @@
     <string name="users">Users</string>
     <string name="send_message_button">Send message button</string>
     <string name="type_a_message">Type a message</string>
-    <string name="back_button">back Button</string>>
+    <string name="back_button">back Button</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>>
 </resources>

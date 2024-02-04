@@ -14,37 +14,40 @@ import demo.campuschat.model.User;
 
 public class DataSeeder {
 
-//    public static void seedUsers(DatabaseReference databaseReference) {
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (!dataSnapshot.exists()) {
-//                    // Data does not exist, proceed with seeding
-//                    List<User> users = new ArrayList<>();
-//                    // Add some test users
-//                    users.add(new User("yMzSSdkEOZVQvETXFRwUs3f0mAf1", "user1", "User1@example.com"));
-//                    users.add(new User("rKRIkZW1EHQny9npQg3uHvvA0cC3", "user2", "User2@example.com"));
-//                    // ...
-//
-//                    for (User user : users) {
-//                        databaseReference.child(user.getUserId()).setValue(user);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Handle possible errors
-//            }
-//        });
-//    }
+    public static void seedUsers(DatabaseReference databaseReference) {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    // Data does not exist, proceed with seeding
+                    List<User> users = new ArrayList<>();
+                    // Add some test users
+                    users.add(new User("JenIABYjFFfs51RPxEdhiQqhXb42", "user1", "User1@example.com"));
+                    users.add(new User("wkSU1jlFo7eriCoUqrmiehoefQo1", "user2", "User2@example.com"));
+                    // ...
+
+                    for (User user : users) {
+                        databaseReference.child(user.getUserId()).setValue(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors
+            }
+        });
+    }
 
     public static void seedMessages(DatabaseReference databaseReference) {
 
         List<Message> messages = new ArrayList<>();
+        String messageId_1 = databaseReference.push().getKey();
+        String messageId_2 = databaseReference.push().getKey();
+
         // Add some test messages
-        messages.add(new Message("JenIABYjFFfs51RPxEdhiQqhXb42", "wkSU1jlFo7eriCoUqrmiehoefQo1", "Hello User2!", System.currentTimeMillis()));
-        messages.add(new Message("wkSU1jlFo7eriCoUqrmiehoefQo1", "JenIABYjFFfs51RPxEdhiQqhXb42", "Hi User1!", System.currentTimeMillis()));
+        messages.add(new Message(messageId_1,"JenIABYjFFfs51RPxEdhiQqhXb42", "wkSU1jlFo7eriCoUqrmiehoefQo1", "Hello User2!", System.currentTimeMillis()));
+        messages.add(new Message(messageId_2,"wkSU1jlFo7eriCoUqrmiehoefQo1", "JenIABYjFFfs51RPxEdhiQqhXb42", "Hi User1!", System.currentTimeMillis()));
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -52,7 +55,7 @@ public class DataSeeder {
                 if (!dataSnapshot.exists()) {
                     // Data does not exist, proceed with seeding
                     for (Message message : messages) {
-                        databaseReference.push().setValue(message);
+                        databaseReference.child(message.getMessageId()).setValue(message);
                     }
                 }
             }

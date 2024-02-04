@@ -21,8 +21,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private final int VIEW_TYPE_SENT = 1;
     private final int VIEW_TYPE_RECEIVED = 2;
 
-    public MessageAdapter(List<Message> messageList) {
+    private final MessageLongClickListener longClickListener;
+
+    public MessageAdapter(List<Message> messageList, MessageLongClickListener messageLongClickListener) {
         this.messageList = messageList;
+        this.longClickListener = messageLongClickListener;
     }
 
     @Override
@@ -54,6 +57,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         Message message = messageList.get(position);
         holder.messageTextView.setText(message.getMessageText());
         holder.timestampView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", message.getTimestamp()));
+
+        if (getItemViewType(position) == VIEW_TYPE_SENT) {
+            holder.itemView.setOnLongClickListener(view -> {
+                if (longClickListener != null) {
+                    longClickListener.onMessageLongClicked(view, message, position);
+                }
+                return true; // Indicates the callback consumed the long press
+            });
+        }
     }
 
     @Override
@@ -64,9 +76,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageTextView;
         TextView timestampView;
+        View itemView;
 
         public MessageViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             messageTextView = itemView.findViewById(R.id.message_text_view);
             timestampView = itemView.findViewById(R.id.timestamp_view);
         }

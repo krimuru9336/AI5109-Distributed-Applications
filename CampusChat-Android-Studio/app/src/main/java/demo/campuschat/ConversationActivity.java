@@ -1,13 +1,17 @@
 package demo.campuschat;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import demo.campuschat.adapter.MessageAdapter;
+import demo.campuschat.adapter.MessageLongClickListener;
 import demo.campuschat.model.ChatSummary;
 import demo.campuschat.model.Message;
 import demo.campuschat.model.User;
@@ -57,7 +62,15 @@ public class ConversationActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view_messages);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         messageList = new ArrayList<>();
-        adapter = new MessageAdapter(messageList);
+        adapter = new MessageAdapter(messageList, new MessageLongClickListener() {
+            @Override
+            public void onMessageLongClicked(View view, Message message, int position) {
+                // Show a context menu or dialog with Edit/Delete options
+                showContextMenu(view, message, position);
+            }
+        });
+
+
         recyclerView.setAdapter(adapter);
 
         editTextChatBox = findViewById(R.id.edittext_chatbox);
@@ -85,9 +98,94 @@ public class ConversationActivity extends AppCompatActivity {
         buttonSend.setOnClickListener(v -> sendMessage());
     }
 
-    private void loadMessages() {
+    private void showContextMenu(View view, Message message, int position) {
+        // Logic to show a context menu or a dialog with options
 
+        PopupMenu popup = new PopupMenu(view.getContext(), view);
+        popup.inflate(R.menu.context_menu);
+        popup.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.edit){
+                promptEditMessage(message, position);
+                return true;
+            } else if (id == R.id.delete){
+                deleteMessage(message, position);
+                return true;
+            } else {
+                return false;
+            }
+        });
+        popup.show();
+    }
+
+    private void deleteMessage(Message message, int position) {
         String senderId = currentUser.getUid();
+
+        String messageId = message.getMessageId();
+
+        fetchUserName(senderId ,userName -> {
+            messagesRef.child(messageId).removeValue()
+                    .addOnSuccessListener(aVoid -> {
+
+                        // Successfully deleted the message
+                        if (isLastMessage(position - 1)) {
+                            message.setMessageText("This message was deleted");
+                            message.setTimestamp(System.currentTimeMillis());
+
+                            createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
+                            createOrUpdateChatSummary(receiver_Id, senderId, userName, message);
+                            Log.d("user-name", "deleteMessage: "+ userName);
+                        }
+                    })
+                    .addOnFailureListener( e -> {
+                        Toast.makeText(ConversationActivity.this, "Failed to delete message", Toast.LENGTH_SHORT).show();
+                    });
+        });
+
+    }
+
+    private void promptEditMessage(final Message message, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ConversationActivity.this);
+        builder.setTitle("Edit Message");
+
+        final EditText input = new EditText(ConversationActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setText(message.getMessageText());
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", (dialog, which) -> editMessage(message, position, input.getText().toString()));
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+
+    private void editMessage(Message message, int position, String newMessageText) {
+        String senderId = currentUser.getUid();
+
+        String messageId = message.getMessageId();
+
+        fetchUserName(senderId, userName -> messagesRef.child(messageId).child("messageText").setValue(newMessageText)
+                .addOnSuccessListener(aVoid -> {
+                    // Successfully updated the message
+                    message.setMessageText(newMessageText);
+                    adapter.notifyItemChanged(position);
+
+                    if (isLastMessage(position)) {
+                        createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
+                        createOrUpdateChatSummary(receiver_Id, senderId, userName, message);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    Toast.makeText(ConversationActivity.this, "Failed to edit message", Toast.LENGTH_SHORT).show();
+                }));
+
+    }
+
+    private void loadMessages() {
+        String senderId = currentUser.getUid();
+
         messagesRef.addValueEventListener(new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -118,40 +216,24 @@ public class ConversationActivity extends AppCompatActivity {
 
 
         if (!messageText.isEmpty() && currentUser != null) {
-            String senderId = currentUser.getUid(); //1
-            String receiverId = receiver_Id; //2
-            String receiverName = receiver_Name; //user2
+            String senderId = currentUser.getUid();
 
-            DatabaseReference currentUserRef = userRef.child(senderId);
 
-            currentUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    User user = dataSnapshot.getValue(User.class);
-                    String senderName ;
-                    if (user != null) {
-                        senderName = user.getUserName();
+            fetchUserName( senderId ,senderName -> {
+                String messageId = messagesRef.push().getKey();
+                Message message = new Message(messageId, senderId, receiver_Id, messageText, System.currentTimeMillis());
+                messagesRef.child(messageId).setValue(message)
+                        .addOnSuccessListener(aVoid -> {
+                            // Check if ChatSummary exists, if not create it
+                            createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
+                            createOrUpdateChatSummary(receiver_Id, senderId, senderName, message);
+                        })
+                        .addOnFailureListener(e -> {
+                            // Handle failure
+                            Log.e("Messaging", "Failed to send message", e);
+                        });
 
-                        Message message = new Message(senderId, receiverId, messageText, System.currentTimeMillis());
-                        messagesRef.push().setValue(message)
-                                .addOnSuccessListener(aVoid -> {
-                                    // Check if ChatSummary exists, if not create it
-                                    createOrUpdateChatSummary(senderId, receiverId, receiverName, message);
-                                    createOrUpdateChatSummary(receiverId, senderId, senderName, message);
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Handle failure
-                                    Log.e("Messaging", "Failed to send message", e);
-                                });
-
-                        editTextChatBox.setText("");
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.e("fetchUser", "Error fetching user data", databaseError.toException());
-                }
+                editTextChatBox.setText("");
             });
 
         }
@@ -161,7 +243,7 @@ public class ConversationActivity extends AppCompatActivity {
 
         chatSummaryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ChatSummary chatSummary;
                 if (dataSnapshot.exists()) {
                     // ChatSummary exists, update it
@@ -175,15 +257,41 @@ public class ConversationActivity extends AppCompatActivity {
                 } else {
                     // ChatSummary does not exist, create a new one
                     chatSummary = new ChatSummary(chatPartnerId, chatPartnerName, message.getMessageText(), message.getTimestamp());
-                    // Assuming you have a method to fetch or derive chat partner's name
                 }
                 chatSummaryRef.child(userId).child(chatPartnerId).setValue(chatSummary);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("ChatSummaryUpdate", "Database error: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void fetchUserName(String userId, final OnUserNameFetchedListener listener) {
+        userRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    listener.onUserNameFetched(user.getUserName());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("fetchUserName", "Error fetching user data", databaseError.toException());
+                listener.onUserNameFetched(null);
+            }
+        });
+    }
+
+    interface OnUserNameFetchedListener {
+        void onUserNameFetched(String userName);
+    }
+
+
+    private boolean isLastMessage(int position) {
+        return position == messageList.size() - 1;
     }
 }
