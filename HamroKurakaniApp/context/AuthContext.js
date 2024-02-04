@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default AuthContext = createContext({
   accessToken: '',
-  setAccessToken: () => { }
+  setAccessToken: () => { },
 });
 
 const accessTokenKey = "accessToken";

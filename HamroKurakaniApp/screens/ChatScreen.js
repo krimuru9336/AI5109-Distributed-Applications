@@ -64,49 +64,38 @@
 
 
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import io from "socket.io-client";
 import axios from 'axios';
 import { TextInput, View, Button, Text } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
+import SocketContext from '../context/SocketContext';
+import { Input, InputField } from '@gluestack-ui/themed';
 
-function App() {
+function App({ route }) {
     const [newMessage, setNewMessage] = useState("");
     const [allMessages, setAllMessages] = useState([]);
     const [myUserId, setByUserId] = useState("samman");
-    const [socket, setSocket] = useState();
-
-    const connectSocket = (userId) => {
-        setSocket(io(`http://localhost:5000?uid=${userId}`))
-    }
-
-    useEffect(() => {
-        if(myUserId) connectSocket(myUserId)
-    }, [myUserId])
+    const { socket } = useContext(SocketContext);
+    const recipientId = route.params.receipientId;
 
     useEffect(() => {
         if (!socket) return
-        console.log("SOCKET ID: ", socket.id)
         socket.on("data", (data) => {
-            console.log("data:: ", data)
             setAllMessages(prev => [...prev, data])
         })
     }, [socket])
 
     const send = useCallback(() => {
         socket.emit("data", {
-            recipientUid: "john",
+            recipientUid: recipientId,
             message: newMessage
         })
         setNewMessage("")
-    }, [socket, newMessage, myUserId])
+    }, [socket, newMessage, myUserId, recipientId])
 
     return (
-        <View className="App">
-            {/* <TextInput onChangeText={(e) => { setByUserId(e) }}></TextInput>
-            <Button onPress={(e) => connectSocket(myUserId)} title='login' /> */}
-            <TextInput onChangeText={(e) => { setNewMessage(e) }}></TextInput>
-            <Button onPress={send} title='send' />
+        <View className="ChatScreen" style={{ height: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10 }}>
             <View style={{ display: 'flex', gap: 10 }}>
                 {
                     allMessages.map((m, idx) =>
@@ -116,6 +105,16 @@ function App() {
                             <Text>TIMESTAMP: {m.timestamp}</Text>
                         </View>)
                 }
+            </View>
+            <View style={{ display: 'flex', gap: 5 }}>
+                <Input
+                    variant="outline"
+                    size="md"
+                    onChangeText={(text) => { setNewMessage(text) }}
+                >
+                    <InputField placeholder="Enter Message" />
+                </Input>
+                <Button onPress={send} title='send' />
             </View>
         </View>
     );

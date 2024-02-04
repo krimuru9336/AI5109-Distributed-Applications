@@ -5,36 +5,59 @@
  * @format
  */
 
-import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView, Text, useColorScheme } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import io from "socket.io-client";
+import { API_URL } from "@env";
 
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import AuthContext from './context/AuthContext';
-
-import AuthScreen from './screens/AuthScreen';
 import ChatListScreen from './screens/ChatListScreen';
+import ChatScreen from './screens/ChatScreen';
+import SocketContext from './context/SocketContext';
+import AuthContext from './context/AuthContext';
+import AuthScreen from './screens/AuthScreen';
+import { Box, Button, ButtonText, Heading } from '@gluestack-ui/themed';
+
+const Stack = createNativeStackNavigator();
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-  const { accessToken } = useContext(AuthContext);
-  const [username, setUsername] = useState('');
+  const { setSocket } = useContext(SocketContext);
+  const { accessToken, setAccessToken } = useContext(AuthContext);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  useEffect(() => {
+    if (accessToken) setSocket(io(`${API_URL}?access_token=${accessToken}`))
+  }, [accessToken])
+
+  const logout = () => {
+    setAccessToken("")
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      {accessToken ? (
-        <ChatListScreen username={username} />
-      ) : (
-        <AuthScreen
-          onSuccessfulLogin={(username) => {
-            setUsername(username);
+    accessToken ? (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName='ChatListScreen'
+          screenOptions={{
+            headerTitle: () =>
+              <Box display='flex' flexDirection='row' justifyContent='space-between' w="100%">
+                <Heading>Hamro KuraKani</Heading>
+                <Button
+                  size="md"
+                  variant="solid"
+                  action="negative"
+                  marginRight={50}
+                >
+                  <ButtonText onPress={logout}>Logout</ButtonText>
+                </Button>
+              </Box>
           }}
-        />
-      )}
-    </SafeAreaView>
+        >
+          <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
+          <Stack.Screen name="ChatScreen" component={ChatScreen} />
+        </Stack.Navigator>
+      </NavigationContainer >
+    ) : (
+      <AuthScreen />
+    )
   );
 }
 

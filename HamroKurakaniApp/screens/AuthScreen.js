@@ -17,6 +17,7 @@ import {
 import { API_URL } from "@env"
 import axios from 'axios'
 import AuthContext from '../context/AuthContext'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function AuthScreen({ onSuccessfulLogin }) {
     const [selectedTab, setSelectedTab] = useState("login");
@@ -60,72 +61,76 @@ export default function AuthScreen({ onSuccessfulLogin }) {
     }
 
     return (
-        <Box h="$32" w="$72">
-            <Box>
-                <FormControl size="md" isDisabled={false} isInvalid={false} isReadOnly={false} isRequired={false} >
-                    <FormControlLabel mb='$1'>
-                        <FormControlLabelText>Username</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input>
-                        <InputField
-                            type="text"
-                            placeholder="username"
-                            value={username}
-                            onChangeText={(val) => setUsername(val)}
-                        />
-                    </Input>
-                </FormControl>
-                <FormControl size="md" isDisabled={false} isInvalid={false} isReadOnly={false} isRequired={false} >
-                    <FormControlLabel mb='$1'>
-                        <FormControlLabelText>Password</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input>
-                        <InputField
-                            type="password"
-                            placeholder="password"
-                            value={password}
-                            onChangeText={(val) => setPassword(val)}
-                        />
-                    </Input>
-                </FormControl>
-                <FormControl size="md" isDisabled={false} isInvalid={false} isReadOnly={false} isRequired={false} >
-                    <Button
-                        size="md"
-                        variant="solid"
-                        action="primary"
-                        isDisabled={false}
-                        isFocusVisible={false}
-                        onPress={handleSubmit}
-                    >
-                        <ButtonText>{selectedTab}</ButtonText>
-                    </Button>
-                </FormControl>
+        <SafeAreaView>
+            <Box h="100%" w="100%" alignItems='center'>
+                <Box h="$32" w="$72" marginTop={50}>
+                    <Box>
+                        <FormControl size="md" isDisabled={false} isInvalid={false} isReadOnly={false} isRequired={false} >
+                            <FormControlLabel mb='$1'>
+                                <FormControlLabelText>Username</FormControlLabelText>
+                            </FormControlLabel>
+                            <Input>
+                                <InputField
+                                    type="text"
+                                    placeholder="username"
+                                    value={username}
+                                    onChangeText={(val) => setUsername(val)}
+                                />
+                            </Input>
+                        </FormControl>
+                        <FormControl size="md" isDisabled={false} isInvalid={false} isReadOnly={false} isRequired={false} >
+                            <FormControlLabel mb='$1'>
+                                <FormControlLabelText>Password</FormControlLabelText>
+                            </FormControlLabel>
+                            <Input>
+                                <InputField
+                                    type="password"
+                                    placeholder="password"
+                                    value={password}
+                                    onChangeText={(val) => setPassword(val)}
+                                />
+                            </Input>
+                        </FormControl>
+                        <FormControl size="md" isDisabled={false} isInvalid={false} isReadOnly={false} isRequired={false} >
+                            <Button
+                                size="md"
+                                variant="solid"
+                                action="primary"
+                                isDisabled={false}
+                                isFocusVisible={false}
+                                onPress={handleSubmit}
+                            >
+                                <ButtonText>{selectedTab}</ButtonText>
+                            </Button>
+                        </FormControl>
+                    </Box>
+                    <Box>
+                        {
+                            selectedTab == "login" ?
+                                <Button
+                                    size="md"
+                                    variant="link"
+                                    action="primary"
+                                    isDisabled={false}
+                                    isFocusVisible={false}
+                                    onPress={() => { setSelectedTab("register") }}
+                                >
+                                    <ButtonText>Register Instead</ButtonText>
+                                </Button> :
+                                <Button
+                                    size="md"
+                                    variant="link"
+                                    action="primary"
+                                    isDisabled={false}
+                                    isFocusVisible={false}
+                                    onPress={() => { setSelectedTab("login") }}
+                                >
+                                    <ButtonText>Login Instead</ButtonText>
+                                </Button>
+                        }
+                    </Box>
+                </Box>
             </Box>
-            <Box>
-                {
-                    selectedTab == "login" ?
-                        <Button
-                            size="md"
-                            variant="link"
-                            action="primary"
-                            isDisabled={false}
-                            isFocusVisible={false}
-                            onPress={() => { setSelectedTab("register") }}
-                        >
-                            <ButtonText>Register Instead</ButtonText>
-                        </Button> :
-                        <Button
-                            size="md"
-                            variant="link"
-                            action="primary"
-                            isDisabled={false}
-                            isFocusVisible={false}
-                            onPress={() => { setSelectedTab("login") }}
-                        >
-                            <ButtonText>Login Instead</ButtonText>
-                        </Button>
-                }
-            </Box>
-        </Box>
+        </SafeAreaView>
     )
 }

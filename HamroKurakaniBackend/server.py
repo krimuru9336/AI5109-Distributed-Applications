@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from flask import Flask, request,jsonify
 from flask_socketio import SocketIO,emit,send, join_room
 from flask_cors import CORS
@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import mysql.connector
 from mysql.connector import errorcode
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, decode_token, JWTManager
 import os
 import uuid
 from flask_cors import CORS
@@ -28,7 +28,7 @@ app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 app.config['SECRET_KEY'] = os.getenv("SOCKET_SECRET_KEY")
-CORS(app,resources={r"/*":{"origins":"*"}})
+CORS(app,resources={r"/*":{"origins":"decoded_token*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
 
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
@@ -59,28 +59,35 @@ insert_new_user = (
 "INSERT INTO users (id, username, password)"
 "VALUES (%s, %s, %s)")
 
-select_user = "SELECT * from users WHERE username=%s"
+select_user_by_username = "SELECT * from users WHERE username=%s"
+select_user_by_id = "SELECT * from users WHERE id=%s"
 
-select_every_users_expect_own = "SELECT id, username FROM users WHERE username!=%s"
+select_every_users_expect_own = "SELECT id, username FROM users WHERE id!=%s"
 
 userIdToSid = {}
 
 @socketio.on("connect")
 def connected():
-    userId = request.args.get("uid")
-    print("client has connected with socket id:", request.sid)
-    userIdToSid[userId] = request.sid
+    access_token = request.args.get("access_token")
+    if not access_token:
+        return False
+    try:
+        decoded_token = decode_token(access_token)
+        userId = decoded_token["sub"] # this also performs token verification
+        print("client has connected with socket id:", request.sid)
+        userIdToSid[userId] = request.sid
+    except:
+        return False
 
 @socketio.on('data')
 def handle_message(data):
     userSid = request.sid
-    recipientUid = data.get('recipientUid')
+    recipient_id = data.get('recipient_id')
     msg = data.get("message")
-    print(recipientUid)
     timestamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
-    if recipientUid:
-        recipientSid = userIdToSid[recipientUid]
-        print(":::: ", recipientUid)
+
+    if recipient_id:
+        recipientSid = userIdToSid[recipient_id]
         roomName = recipientSid
         join_room(roomName)
         print(f"Sending message: '{msg}' to room: '{roomName}'")
@@ -111,11 +118,12 @@ def login():
     if(password == None):
         return "Password is required!", 400
     try:
-        dbCur.execute(select_user, (username,))
+        dbCur.execute(select_user_by_username, (username,))
         users = dbCur.fetchall()
         user = users[0] if len(users) > 0 else None
         if user and check_password_hash(user[2], password):
-            access_token = create_access_token(identity=username, expires_delta=datetime.timedelta(days=30))
+            user_id = user[0]
+            access_token = create_access_token(identity=user_id, expires_delta=timedelta(days=30))
             return jsonify({"message": "Login successfully", "accessToken": access_token}), 201
         else:
             return jsonify({"message": "Incorrect username or password"}), 400
@@ -150,9 +158,9 @@ def register():
 @app.route("/chats", methods=['GET'])
 @jwt_required()
 def chats():
-    current_username = get_jwt_identity()
+    current_userid = get_jwt_identity()
     try:
-        dbCur.execute(select_every_users_expect_own, (current_username, ))
+        dbCur.execute(select_every_users_expect_own, (current_userid, ))
         # getting columns name
         columns = [column[0] for column in dbCur.description]
         rows = dbCur.fetchall()
