@@ -93,7 +93,7 @@ clients: Dict[int, WebSocket] = {}
 async def get_past_messages(sender_id: int = Query(...), reciever_id: int = Query(...)):
     try:
         cursor = conn.cursor(dictionary=True)
-        query = "SELECT message as text, receiver_id as recieverId, sender_id as senderId, timestamp  FROM messages WHERE (receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s) ORDER BY timestamp"
+        query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp  FROM messages WHERE (receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s) ORDER BY timestamp"
         cursor.execute(query, (sender_id, reciever_id, reciever_id, sender_id))
         past_messages = cursor.fetchall()
         cursor.close()
@@ -120,46 +120,94 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                     print(f"Error decoding JSON: {e}")
                     continue
 
-                target_client_id = data.get("recieverId")
-                print(target_client_id)
+                if data.get("messageType") == "delete":
+                    # Handle delete signal
+                    try:
+                        message_id = data.get("messageId")
+                        cursor = conn.cursor()
+                        delete_query = "DELETE FROM messages WHERE id=%s"
+                        cursor.execute(delete_query, (message_id,))
+                        conn.commit()
+                        cursor.close()
+                    except mysql.connector.Error as err:
+                        raise HTTPException(
+                            status_code=500, detail=f"Database error: {err}")
 
-                # Send the received message to the specific client
-                if target_client_id:
+                    # Send deletion signal to the recipient
+                    target_client_id = data.get("recieverId")
                     target_websocket = clients.get(target_client_id)
                     if target_websocket:
-                        await target_websocket.send_text(json.dumps(data))
+                        await target_websocket.send_text(json.dumps({
+                            "messageType": "delete",
+                            "messageId": message_id,
+                        }))
+                elif data.get("messageType") == "update":
+                    # Handle update signal
+                    try:
+                        message_id = data.get("messageId")
+                        updated_text = data.get("updatedText")
+
+                        cursor = conn.cursor()
+                        update_query = "UPDATE messages SET message=%s WHERE id=%s"
+                        cursor.execute(
+                            update_query, (updated_text, message_id))
+                        conn.commit()
+                        cursor.close()
+
+                        # Send update signal to the recipient
+                        target_client_id = data.get("recieverId")
+                        target_websocket = clients.get(target_client_id)
+                        if target_websocket:
+                            await target_websocket.send_text(json.dumps({
+                                "messageType": "update",
+                                "messageId": message_id,
+                            }))
+                    except mysql.connector.Error as err:
+                        raise HTTPException(
+                            status_code=500, detail=f"Database error: {err}")
+
+                else:
+
+                    target_client_id = data.get("recieverId")
+
+                    try:
+                        cursor = conn.cursor()
+                        query = "INSERT INTO messages (message, sender_id, receiver_id, timestamp) VALUES (%s, %s, %s, %s)"
+                        cursor.execute(query, (data.get('text'), data.get(
+                            'senderId'), data.get('recieverId'), data.get('timestamp')))
+                        data['id'] = cursor.lastrowid
+                        conn.commit()
+                        cursor.close()
+                    except mysql.connector.Error as err:
+                        raise HTTPException(
+                            status_code=500, detail=f"Database error: {err}")
+
+                    # Send the received message to the specific client
+                    if target_client_id:
+                        target_websocket = clients.get(target_client_id)
+                        if target_websocket:
+                            await target_websocket.send_text(json.dumps(data))
+                        else:
+                            await websocket.send_text(json.dumps({
+                                'error': "Error: Client {target_client_id} not found"
+                            }))
                     else:
                         await websocket.send_text(json.dumps({
                             'error': "Error: Client {target_client_id} not found"
                         }))
-                else:
-                    await websocket.send_text(json.dumps({
-                        'error': "Error: Client {target_client_id} not found"
-                    }))
 
-                if client_id:
-                    client_websocket = clients.get(client_id)
-                    if client_websocket:
-                        await client_websocket.send_text(json.dumps(data))
+                    if client_id:
+                        client_websocket = clients.get(client_id)
+                        if client_websocket:
+                            await client_websocket.send_text(json.dumps(data))
+                        else:
+                            await websocket.send_text(json.dumps({
+                                'error': "Error: Client {client_id} not found"
+                            }))
                     else:
                         await websocket.send_text(json.dumps({
                             'error': "Error: Client {client_id} not found"
                         }))
-                else:
-                    await websocket.send_text(json.dumps({
-                        'error': "Error: Client {client_id} not found"
-                    }))
-
-                try:
-                    cursor = conn.cursor()
-                    query = "INSERT INTO messages (message, sender_id, receiver_id, timestamp) VALUES (%s, %s, %s, %s)"
-                    cursor.execute(query, (data.get('text'), data.get(
-                        'senderId'), data.get('recieverId'), data.get('timestamp')))
-                    conn.commit()
-                    cursor.close()
-                except mysql.connector.Error as err:
-                    raise HTTPException(
-                        status_code=500, detail=f"Database error: {err}")
 
             else:
                 print("Error with the data", data)

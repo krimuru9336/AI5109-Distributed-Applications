@@ -5,17 +5,23 @@ import {
     TextInput,
     Button,
     FlatList,
-    StyleSheet,
+    StyleSheet, Modal
 } from 'react-native';
 import { useSocket } from '../SocketContext';
 import { baseUrl } from '../baseUrl';
 import axios from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import AppButton from '../components/AppButton';
 
 const Chat = ({ route }) => {
     const { socket } = useSocket();
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const flatListRef = useRef(null);
+    const [selectedMessage, setSelectedMessage] = useState(null);
+    const [showContextMenu, setShowContextMenu] = useState(false);
+    const [showEditDialog, setShowEditDialog] = useState(false);
+    const editedMessage = useRef('')
 
     const getPastMessages = () => {
         if (route?.params?.user?.id) {
@@ -45,7 +51,11 @@ const Chat = ({ route }) => {
                     try {
                         const message = JSON.parse(event.data);
                         if (typeof message === 'object' && !message.error) {
-                            setMessages((prevMessages) => [...prevMessages, message]);
+                            if (message.messageType === 'delete' || message.messageType === 'update') {
+                                getPastMessages();
+                            } else {
+                                setMessages((prevMessages) => [...prevMessages, message]);
+                            }
                         }
                     } catch (error) {
                         console.error(error);
@@ -53,8 +63,11 @@ const Chat = ({ route }) => {
                 }
             });
         }
+    }, [socket]);
+
+    useEffect(() => {
         getPastMessages();
-    }, []);
+    }, [])
 
     useEffect(() => {
         // Scroll to the bottom when messages change
@@ -79,6 +92,71 @@ const Chat = ({ route }) => {
         }
     };
 
+    const handleEdit = () => {
+        setShowEditDialog(true);
+        setShowContextMenu(false);
+    };
+
+    const handleDelete = () => {
+        socket.send(JSON.stringify({
+            messageType: "delete",
+            messageId: selectedMessage.id,
+            recieverId: selectedMessage.recieverId
+        }));
+        getPastMessages();
+        setShowContextMenu(false)
+    };
+
+    const handleEditDialogSave = () => {
+        socket.send(JSON.stringify({
+            messageType: "update",
+            messageId: selectedMessage.id,
+            recieverId: selectedMessage.recieverId,
+            updatedText: editedMessage.current,
+        }));
+        getPastMessages();
+        setShowEditDialog(false);
+        setSelectedMessage(null)
+        editedMessage.current = ''
+    };
+
+
+    const ContextMenu = ({ item }) => {
+
+        return (
+            <Modal
+                visible={showContextMenu}
+                transparent={true}
+                animationType="slide"
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.contextMenu}>
+                        <TouchableOpacity
+                            style={styles.menuItem}
+                            onPress={() => handleEdit()}
+                        >
+                            <Text style={styles.menuText}>Edit</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.menuItem}
+                            onPress={() => handleDelete()}
+                        >
+                            <Text style={styles.menuText}>Delete</Text>
+                        </TouchableOpacity>
+                        <AppButton onPress={() => setShowContextMenu(false)} text='Cancel' />
+                    </View>
+                </View>
+            </Modal>
+        );
+    };
+
+    const onMessageLongPress = (message, event) => {
+        if (message.senderId === route?.params?.user?.id) {
+            setSelectedMessage(message);
+            setShowContextMenu(true);
+        }
+    };
+
     const renderMessage = ({ item }) => {
         const isCurrentUser = item.senderId === route?.params?.user?.id;
         const messageDate = new Date(item.timestamp);
@@ -90,17 +168,30 @@ const Chat = ({ route }) => {
             minute: 'numeric',
         })}`;
 
+
         return (
-            <View
-                style={[
-                    styles.messageContainer,
-                    isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
-                ]}
-            >
-                <Text style={styles.messageText}>{item.text}</Text>
-                <Text style={styles.timestamp}>{timestamp}</Text>
-            </View>
-        );
+            <View>
+                {selectedMessage?.id === item.id && showContextMenu && (
+                    <ContextMenu
+                        style={styles.contextMenu}
+                        item={item}
+                    />
+                )}
+                <TouchableOpacity
+                    onLongPress={(event) => isCurrentUser ? onMessageLongPress(item, event) : null}
+                >
+                    <View
+                        style={[
+                            styles.messageContainer,
+                            isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
+                        ]}
+                    >
+                        <Text style={styles.messageText}>{item.text}</Text>
+                        <Text style={styles.timestamp}>{timestamp}</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>)
+
     };
 
     return (
@@ -120,6 +211,29 @@ const Chat = ({ route }) => {
                 />
                 <Button title="Send" onPress={sendMessage} />
             </View>
+            <Modal
+                visible={showEditDialog}
+                transparent={true}
+                animationType="slide"
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.contextMenu}>
+                        <TextInput
+                            style={styles.editInput}
+                            onChangeText={(e) => {
+                                editedMessage.current = e
+                            }}
+                            defaultValue={selectedMessage?.text}
+                            multiline
+                        />
+                        <AppButton text="Save" onPress={handleEditDialogSave} />
+                        <Button title="Cancel" onPress={() => {
+                            setShowEditDialog(false)
+                            editedMessage.current = ''
+                        }} />
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -167,6 +281,49 @@ const styles = StyleSheet.create({
         color: '#555',
         textAlign: 'right',
         marginTop: 2,
+    },
+    contextMenu: {
+        position: 'absolute',
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 5,
+        elevation: 15,
+        alignSelf: 'flex-end',
+        zIndex: 10,
+        right: 30,
+        top: 75,
+        gap: 10,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    contextMenu: {
+        width: '80%',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 20,
+        elevation: 5,
+    },
+    menuItem: {
+        paddingVertical: 15,
+        borderBottomColor: '#E0E0E0',
+        alignItems: 'center',
+    },
+    cancelButton: {
+        borderBottomWidth: 0,
+        marginTop: 10,
+        backgroundColor: '#FFEB3B',
+    },
+    menuText: {
+        fontSize: 18,
+    },
+    editInput: {
+        borderWidth: 1,
+        marginBottom: 10,
+        padding: 5,
+        borderRadius: 5
     },
 });
 
