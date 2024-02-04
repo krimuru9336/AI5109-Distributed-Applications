@@ -1,45 +1,41 @@
-# AI5109-Distributed-Applications
+# ZapTalk Android App
 
-This README outlines the guidelines for working with this repository. It is essential to follow these guidelines to maintain a structured and collaborative development process.
+ZapTalk is a basic text messaging app built using Kotlin and Android Studio. It allows users to view a list of available users on the app and start chatting with selected users.
 
-## Basic Principles
+## Features
 
-1. **No Direct Work on Main Branch:**
-   - No one should directly work on the `main` branch.
+- **User Listing**: The app displays a list of available users for easy selection.
+- **Real-time Chatting**: Start chatting with selected users instantly.
+- **Media Sharing**: Start sharing media with selected users instantly.
+- **Group chatting**: Start chatting with selected groups instantly.
 
-2. **Individual Project Branches:**
-   - Each contributor manages their work on a branch named after their FD number (e.g., `fdai1234`).
+## Getting Started
 
-3. **Prohibition of Editing Others' Branches:**
-   - Editing or making changes directly to branches other than your own is strictly prohibited.
+### Prerequisites
 
-## Working on Your Own Branch
+- Android Studio installed
+- Android device or emulator
 
-Follow these steps to create and work on your own branch:
+### Installation
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
-   cd AI5109-Distributed-Applications
-   ```
+1. Clone the repository: `git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git`
+2. Open the project in Android Studio.
+3. Run the app on an emulator or a connected Android device.
 
-2. **Create a New Branch Named After Your FD Number:**
-   ```bash
-   git checkout -b fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+## Usage
 
-3. **Make Changes:**
-   - Implement your features or make necessary changes.
+1. Launch the app.
+2. Browse the list of available users.
+3. Select a user to start chatting.
 
-4. **Commit Changes:**
-   ```bash
-   git add .
-   git commit -m "Your meaningful commit message here"
-   ```
+## Contributing
 
-5. **Push Changes to Your Branch:**
-   ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+Feel free to contribute to the project. If you find any issues or have suggestions, please open an issue or create a pull request.
+
+## License
+
+Not Licensed
+
+## Acknowledgments
+
+- This project has been created for the purpose dof academic learning for the subject- Distributed applications.
