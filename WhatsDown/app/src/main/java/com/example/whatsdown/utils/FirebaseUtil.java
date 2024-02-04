@@ -1,10 +1,17 @@
 package com.example.whatsdown.utils;
 
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -76,6 +83,82 @@ public class FirebaseUtil {
     public static StorageReference  getOtherProfilePicStorageRef(String otherUserId){
         return FirebaseStorage.getInstance().getReference().child("profile_pic")
                 .child(otherUserId);
+    }
+
+    public static void updateChatMessage(String chatroomId, String userId, Timestamp timestamp, String newMessage) {
+        CollectionReference chatroomMessagesRef = getChatroomMessageReference(chatroomId);
+
+        // Query for the specific message based on userId and timestamp
+        Query query = chatroomMessagesRef
+                .whereEqualTo("senderId", userId)
+                .whereEqualTo("timestamp", timestamp);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        // Update the message
+                        DocumentReference messageRef = chatroomMessagesRef.document(document.getId());
+                        messageRef.update("message", newMessage)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            // Successfully updated the message
+                                            Log.e("EDIT DELETE", "MESSAGE UPDATED");
+
+                                        } else {
+                                            // Handle the error
+                                            Log.e("EDIT DELETE", "MESSAGE UPDATED ERROR");
+
+                                        }
+                                    }
+                                });
+                    }
+                } else {
+                    // Handle the error
+                }
+            }
+        });
+    }
+
+    public static void deleteChatMessage(String chatroomId, String userId, Timestamp timestamp) {
+        CollectionReference chatroomMessagesRef = getChatroomMessageReference(chatroomId);
+
+        // Query for the specific message based on userId and timestamp
+        Query query = chatroomMessagesRef
+                .whereEqualTo("senderId", userId)
+                .whereEqualTo("timestamp", timestamp);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        // Delete the message
+                        DocumentReference messageRef = chatroomMessagesRef.document(document.getId());
+                        messageRef.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            // Successfully deleted the message
+                                            Log.e("EDIT DELETE", "MESSAGE DELETED");
+
+                                        } else {
+                                            // Handle the error
+                                            Log.e("EDIT DELETE", "MESSAGE DELETED ERROR");
+
+                                        }
+                                    }
+                                });
+                    }
+                } else {
+                    // Handle the error
+                }
+            }
+        });
     }
 
 

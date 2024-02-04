@@ -9,15 +9,27 @@ import java.util.Locale;
 public class ChatMessageModel {
     private String message;
     private String senderId;
+    private String chatroomID;
     private Timestamp timestamp;
 
     public ChatMessageModel() {
     }
 
-    public ChatMessageModel(String message, String senderId, Timestamp timestamp) {
+
+
+    public ChatMessageModel(String message, String senderId, Timestamp timestamp, String chatroomId) {
         this.message = message;
         this.senderId = senderId;
         this.timestamp = timestamp;
+        this.chatroomID = chatroomId;
+    }
+
+    public String getChatroomID() {
+        return chatroomID;
+    }
+
+    public void setChatroomID(String chatroomID) {
+        this.chatroomID = chatroomID;
     }
 
     public String getMessage() {

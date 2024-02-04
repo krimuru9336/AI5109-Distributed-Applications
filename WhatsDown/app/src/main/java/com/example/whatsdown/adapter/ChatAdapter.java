@@ -17,12 +17,14 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class ChatAdapter extends FirestoreRecyclerAdapter<ChatMessageModel, ChatAdapter.ChatModelViewHolder> {
+    private final ClickListener clickListener;
 
     Context context;
 
-    public ChatAdapter(@NonNull FirestoreRecyclerOptions<ChatMessageModel> options, Context context) {
+    public ChatAdapter(@NonNull FirestoreRecyclerOptions<ChatMessageModel> options, Context context, ClickListener cl) {
         super(options);
         this.context = context;
+        clickListener = cl;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatMessageModel, Chat
         return new ChatModelViewHolder(view);
     }
 
-    class ChatModelViewHolder extends RecyclerView.ViewHolder {
+    class ChatModelViewHolder extends RecyclerView.ViewHolder implements  View.OnLongClickListener{
 
         LinearLayout leftChatLayout, rightChatLayout;
         TextView leftChatTextview, rightChatTextview;
@@ -55,7 +57,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatMessageModel, Chat
 
         public ChatModelViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            itemView.setOnLongClickListener(this);
             leftChatLayout = itemView.findViewById(R.id.left_chat_layout);
             rightChatLayout = itemView.findViewById(R.id.right_chat_layout);
             leftChatTextview = itemView.findViewById(R.id.left_chat_textview);
@@ -63,5 +65,20 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<ChatMessageModel, Chat
             leftChatTimestamp = itemView.findViewById(R.id.left_chat_timestamp);
             rightChatTimestamp = itemView.findViewById(R.id.right_chat_timestamp);
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int position = getBindingAdapterPosition();
+            if (position >= 0) {
+                clickListener.onItemLongClick(position, v);
+                return true;
+            }
+            return false;
+        }
+
+
+    }
+    public interface ClickListener {
+        void onItemLongClick(int position, View v);
     }
 }

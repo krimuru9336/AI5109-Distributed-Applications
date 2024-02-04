@@ -5,8 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -100,7 +107,14 @@ public class ChatActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<ChatMessageModel> options = new FirestoreRecyclerOptions.Builder<ChatMessageModel>()
                 .setQuery(query,ChatMessageModel.class).build();
 
-        adapter = new ChatAdapter(options,getApplicationContext());
+        adapter = new ChatAdapter(options,getApplicationContext(), new ChatAdapter.ClickListener() {
+            @Override
+            public void onItemLongClick(int position, View v) {
+                Log.d("TAG", "onItemLongClick pos = " + position);
+                showOptionsDialog(v, position);
+
+            }
+        });
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);
@@ -113,6 +127,88 @@ public class ChatActivity extends AppCompatActivity {
                 recyclerView.smoothScrollToPosition(0);
             }
         });
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        Log.e("", "onCreateContextMenu");
+
+        // This method will no longer be used for modal dialog
+        // Keep it empty or remove it if not needed for other purposes
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        // This method will no longer be used for modal dialog
+        // Keep it empty or remove it if not needed for other purposes
+        Log.e("", "onContextItemSelected");
+
+        return false;
+    }
+
+    public void showOptionsDialog(View view, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Select an option")
+                .setItems(R.array.options_array, (dialog, which) -> {
+                    // Handle the selected option
+                    switch (which) {
+                        case 0:
+                            // Handle option 1
+                            Log.e("EDIT DELETE", "edit message");
+
+                            AlertDialog.Builder builderEdit = new AlertDialog.Builder(this);
+                            LayoutInflater inflater = getLayoutInflater();
+                            View dialogView = inflater.inflate(R.layout.dialog_editmessage_input, null);
+                            builderEdit.setView(dialogView);
+
+                            EditText editTextMessageInput = dialogView.findViewById(R.id.editTextMessageInput);
+                            ChatMessageModel chatMessage = adapter.getItem(position);
+                            editTextMessageInput.setText(chatMessage.getMessage());
+                            Button buttonSave = dialogView.findViewById(R.id.buttonSave);
+
+                            AlertDialog dialogEdit = builderEdit.create();
+                            buttonSave.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // Get the message from the EditText
+                                    String newMessage = editTextMessageInput.getText().toString();
+
+                                    // Update the ChatMessageModel
+                                    ChatMessageModel chatMessage = adapter.getItem(position);
+                                    editTextMessageInput.setText(chatMessage.getMessage());
+
+                                    if (chatMessage != null) {
+                                        chatMessage.setMessage(newMessage);
+                                        FirebaseUtil.updateChatMessage(chatroomId, chatMessage.getSenderId(), chatMessage.getTimestamp(), newMessage);
+                                        adapter.notifyItemChanged(position);
+                                        adapter.notifyDataSetChanged();
+
+                                    }
+
+                                    // Dismiss the dialog
+                                    dialogEdit.dismiss();
+                                }
+                            });
+
+                            dialogEdit.show();
+                            break;
+                        case 1:
+                            // Handle option 2
+                            Log.e("EDIT DELETE", "delete message");
+                            ChatMessageModel chatMessageToDelete = adapter.getItem(position);
+                            FirebaseUtil.deleteChatMessage(chatroomId, chatMessageToDelete.getSenderId(), chatMessageToDelete.getTimestamp());
+                            adapter.notifyItemRemoved(position);
+                            adapter.notifyDataSetChanged();
+                            break;
+                        // Add more cases for other options if needed
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     void sendMessageToUser(String message){
@@ -122,7 +218,7 @@ public class ChatActivity extends AppCompatActivity {
         chatroomModel.setLastMessage(message);
         FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
 
-        ChatMessageModel chatMessageModel = new ChatMessageModel(message,FirebaseUtil.currentUserId(),Timestamp.now());
+        ChatMessageModel chatMessageModel = new ChatMessageModel(message,FirebaseUtil.currentUserId(),Timestamp.now(), chatroomId);
         FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
@@ -207,23 +303,4 @@ public class ChatActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
