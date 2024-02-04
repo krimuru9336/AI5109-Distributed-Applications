@@ -2,13 +2,13 @@
 
 This repository contains source code for the "Distributed Applications" module in the Winter Semester 2023/2024 at Fulda University of Applied Sciences.
 
-# MODULE 3 - Implementation of Real-Time Message Communication App - ChatApp
+# MODULE 4 - Editing and Deleting Messages - ChatApp
 
 This Android application showcases a real-time message communication feature, allowing users to engage in text-based conversations with timestamps. The project focuses on simplicity and functionality, omitting complex media elements such as images or videos.
 
 ## Features
 
-- **Real-Time Messaging:** Users can send and receive text messages seamlessly in real-time.
+- **Real-Time Messaging:** Users can send, edit, delete and receive text messages seamlessly in real-time.
 - **Timestamps:** Each message is accompanied by a timestamp, providing contextual information about when the message was sent.
 
 ## Implementation Details
@@ -47,6 +47,7 @@ Once the application is operational, users can:
 - Input text messages in the provided field.
 - Utilize the send button to transmit messages.
 - Witness incoming messages in real-time, complete with timestamps.
+- Edit and delete messages
 
 ## Author
 Name: Suhaila Kondappilly Aliyar
