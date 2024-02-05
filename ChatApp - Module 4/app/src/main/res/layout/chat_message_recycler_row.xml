@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <!-- Left Chat Layout -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_rounded_corner"
+        android:backgroundTint="@color/chat_color_sender"
+        android:padding="8dp"
+        android:layout_marginEnd="80dp"
+        android:id="@+id/left_chat_layout"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:text="Hello"
+            android:id="@+id/left_chat_textview"/>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/left_chat_layout">
+        <!-- Timestamp TextView for Left Chat -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Light_gray"
+            android:padding="10sp"
+            android:layout_marginTop="5sp"
+            android:textSize="12sp"
+            android:id="@+id/left_chat_timestamp"/>
+    </RelativeLayout>
+
+    <!-- Right Chat Layout -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_rounded_corner"
+        android:backgroundTint="@color/chat_color_receiver"
+        android:padding="8dp"
+        android:layout_marginStart="80dp"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/right_chat_layout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:id="@+id/right_chat_textview"/>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/right_chat_layout"
+        android:layout_alignParentEnd="true">
+        <!-- Timestamp TextView for Right Chat -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Light_gray"
+            android:padding="10sp"
+            android:layout_marginTop="5sp"
+            android:textSize="12sp"
+            android:id="@+id/right_chat_timestamp"/>
+    </RelativeLayout>
+
+</RelativeLayout>
