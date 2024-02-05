@@ -1,5 +1,7 @@
 package de.hsfulda.WhatsDownBackend.messages;
 
+import de.hsfulda.WhatsDownBackend.groupchats.GroupChat;
+import de.hsfulda.WhatsDownBackend.groupchats.GroupChatRepository;
 import de.hsfulda.WhatsDownBackend.users.User;
 import de.hsfulda.WhatsDownBackend.users.UserRepository;
 import de.hsfulda.WhatsDownBackend.util.AzureBlobStorageUtil;
@@ -19,13 +21,15 @@ public class MessageService {
      */
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
+    private final GroupChatRepository groupChatRepository;
     private final AzureBlobStorageUtil azureBlobStorageUtil;
     private final Map<String, Set<Long>> fetchedMessages = new HashMap<>();
     private final Map<String, String> mappingMediaTypeToContainerName = new HashMap<>();
 
-    public MessageService(MessageRepository messageRepository, UserRepository userRepository, AzureBlobStorageUtil azureBlobStorageUtil) {
+    public MessageService(MessageRepository messageRepository, UserRepository userRepository, GroupChatRepository groupChatRepository, AzureBlobStorageUtil azureBlobStorageUtil) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
+        this.groupChatRepository = groupChatRepository;
         this.azureBlobStorageUtil = azureBlobStorageUtil;
 
         mappingMediaTypeToContainerName.put("Image", "images");
@@ -34,6 +38,16 @@ public class MessageService {
     }
 
     public Message sendMessage(MessageDTO message, MultipartFile media) {
+        if (message.getGroupChatId() != null) {
+            // Sending a message to a group chat
+            return sendGroupChatMessage(message, media);
+        } else {
+            // Sending a message to an individual user
+            return sendIndividualMessage(message, media);
+        }
+    }
+
+    private Message sendIndividualMessage(MessageDTO message, MultipartFile media) {
         Optional<User> senderOptional = userRepository.findById(message.getSenderId());
         Optional<User> receiverOptional = userRepository.findById(message.getReceiverId());
 
@@ -44,14 +58,7 @@ public class MessageService {
         User sender = senderOptional.get();
         User receiver = receiverOptional.get();
 
-        Message newMessage = new Message();
-        newMessage.setSender(sender);
-        newMessage.setReceiver(receiver);
-        newMessage.setContent(message.getContent());
-        newMessage.setTimestamp(LocalDateTime.now());
-        newMessage.setSenderId(sender.getUserId());
-        newMessage.setReceiverId(receiver.getUserId());
-        newMessage.setMediaType(message.getMediaType());
+        Message newMessage = createMessage(message, sender, receiver);
 
         String containerName = mappingMediaTypeToContainerName.get(message.getMediaType());
 
@@ -62,6 +69,46 @@ public class MessageService {
 
         return messageRepository.save(newMessage);
     }
+
+    private Message createMessage(MessageDTO message, User sender, User receiver) {
+        Message newMessage = new Message();
+        newMessage.setSender(sender);
+        newMessage.setReceiver(receiver);
+        newMessage.setContent(message.getContent());
+        newMessage.setTimestamp(LocalDateTime.now());
+        newMessage.setSenderId(sender.getUserId());
+        if (receiver != null) {
+            newMessage.setReceiverId(receiver.getUserId());
+        } else {
+            newMessage.setReceiverId(null);
+        }
+        newMessage.setMediaType(message.getMediaType());
+        return newMessage;
+    }
+
+    private Message sendGroupChatMessage(MessageDTO message, MultipartFile media) {
+        Optional<GroupChat> groupChatOptional = groupChatRepository.findById(message.getGroupChatId());
+        Optional<User> senderOptional = userRepository.findById(message.getSenderId());
+
+        if (groupChatOptional.isEmpty() || senderOptional.isEmpty()) {
+            return null;
+        }
+
+        GroupChat groupChat = groupChatOptional.get();
+        User sender = senderOptional.get();
+        Message newMessage = createMessage(message, sender, null);
+        newMessage.setGroupChat(groupChat);
+
+        String containerName = mappingMediaTypeToContainerName.get(message.getMediaType());
+
+        if (media != null && !media.isEmpty()) {
+            String mediaUrl = azureBlobStorageUtil.uploadMedia(media, containerName);
+            newMessage.setMediaUrl(mediaUrl);
+        }
+
+        return messageRepository.save(newMessage);
+    }
+
 
     public List<Message> getEntireChat(Long userId1, Long userId2) {
         Optional<User> user1Optional = userRepository.findById(userId1);

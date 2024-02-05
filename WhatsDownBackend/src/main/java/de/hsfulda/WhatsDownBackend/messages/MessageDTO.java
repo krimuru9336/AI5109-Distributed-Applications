@@ -14,6 +14,7 @@ public class MessageDTO {
      */
     private Long senderId;
     private Long receiverId;
+    private Long groupChatId;
     private String content;
     private String mediaType;
     private MultipartFile media;

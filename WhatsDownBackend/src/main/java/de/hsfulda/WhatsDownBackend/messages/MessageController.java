@@ -36,10 +36,11 @@ public class MessageController {
     }
 
     @PostMapping(value = "/send", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Message> sendMessage(@RequestParam Long senderId, @RequestParam Long receiverId, @RequestParam String content, @RequestParam(required = false) MultipartFile media) {
+    public ResponseEntity<Message> sendMessage(@RequestParam Long senderId, @RequestParam(required = false) Long receiverId, @RequestParam(required = false) Long groupId, @RequestParam String content, @RequestParam(required = false) MultipartFile media) {
         MessageDTO message = new MessageDTO();
         message.setSenderId(senderId);
         message.setReceiverId(receiverId);
+        message.setGroupChatId(groupId);
         message.setContent(content);
 
         if(media == null) {

@@ -419,15 +419,12 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.menu_image) {
-                // Handle image selection
                 openFileExplorer("Image");
                 return true;
             } else if (id == R.id.menu_video) {
-                // Handle video selection
                 openFileExplorer("Video");
                 return true;
             } else if (id == R.id.menu_gif) {
-                // Handle GIF selection
                 openFileExplorer("Gif");
                 return true;
             }
@@ -468,7 +465,9 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
 
         if (requestCode == PICK_MEDIA_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Uri selectedMediaUri = data.getData();
-            sendMessageToServer(loggedInUser.getUserId(), selectedUser.getUserId(), "", selectedMediaUri);
+            String messageContent = inputText.getText().toString();
+            sendMessageToServer(loggedInUser.getUserId(), selectedUser.getUserId(), messageContent, selectedMediaUri);
+            inputText.setText("");
         }
     }
 
