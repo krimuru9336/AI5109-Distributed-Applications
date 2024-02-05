@@ -1,3 +1,9 @@
+/**
+ Author info
+ Md Firoj Kabir
+ 1300934
+ **/
+
 package com.example.chitchat;
 
 import androidx.annotation.NonNull;

@@ -1,7 +1,14 @@
+/**
+ Author info
+ Md Firoj Kabir
+ 1300934
+ **/
+
 package com.example.chitchat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
     private String currentUserID;
+    private Toolbar SettingsToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +69,11 @@ public class SettingsActivity extends AppCompatActivity {
         userName = (EditText) findViewById(R.id.set_user_name);
         userStatus = (EditText) findViewById(R.id.set_profile_status);
         userProfileImage = (CircleImageView) findViewById(R.id.set_profile_image);
+        SettingsToolBar = (Toolbar) findViewById(R.id.settings_toolbar);
+        setSupportActionBar(SettingsToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setTitle("Account settings");
     }
 
     private void UpdateSettings() {
