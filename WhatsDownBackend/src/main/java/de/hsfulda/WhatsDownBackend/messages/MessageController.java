@@ -42,8 +42,12 @@ public class MessageController {
         message.setReceiverId(receiverId);
         message.setContent(content);
 
-        String fileType = media.getContentType();
-        message.setMediaType(mappingFileTypeToMediaType.get(fileType));
+        if(media == null) {
+            message.setMediaType("Text");
+        } else {
+            String fileType = media.getContentType();
+            message.setMediaType(mappingFileTypeToMediaType.get(fileType));
+        }
 
         log.info("Message received: {}", message);
         Message sentMessage = messageService.sendMessage(message, media);
