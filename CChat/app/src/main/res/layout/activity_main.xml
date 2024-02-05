@@ -46,6 +46,7 @@
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        app:dividerColor="@color/light_gray"
         android:layout_above="@id/bottom_navigation"
         android:id="@+id/divider"/>
     
@@ -53,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        app:itemIconTint="@color/my_primary"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:id="@+id/bottom_navigation"
         app:menu="@menu/bottom_navigation_menu"/>

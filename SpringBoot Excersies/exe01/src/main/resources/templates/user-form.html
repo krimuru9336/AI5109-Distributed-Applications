@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>User Form</title>
+		<link rel="stylesheet" href="/css/main.css">
+	</head>
+<body>
+
+<h2 class="header">User Form</h2>
+
+<form action="/saveUser" method="post" enctype="application/x-www-form-urlencoded">
+  <label for="fname">Name:</label><br>
+  <input type="text" class="in" id="fname" name="name" value=""><br><br>
+  <label for="fname">Phone No:</label><br>
+  <input type="text" class="in" id="phone" name="phone" value=""><br><br>
+
+  <input type="submit" value="Submit">
+</form>
+
+
+<h1>Users List</h1>
+    <table class="user-table">
+        <tr>
+            <th>Name</th>
+            <th>Phone Number</th>
+        </tr>
+        <tr th:each="users : ${users}">
+            <td th:text="${users.name}">Name</td>
+            <td th:text="${users.phone}">Phone</td>
+        </tr>
+    </table>
+
+</body>
+</html>
+
+<!-- 
+	Author : Bhavin Vadhiya 
+     Created on : 06/11/2023
+-->

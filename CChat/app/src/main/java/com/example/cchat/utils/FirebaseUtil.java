@@ -47,6 +47,10 @@ public class FirebaseUtil {
         return getChatroomReference(chatroomId).collection("chats");
     }
 
+    public static DocumentReference getChatMessageReference(String chatroomId, String messageId) {
+        return getChatroomMessageReference(chatroomId).document(messageId);
+    }
+
     public static CollectionReference allChatRoomCollectionReference() {
         return FirebaseFirestore.getInstance().collection("chatrooms");
     }
