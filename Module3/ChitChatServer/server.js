@@ -73,23 +73,26 @@ io.on('connection', (socket) => {
     // Handle incoming messages
     socket.on('message', (message) => {
         try {
-            const { targetUserId, message: messageText, id, type } = message;
+            const { targetUserId: receiverId, message: messageText, id, type, action } = message;
             console.log(message);
             const senderUserId = connectedUsers.find(user => user.socketId === socket.id)?.userId;
 
             // Find the socket ID of the target user
-            const targetSocketId = connectedUsers.find(({ userId }) => userId === targetUserId);
+            const targetSocketId = connectedUsers.find(({ userId }) => userId === receiverId);
+            
 
+            console.log("Action " + action + " from " + senderUserId);
             // If the target user is found, send the message to that user
             if (targetSocketId) {
                 io.to(targetSocketId.socketId).emit('message', {
                     data: {
                         senderUserId,
+                        receiverUserId: targetSocketId,
                         message: messageText,
                         id: id,
                         type: type,
                     },
-                    action: 'message',
+                    action: action,
                 });
             }
         } catch (error) {

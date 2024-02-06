@@ -16,4 +16,12 @@
     <string name="enter_username">Enter Username</string>
     <string name="connect">Connect</string>
     <string name="attach_button_description">Attach Media to Message</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="editDialogTitle">Edit Message</string>
+    <string name="deleteDialogTitle">Delete Message</string>
+    <string name="editMessageText">Edit your message:</string>
+    <string name="deleteMessageText">Do you want to delete this message?</string>
+    <string name="clear_text">Clear text</string>
+    <string name="last_edited_on">Last edit: </string>
 </resources>

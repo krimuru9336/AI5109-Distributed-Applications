@@ -114,6 +114,7 @@ public class ChatOverviewActivity extends AppCompatActivity {
                             Message msg = new Message(messageObj.getString("message"),
                                     UUID.fromString(messageObj.getString("id")),
                                     messageObj.getString("senderUserId"),
+                                    messageObj.getString("receiverUserId"),
                                     true,
                                     MessageType.TEXT);
                             this.messageHelper.onMessageReceived(msg, jsonObject.getString("action"));

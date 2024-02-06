@@ -3,8 +3,10 @@
     <color name="black">#121212</color>
     <color name="white">#ffffff</color>
     <color name="colorPrimary">#651195</color>
+    <color name="colorPrimaryOpaue">#80651195</color>
     <color name="colorSecondary">#2a2929</color>
     <color name="colorTertiary">#545151</color>
     <color name="colorAccent">#545151</color>
+    <color name="colorAccentOpaque">#80545151</color>
     <color name="colorBanner">#2a2929</color>
 </resources>

@@ -25,9 +25,10 @@ public class MessageHelper {
 
     public void onMessageReceived(Message message, String action) {
         runOnUiThread(() -> {
+            String sender = message.getSender();
+
             switch (action) {
                 case ("message"):
-                    String sender = message.getSender();
                     MessageStore.addMessageToUser(sender, message);
 
                     if (messageAdapter != null) {
@@ -37,8 +38,24 @@ public class MessageHelper {
                     }
                     break;
                 case ("edit"):
+
+                    if (messageAdapter != null) {
+                        if (messageAdapter.currentUser().equals(sender)) {
+                            MessageStore.editMessageFromUser(message);
+                            messageAdapter.notifyMessageChanged(message);
+                        }
+                    }
+
                     break;
                 case ("delete"):
+
+                    if (messageAdapter != null) {
+                        if (messageAdapter.currentUser().equals(sender)) {
+                            MessageStore.deleteMessageFromUser(message);
+                            messageAdapter.notifyMessageChanged(message);
+                        }
+                    }
+
                     break;
             }
         });
