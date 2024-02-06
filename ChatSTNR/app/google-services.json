@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "802665670109",
+    "project_id": "chatstnr",
+    "storage_bucket": "chatstnr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802665670109:android:b386d913ef362485848234",
+        "android_client_info": {
+          "package_name": "com.example.chatstnr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQyJ3nQcOb48iN4HTZnLXBV4pJ27kDIqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
