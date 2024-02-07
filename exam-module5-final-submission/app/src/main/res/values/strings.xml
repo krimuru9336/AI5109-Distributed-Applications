@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">WhatsDown</string>
+    <string name="student_info">Lorenz Hohmann, 1259904</string>
+    <string name="insert_button_text">Insert</string>
+    <string name="insert_button_text_error">Error!</string>
+    <string name="insert_button_text_loading">Saving...</string>
+    <string name="insert_button_text_success">Saved</string>
+    <string name="retrieve_button_text">Retrieve</string>
+    <string name="retrieve_button_text_error">Error!</string>
+    <string name="name_input_label">Name:</string>
+    <string name="name_input_placeholder">Lorenz</string>
+    <string name="enter_username">Enter username</string>
+    <string name="username">Username</string>
+    <string name="login">Login</string>
+    <string name="update">Update</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="message">Message</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="users">Users</string>
+    <string name="chats">Chats</string>
+
+
+    <string name="backend_url">https://api.lorenzhohmann.de/</string>
+    <string name="three_dots">...</string>
+    <string name="date_format_string">dd.mm.YYYY HH:ii</string>
+    <string name="no_chats">You have no active chats right now. Change to the \"Users\" tab and start a new chat.</string>
+</resources>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "699510976077",
+    "project_id": "da-exam-app",
+    "storage_bucket": "da-exam-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699510976077:android:8ed6c3b3d3c728440d3604",
+        "android_client_info": {
+          "package_name": "de.lorenz.da_exam_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7fCO_mAz5Z4FX598mkmheO1LgXk3j7zA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

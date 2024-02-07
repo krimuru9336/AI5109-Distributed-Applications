@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp"
+    android:weightSum="100"
+    android:background="@color/light_gray"
+    tools:context=".LoginUserActivity">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/stop_hand"
+        app:tint="@color/primary"
+        android:layout_weight="20" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/student_info"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:textColor="@color/third" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_username"
+        android:layout_gravity="center_vertical"
+        android:letterSpacing="0.08"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/third"
+        android:layout_weight="5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_weight="5">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:height="48dp"
+            android:hint="@string/username"
+            android:inputType="text"
+            android:background="@drawable/rounded_corner"
+            android:id="@+id/usernameInput" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_weight="20">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:backgroundTint="@color/primary"
+            android:id="@+id/loginButton" />
+
+        <ProgressBar
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/secondary"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:id="@+id/progressBar" />
+    </LinearLayout>
+
+
+</LinearLayout>

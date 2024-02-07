@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gray">#bbb</color>
+    <color name="primary">#ffc13b</color>
+    <color name="secondary">#ff6e40</color>
+    <color name="third">#1e3d59</color>
+    <color name="light_gray">#f5f0e1</color>
+
+    <color name="pressed_color">#E0E0E0</color> <!-- Light grey color for pressed state -->
+    <color name="hover_color">#C0C0C0</color>   <!-- Medium grey color for focused (hover) state -->
+</resources>

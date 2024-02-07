@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <padding android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp" />
+            <solid android:color="#66000000" /> <!-- rgba(0,0,0,0.4) -->
+        </shape>
+    </item>
+    <!-- Focused state (hover) -->
+    <item android:state_focused="true">
+        <shape android:shape="oval">
+            <padding android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp" />
+            <solid android:color="#66000000" /> <!-- rgba(0,0,0,0.4) -->
+        </shape>
+    </item>
+    <!-- Default state -->
+    <item>
+        <shape android:shape="oval">
+            <padding android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</selector>

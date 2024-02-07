@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/light_gray"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/left_chat_layout"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_marginEnd="10dp"
+            android:focusable="true"
+            android:background="@drawable/rounded_corner">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textAllCaps="true"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/secondary"
+                android:id="@+id/left_chat_username" />
+
+            <ImageView
+                android:id="@+id/left_chat_image"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:background="@drawable/rounded_corner"
+                android:paddingBottom="8dp"
+                android:visibility="gone"
+                android:layout_marginEnd="10dp"
+                android:layout_below="@id/left_chat_username" />
+
+            <VideoView
+                android:id="@+id/left_chat_video"
+                android:layout_height="220dp"
+                android:visibility="gone"
+                android:layout_below="@id/left_chat_username"
+                android:layout_marginEnd="10dp"
+                android:layout_width="300dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/three_dots"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_below="@id/left_chat_username"
+                android:id="@+id/left_chat_text_view" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_format_string"
+            android:layout_marginEnd="40dp"
+            android:alpha="0.5"
+            android:textSize="11sp"
+            android:id="@+id/left_chat_timestamp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical"
+        android:id="@+id/right_chat_layout">
+
+        <ImageView
+            android:id="@+id/right_chat_image"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/rounded_corner"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:layout_marginStart="10dp" />
+
+        <VideoView
+            android:id="@+id/right_chat_video"
+            android:layout_width="300dp"
+            android:layout_height="220dp"
+            android:visibility="gone"
+            android:layout_marginStart="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/three_dots"
+            android:padding="8dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textColor="@color/black"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="end"
+            android:background="@drawable/rounded_corner"
+            android:textSize="16sp"
+            android:focusable="true"
+            android:id="@+id/right_chat_text_view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/date_format_string"
+            android:alpha="0.5"
+            android:textSize="11sp"
+            android:id="@+id/right_chat_timestamp" />
+
+    </LinearLayout>
+
+</RelativeLayout>
