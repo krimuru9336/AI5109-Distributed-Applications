@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
      * Jonas Wagner - 1315578
      */
     private EditText inputText;
-    private DatabaseHelperSQLite databaseHelperSQLite;
     private LinearLayout chatContainer;
     private final Handler messageHandler = new Handler();
     private static final int MESSAGE_FETCH_DELAY = 3000;
@@ -115,10 +114,6 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         addMediaButton.setOnClickListener(this::showMediaOptionsPopup);
 
         inputText = findViewById(R.id.input_text);
-        databaseHelperSQLite = new DatabaseHelperSQLite(this);
-
-        databaseHelperSQLite.clearData();
-
         startFetchingMessages();
     }
 

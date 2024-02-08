@@ -64,7 +64,6 @@ public class GroupChatsActivity extends AppCompatActivity implements MessageCall
      * Jonas Wagner - 1315578
      */
     private EditText inputText;
-    private DatabaseHelperSQLite databaseHelperSQLite;
     private LinearLayout chatContainer;
     private final Handler messageHandler = new Handler();
     private static final int MESSAGE_FETCH_DELAY = 3000;
@@ -116,9 +115,6 @@ public class GroupChatsActivity extends AppCompatActivity implements MessageCall
         addMediaButton.setOnClickListener(this::showMediaOptionsPopup);
 
         inputText = findViewById(R.id.input_text);
-        databaseHelperSQLite = new DatabaseHelperSQLite(this);
-
-        databaseHelperSQLite.clearData();
 
         startFetchingMessages();
     }
@@ -221,7 +217,6 @@ public class GroupChatsActivity extends AppCompatActivity implements MessageCall
 
     public void saveData(View data) {
         String userInput = inputText.getText().toString();
-        databaseHelperSQLite.insertData(userInput);
         sendMessageToServerGroup(loggedInUser.getUserId(), selectedGroupChat.getId(), userInput, null);
         inputText.setText("");
     }

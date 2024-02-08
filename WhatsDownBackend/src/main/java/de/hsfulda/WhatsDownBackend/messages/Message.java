@@ -77,4 +77,11 @@ CREATE TABLE group_chat_member (
 ALTER TABLE message
 ADD CONSTRAINT fk_message_group_chat
 FOREIGN KEY (group_chat_id) REFERENCES group_chat(id);
+
+create table user
+(
+    user_id int auto_increment
+        primary key,
+    name    varchar(255) null
+);
  */
