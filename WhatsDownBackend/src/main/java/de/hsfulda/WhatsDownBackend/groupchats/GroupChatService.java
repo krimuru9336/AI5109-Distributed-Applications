@@ -10,6 +10,9 @@ import java.util.Set;
 
 @Service
 public class GroupChatService {
+    /*
+     * Jonas Wagner - 1315578
+     */
     private final GroupChatRepository groupChatRepository;
     private final UserRepository userRepository;
 
@@ -33,5 +36,9 @@ public class GroupChatService {
         userRepository.saveAll(members);
 
         return createdGroupChat;
+    }
+
+    public List<GroupChat> getGroupsForUser(Long userId) {
+        return groupChatRepository.findByMembers_userId(userId);
     }
 }

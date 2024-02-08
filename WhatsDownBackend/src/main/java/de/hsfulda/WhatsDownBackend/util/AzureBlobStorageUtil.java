@@ -21,6 +21,9 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class AzureBlobStorageUtil {
+    /*
+     * Jonas Wagner - 1315578
+     */
     @Value("${azure.storage.account-name}")
     private String accountName;
     @Value("${azure.storage.sas-key}")

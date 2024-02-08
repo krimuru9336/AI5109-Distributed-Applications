@@ -209,6 +209,69 @@ public class MessageService {
         return false;
     }
 
+    public List<Message> getGroupMessages(Long groupId) {
+        Optional<GroupChat> groupChatOptional = groupChatRepository.findById(groupId);
+
+        if (groupChatOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        GroupChat groupChat = groupChatOptional.get();
+
+        List<Message> groupMessages = messageRepository.findGroupMessages(groupChat);
+
+        groupMessages.forEach(message -> {
+            if (message.getMediaUrl() != null) {
+                String sasToken = azureBlobStorageUtil.generateSasTokenFromUrl(message.getMediaUrl(), mappingMediaTypeToContainerName.get(message.getMediaType()));
+                String sasMediaUrl = message.getMediaUrl() + "?" + sasToken;
+                message.setMediaUrl(sasMediaUrl);
+            }
+        });
+
+        log.info("Found {} messages in group chat {}", groupMessages.size(), groupChat);
+
+        return groupMessages;
+    }
+
+    public List<Message> getNewGroupMessages(Long groupId, LocalDateTime lastFetchedTimestamp) {
+        String pairKey = "group-" + groupId;
+        Set<Long> fetchedMessageIds = fetchedMessages.getOrDefault(pairKey, new HashSet<>());
+
+        Optional<GroupChat> groupChatOptional = groupChatRepository.findById(groupId);
+
+        if (groupChatOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        GroupChat groupChat = groupChatOptional.get();
+
+        List<Message> newMessages = messageRepository.findGroupNewMessages(groupChat, lastFetchedTimestamp);
+
+        List<Message> unfetchedMessages = new ArrayList<>(newMessages.stream()
+                .filter(message -> !fetchedMessageIds.contains(message.getId()))
+                .peek(message -> {
+                    if (message.getMediaUrl() != null) {
+                        String sasToken = azureBlobStorageUtil.generateSasTokenFromUrl(message.getMediaUrl(), mappingMediaTypeToContainerName.get(message.getMediaType()));
+                        String sasMediaUrl = message.getMediaUrl() + "?" + sasToken;
+                        message.setMediaUrl(sasMediaUrl);
+                    }
+                })
+                .toList());
+
+        if (!unfetchedMessages.isEmpty()) {
+            unfetchedMessages.forEach(message -> fetchedMessageIds.add(message.getId()));
+            fetchedMessages.put(pairKey, fetchedMessageIds);
+        }
+
+        unfetchedMessages.sort(Comparator.comparing(Message::getTimestamp));
+
+        log.info("Current fetched messages: {}", fetchedMessages);
+
+        log.info("Found {} new messages in group chat {} since {}", unfetchedMessages.size(), groupChat, lastFetchedTimestamp);
+
+        return unfetchedMessages;
+    }
+
     @Scheduled(fixedRate = 300000)
     public void scheduledCleanUp() {
         log.info("Running scheduled clean up");

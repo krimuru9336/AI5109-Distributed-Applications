@@ -60,15 +60,24 @@ public class MessageController {
     }
 
     @GetMapping("/retrieve")
-    public ResponseEntity<List<Message>> retrieveMessages(@RequestParam Long user1, @RequestParam Long user2, @RequestParam(required = false) String lastFetchedTimestamp) {
-
+    public ResponseEntity<List<Message>> retrieveMessages(@RequestParam(required = false) Long user1, @RequestParam(required = false)  Long user2, @RequestParam(required = false) Long groupId, @RequestParam(required = false) String lastFetchedTimestamp) {
         List<Message> messages;
-        if (lastFetchedTimestamp != null) {
-            LocalDateTime fetchedTimestamp = LocalDateTime.parse(lastFetchedTimestamp);
-            messages = messageService.getNewMessages(user1, user2, fetchedTimestamp);
+        if (groupId != null && user2 == null) {
+            if (lastFetchedTimestamp == null) {
+                messages = messageService.getGroupMessages(groupId);
+            } else {
+                LocalDateTime fetchedTimestamp = LocalDateTime.parse(lastFetchedTimestamp);
+                messages = messageService.getNewGroupMessages(groupId, fetchedTimestamp);
+            }
+        } else if (user2 != null && groupId == null) {
+            if (lastFetchedTimestamp != null) {
+                LocalDateTime fetchedTimestamp = LocalDateTime.parse(lastFetchedTimestamp);
+                messages = messageService.getNewMessages(user1, user2, fetchedTimestamp);
+            } else {
+                messages = messageService.getEntireChat(user1, user2);
+            }
         } else {
-            log.info("Retrieving all messages between {} and {}", user1, user2);
-            messages = messageService.getEntireChat(user1, user2);
+            return ResponseEntity.badRequest().body(null);
         }
         return ResponseEntity.ok(messages);
     }

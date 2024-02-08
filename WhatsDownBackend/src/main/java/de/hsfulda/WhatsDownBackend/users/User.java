@@ -1,6 +1,7 @@
 package de.hsfulda.WhatsDownBackend.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.hsfulda.WhatsDownBackend.groupchats.GroupChat;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString(exclude = "groupChats")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
     /*
      * Jonas Wagner - 1315578
