@@ -11,6 +11,7 @@ public class ChatMessage {
     private String timestamp;
     private String mediaType;
     private String mediaUrl;
+    private User sender;
 
     public ChatMessage(int id, int senderId, int receiverId, String content, String timestamp) {
         this.id = id;
@@ -49,6 +50,10 @@ public class ChatMessage {
 
     public String getMediaUrl() {
         return mediaUrl;
+    }
+
+    public User getSender() {
+        return sender;
     }
 
 }

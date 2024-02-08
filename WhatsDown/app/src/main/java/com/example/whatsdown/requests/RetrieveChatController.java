@@ -77,6 +77,52 @@ public class RetrieveChatController implements Callback<List<ChatMessage>> {
         call.enqueue(this);
     }
 
+    public void startLastFetchedTimestampGroup(int userId, int groupChatId) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL + "/messages/retrieve/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, -3);
+        Date lastFetchedDate = calendar.getTime();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        String lastFetchedTimestamp = formatter.format(lastFetchedDate);
+
+        System.out.println("Last fetched timestamp: " + lastFetchedTimestamp);
+
+        String userIdString = String.valueOf(userId);
+        String groupChatIdString = String.valueOf(groupChatId);
+
+        Call<List<ChatMessage>> call = apiService.getChatMessagesLastFetchedTimestampGroup(groupChatIdString, lastFetchedTimestamp);
+        call.enqueue(this);
+    }
+
+    public void startGroup(int groupChatId) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL + "/messages/retrieve/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        String groupChatIdString = String.valueOf(groupChatId);
+
+        Call<List<ChatMessage>> call = apiService.getChatMessagesGroup(groupChatIdString);
+        call.enqueue(this);
+    }
+
     @Override
     public void onResponse(Call<List<ChatMessage>> call, Response<List<ChatMessage>> response) {
         if (response.isSuccessful()) {

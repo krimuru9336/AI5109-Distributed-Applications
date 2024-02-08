@@ -1,6 +1,7 @@
+<!-- Jonas Wagner - 1315578 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#C6DCF8" /> <!-- Change this color as needed -->
+    <solid android:color="#C6DCF8" />
     <corners android:topLeftRadius="8dp"
         android:bottomRightRadius="8dp"
         android:bottomLeftRadius="8dp" />

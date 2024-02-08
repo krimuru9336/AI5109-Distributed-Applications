@@ -1,7 +1,9 @@
 package com.example.whatsdown.requests;
 
 import com.example.whatsdown.model.ChatMessage;
+import com.example.whatsdown.model.CreateGroupChat;
 import com.example.whatsdown.model.CreateUser;
+import com.example.whatsdown.model.GroupChat;
 import com.example.whatsdown.model.UpdateMessage;
 import com.example.whatsdown.model.User;
 
@@ -55,4 +57,28 @@ public interface ApiService {
 
     @POST("/users")
     Call<User> createUser(@Body CreateUser user);
+
+    @POST("/group-chats")
+    Call<GroupChat> createGroupChat(@Body CreateGroupChat groupChat);
+
+    @GET("/group-chats/{userId}")
+    Call<List<GroupChat>> getGroupChats(@Path("userId") int userId);
+
+    @GET("/messages/retrieve")
+    Call<List<ChatMessage>> getChatMessagesGroup(
+            @Query("groupId") String groupId
+    );
+
+    @GET("/messages/retrieve")
+    Call<List<ChatMessage>> getChatMessagesLastFetchedTimestampGroup(
+            @Query("groupId") String groupId,
+            @Query("lastFetchedTimestamp") String lastFetchedTimestamp
+    );
+
+    @Multipart
+    @POST("/messages/send")
+    Call<Void> sendMessageGroup(@Part("senderId") RequestBody senderId,
+                           @Part("groupId") RequestBody groupId,
+                           @Part("content") RequestBody content,
+                           @Part MultipartBody.Part media);
 }

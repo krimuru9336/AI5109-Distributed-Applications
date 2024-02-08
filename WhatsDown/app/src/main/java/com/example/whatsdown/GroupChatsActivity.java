@@ -33,6 +33,7 @@ import androidx.media3.ui.PlayerView;
 
 import com.bumptech.glide.Glide;
 import com.example.whatsdown.model.ChatMessage;
+import com.example.whatsdown.model.GroupChat;
 import com.example.whatsdown.model.UpdateMessage;
 import com.example.whatsdown.model.User;
 import com.example.whatsdown.requests.ApiService;
@@ -58,7 +59,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements MessageCallback {
+public class GroupChatsActivity extends AppCompatActivity implements MessageCallback {
     /*
      * Jonas Wagner - 1315578
      */
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
     private final Handler messageHandler = new Handler();
     private static final int MESSAGE_FETCH_DELAY = 3000;
     private User loggedInUser;
-    private User selectedUser;
+    private GroupChat selectedGroupChat;
     private final RetrieveChatController retrieveChatController = new RetrieveChatController(this);
     private ChatMessage selectedMessage;
     private ScrollView scrollView;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         @Override
         public void run() {
             System.out.println("Fetching messages...");
-            retrieveChatController.startLastFetchedTimestamp(loggedInUser.getUserId(), selectedUser.getUserId());
+            retrieveChatController.startLastFetchedTimestampGroup(loggedInUser.getUserId(), selectedGroupChat.getId());
             messageHandler.postDelayed(this, MESSAGE_FETCH_DELAY);
         }
     };
@@ -91,17 +92,17 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        selectedUser = (User) getIntent().getSerializableExtra("selectedUser");
+        selectedGroupChat = (GroupChat) getIntent().getSerializableExtra("selectedGroupChat");
         loggedInUser = (User) getIntent().getSerializableExtra("loggedInUser");
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(selectedUser.getName());
+            actionBar.setTitle(selectedGroupChat.getName());
         }
 
-        System.out.println("Selected user userId: " + selectedUser.getUserId());
-        System.out.println("Selected user name: " + selectedUser.getName());
+        System.out.println("Selected group id: " + selectedGroupChat.getId());
+        System.out.println("Selected group name: " + selectedGroupChat.getName());
 
         System.out.println("Logged in user userId: " + loggedInUser.getUserId());
         System.out.println("Logged in user name: " + loggedInUser.getName());
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         chatContainer = findViewById(R.id.chat_container);
         scrollView = findViewById(R.id.scroll_view);
 
-        retrieveChatController.start(loggedInUser.getUserId(), selectedUser.getUserId());
+        retrieveChatController.startGroup(selectedGroupChat.getId());
 
         ImageButton addMediaButton = findViewById(R.id.add_media_button);
         addMediaButton.setOnClickListener(this::showMediaOptionsPopup);
@@ -153,6 +154,16 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
             showEditDeleteOptions(selectedMessage);
             return true;
         });
+
+        if (message.getSenderId() != loggedInUser.getUserId()) {
+            TextView senderNameTextView = new TextView(this);
+            senderNameTextView.setLayoutParams(messageLayoutParams);
+            senderNameTextView.setPadding(8, 8, 8, 8);
+            senderNameTextView.setText(message.getSender().getName()); // Assuming you have a getter method for sender's name
+            senderNameTextView.setTextColor(getResources().getColor(android.R.color.darker_gray)); // Set color as per requirement
+            senderNameTextView.setTextSize(12);
+            messageLayout.addView(senderNameTextView);
+        }
 
         String mediaType = message.getMediaType();
         if (mediaType != null) {
@@ -210,7 +221,8 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
 
     public void saveData(View data) {
         String userInput = inputText.getText().toString();
-        sendMessageToServer(loggedInUser.getUserId(), selectedUser.getUserId(), userInput, null);
+        databaseHelperSQLite.insertData(userInput);
+        sendMessageToServerGroup(loggedInUser.getUserId(), selectedGroupChat.getId(), userInput, null);
         inputText.setText("");
     }
 
@@ -232,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         Toast.makeText(this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    public void sendMessageToServer(int senderId, int receiverId, String content, Uri imageUri) {
+    public void sendMessageToServerGroup(int senderId, int groupId, String content, Uri imageUri) {
         Gson gson = new GsonBuilder().setLenient().create();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -243,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         ApiService apiService = retrofit.create(ApiService.class);
 
         RequestBody requestBodySenderId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(senderId));
-        RequestBody requestBodyReceiverId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(receiverId));
+        RequestBody requestBodyGroupId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(groupId));
         RequestBody requestBodyContent = RequestBody.create(MediaType.parse("text/plain"), content);
 
         MultipartBody.Part requestBodyMedia = null;
@@ -264,14 +276,14 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         }
 
         System.out.println("Sending message...");
-        Call<Void> call = apiService.sendMessage(requestBodySenderId, requestBodyReceiverId, requestBodyContent, requestBodyMedia);
+        Call<Void> call = apiService.sendMessageGroup(requestBodySenderId, requestBodyGroupId, requestBodyContent, requestBodyMedia);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     System.out.println("Message sent successfully");
                 } else {
-                    Toast.makeText(MainActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupChatsActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -279,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
             public void onFailure(Call<Void> call, Throwable t) {
                 System.out.println("Error: " + t.getMessage());
                 t.printStackTrace();
-                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupChatsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -341,18 +353,18 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
                     @Override
                     public void onResponse(Call<ChatMessage> call, Response<ChatMessage> response) {
                         if (response.isSuccessful()) {
-                            Toast.makeText(MainActivity.this, "Message updated successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatsActivity.this, "Message updated successfully", Toast.LENGTH_SHORT).show();
                             clearChatUI();
-                            retrieveChatController.start(loggedInUser.getUserId(), selectedUser.getUserId());
+                            retrieveChatController.startGroup(selectedGroupChat.getId());
                         } else {
-                            Toast.makeText(MainActivity.this, "Failed to update message", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatsActivity.this, "Failed to update message", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ChatMessage> call, Throwable t) {
                         t.printStackTrace();
-                        Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
@@ -385,18 +397,18 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(MainActivity.this, "Message deleted successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatsActivity.this, "Message deleted successfully", Toast.LENGTH_SHORT).show();
                         clearChatUI();
-                        retrieveChatController.start(loggedInUser.getUserId(), selectedUser.getUserId());
+                        retrieveChatController.startGroup(selectedGroupChat.getId());
                     } else {
-                        Toast.makeText(MainActivity.this, "Failed to delete message", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatsActivity.this, "Failed to delete message", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
                     t.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupChatsActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -465,7 +477,7 @@ public class MainActivity extends AppCompatActivity implements MessageCallback {
         if (requestCode == PICK_MEDIA_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             Uri selectedMediaUri = data.getData();
             String messageContent = inputText.getText().toString();
-            sendMessageToServer(loggedInUser.getUserId(), selectedUser.getUserId(), messageContent, selectedMediaUri);
+            sendMessageToServerGroup(loggedInUser.getUserId(), selectedGroupChat.getId(), messageContent, selectedMediaUri);
             inputText.setText("");
         }
     }
