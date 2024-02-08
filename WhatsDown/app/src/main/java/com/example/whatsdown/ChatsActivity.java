@@ -125,7 +125,10 @@ public class ChatsActivity extends AppCompatActivity {
             // Get the list of selected user IDs
             List<Integer> selectedUserIds = getSelectedUserIds();
 
-            if (selectedUserIds.isEmpty()) {
+            assert currentUser != null;
+            selectedUserIds.add(currentUser.getUserId());
+
+            if (selectedUserIds.size() <= 1) {
                 Toast.makeText(ChatsActivity.this, "Please select at least one user", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -139,6 +142,8 @@ public class ChatsActivity extends AppCompatActivity {
                 public void onResponse(Call<GroupChat> call, Response<GroupChat> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(ChatsActivity.this, "Group created successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                        startActivity(getIntent());
                     } else {
                         Toast.makeText(ChatsActivity.this, "Failed to create group chat", Toast.LENGTH_SHORT).show();
                     }
