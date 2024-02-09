@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Form</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+
+<body>
+
+    <h2 class="header">User Form</h2>
+
+    <form id="userForm" method="post" enctype="application/x-www-form-urlencoded">
+        <label for="fname">Name:</label><br>
+        <input type="text" class="in" id="fname" name="name" value=""><br><br>
+        <label for="fname">Phone No:</label><br>
+        <input type="text" class="in" id="phone" name="phone" value=""><br><br>
+    
+        <input id="submit" type="submit" value="Submit" onclick="submitForm(event)">
+    </form>
+
+    <h1>Users List</h1>
+    <table class="user-table" id="userTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+        </tbody>
+    </table>
+
+</body>
+
+</html>
+
+<!-- 
+	Author : Bhavin Vadhiya 
+     Created on : 06/11/2023
+-->
