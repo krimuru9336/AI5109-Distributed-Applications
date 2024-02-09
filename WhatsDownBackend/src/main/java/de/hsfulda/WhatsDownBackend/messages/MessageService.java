@@ -233,8 +233,8 @@ public class MessageService {
         return groupMessages;
     }
 
-    public List<Message> getNewGroupMessages(Long groupId, LocalDateTime lastFetchedTimestamp) {
-        String pairKey = "group-" + groupId;
+    public List<Message> getNewGroupMessages(Long groupId, LocalDateTime lastFetchedTimestamp, Long userId1) {
+        String pairKey = "group-" + groupId + "/user-" + userId1;
         Set<Long> fetchedMessageIds = fetchedMessages.getOrDefault(pairKey, new HashSet<>());
 
         Optional<GroupChat> groupChatOptional = groupChatRepository.findById(groupId);

@@ -101,7 +101,7 @@ public class RetrieveChatController implements Callback<List<ChatMessage>> {
         String userIdString = String.valueOf(userId);
         String groupChatIdString = String.valueOf(groupChatId);
 
-        Call<List<ChatMessage>> call = apiService.getChatMessagesLastFetchedTimestampGroup(groupChatIdString, lastFetchedTimestamp);
+        Call<List<ChatMessage>> call = apiService.getChatMessagesLastFetchedTimestampGroup(groupChatIdString, lastFetchedTimestamp, userIdString);
         call.enqueue(this);
     }
 

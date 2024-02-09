@@ -67,7 +67,7 @@ public class MessageController {
                 messages = messageService.getGroupMessages(groupId);
             } else {
                 LocalDateTime fetchedTimestamp = LocalDateTime.parse(lastFetchedTimestamp);
-                messages = messageService.getNewGroupMessages(groupId, fetchedTimestamp);
+                messages = messageService.getNewGroupMessages(groupId, fetchedTimestamp, user1);
             }
         } else if (user2 != null && groupId == null) {
             if (lastFetchedTimestamp != null) {

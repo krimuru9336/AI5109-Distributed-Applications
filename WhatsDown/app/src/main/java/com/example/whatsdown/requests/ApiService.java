@@ -72,7 +72,8 @@ public interface ApiService {
     @GET("/messages/retrieve")
     Call<List<ChatMessage>> getChatMessagesLastFetchedTimestampGroup(
             @Query("groupId") String groupId,
-            @Query("lastFetchedTimestamp") String lastFetchedTimestamp
+            @Query("lastFetchedTimestamp") String lastFetchedTimestamp,
+            @Query("user1") String user1
     );
 
     @Multipart
