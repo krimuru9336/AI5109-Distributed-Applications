@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1066923001070",
+    "project_id": "chathere-80512",
+    "storage_bucket": "chathere-80512.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066923001070:android:60dcc1dbdfd5db1c2e1fff",
+        "android_client_info": {
+          "package_name": "com.example.chathere"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHrqn2ApVAFbTTY2juieI6L-CH7BHggU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
