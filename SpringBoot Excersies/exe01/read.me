@@ -1,0 +1,30 @@
+# Spring Boot User Management
+## Bhavin Vadhiya - fdai7862 - 1482014
+
+A simple Spring Boot app deployed on Azure VMs, storing user data in MySQL. Form captures name and phone, accessible via VM's public IP.
+
+## Prerequisites
+
+- JDK 17 installed.
+- MySQL server running.
+- Azure VMs.
+
+
+## Features
+
+- User form for name and phone.
+- Data stored in MySQL using Spring Data JPA.
+
+## Deployment on Azure
+
+1. Set up VMs with Ubuntu.
+2. Install MySQL on VM.
+3. Deploy JAR on VM: `java -jar your-application.jar`.
+4. Access: `http://your-azure-vm-ip:8080`.
+
+## Troubleshooting
+
+- Check logs for errors.
+- Verify firewall rules on Azure VM.
+- Confirm database connection details.
+- Review Azure NSG rules.
