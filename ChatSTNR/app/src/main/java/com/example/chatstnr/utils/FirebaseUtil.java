@@ -1,5 +1,8 @@
 package com.example.chatstnr.utils;
 
+import android.net.Uri;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -82,4 +85,20 @@ public class FirebaseUtil {
                 .child(otherUserId);
     }
 
+
+    public static StorageReference  getCurrentChatRoomStorageRef(String chatroomId, String messageId){
+        return FirebaseStorage.getInstance().getReference().child("chat_room")
+                .child(chatroomId).child(messageId);
+    }
+
+    public static void getLoadingCircleVideoUri(OnSuccessListener<Uri> onSuccessListener) {
+        // Get a reference to the Firebase Storage instance
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        // Create a reference to the video file
+        StorageReference videoRef = storage.getReference().child("others/circle_loading.mov");
+
+        // Get the download URL asynchronously
+        videoRef.getDownloadUrl().addOnSuccessListener(onSuccessListener);
+    }
 }

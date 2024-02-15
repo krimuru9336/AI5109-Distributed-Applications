@@ -6,55 +6,101 @@
     android:padding="8dp">
 
     <LinearLayout
+        android:id="@+id/left_chat_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
         android:background="@drawable/edit_text_rounded_corner"
         android:backgroundTint="@color/chat_color_sender"
-        android:padding="8dp"
-        android:layout_marginEnd="80dp"
-        android:id="@+id/left_chat_layout"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
+
         <TextView
+            android:id="@+id/left_chat_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Hello"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/left_chat_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:visibility="gone" />
+
+        <VideoView
+            android:id="@+id/left_chat_videoview"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
             android:text="Hello"
-            android:id="@+id/left_chat_textview"
-            />
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
         <TextView
+            android:id="@+id/left_chat_timeview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             android:text="TIME"
-            android:id="@+id/left_chat_timeview"/>
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/right_chat_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="80dp"
         android:background="@drawable/edit_text_rounded_corner"
         android:backgroundTint="@color/chat_color_receiver"
-        android:layout_alignParentEnd="true"
-        android:padding="8dp"
-        android:layout_marginStart="80dp"
-        android:id="@+id/right_chat_layout"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/edit_delete_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/edit_delete_icon"
+            android:background="@null"
+            app:tint="@color/white" />
 
         <TextView
+            android:id="@+id/right_chat_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:id="@+id/right_chat_textview"/>
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/right_chat_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
+        <VideoView
+            android:id="@+id/right_chat_videoview"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
 
         <TextView
+            android:id="@+id/right_chat_timeview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="14sp"
             android:text="TIME"
-            android:id="@+id/right_chat_timeview"/>
+            android:textColor="@color/black"
+            android:textSize="14sp" />
 
     </LinearLayout>
 

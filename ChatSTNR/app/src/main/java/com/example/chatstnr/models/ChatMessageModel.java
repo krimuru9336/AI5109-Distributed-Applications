@@ -1,5 +1,7 @@
 package com.example.chatstnr.models;
 
+import android.net.Uri;
+
 import com.google.firebase.Timestamp;
 
 public class ChatMessageModel {
@@ -7,6 +9,8 @@ public class ChatMessageModel {
     private String senderId;
     private Timestamp timestamp;
     private String messageID;
+    private String messageType;
+    private String messageUrl;
     private boolean isEditable;
     private boolean isDeleted;
     public ChatMessageModel() {
@@ -64,5 +68,21 @@ public class ChatMessageModel {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    public String getMessageUrl() {
+        return messageUrl;
+    }
+
+    public void setMessageUrl(String messageUrl) {
+        this.messageUrl = messageUrl;
     }
 }

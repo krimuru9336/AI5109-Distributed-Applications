@@ -37,7 +37,7 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
         if(model.getUserId().equals(FirebaseUtil.currentUserid())){
             holder.usernameText.setText(model.getUsername()+" (Me)");
         }
-/*
+
         FirebaseUtil.getOtherProfilePicStorageRef(model.getUserId()).getDownloadUrl()
                 .addOnCompleteListener(t -> {
                     if(t.isSuccessful()){
@@ -45,7 +45,7 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
                         AndroidUtil.setProfilePic(context,uri,holder.profilePic);
                     }
                 });
-*/
+
         holder.itemView.setOnClickListener(v -> {
             //navigate to chat activity
             Intent intent = new Intent(context, ChatActivity.class);

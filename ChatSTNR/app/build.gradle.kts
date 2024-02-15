@@ -50,4 +50,8 @@ dependencies {
 
     implementation ("com.firebaseui:firebase-ui-firestore:8.0.2")
 
+    implementation ("com.github.dhaval2404:imagepicker:2.1")
+
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
 }
