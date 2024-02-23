@@ -3,9 +3,13 @@ package com.example.letschat.util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.letschat.R;
 import com.example.letschat.model.User;
 import com.google.android.material.snackbar.Snackbar;
@@ -34,6 +38,11 @@ public class AndroidUtil {
         Snackbar snackbar = Snackbar.make(v, message, Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundColor(resources.getColor(R.color.red));
         snackbar.show();
+
+    }
+
+    public static void setProfilePic(Context context, Uri imageUri, ImageView imageView){
+        Glide.with(context).load(imageUri).apply(RequestOptions.circleCropTransform()).into(imageView);
 
     }
 

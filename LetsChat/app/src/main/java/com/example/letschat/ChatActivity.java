@@ -1,9 +1,11 @@
 package com.example.letschat;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,6 +40,8 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     String chatRoomId;
     ChatRoom chatRoom;
 
+    ImageView profilePic;
+
     ChatRecyclerAdapter chatRecyclerAdapter;
 
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -55,6 +59,15 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         backBtn = findViewById(R.id.back_btn);
         otherUserView = findViewById(R.id.other_username);
         recyclerView = findViewById(R.id.chat_recycler_view);
+        profilePic = findViewById(R.id.profile_pic_img_view);
+
+        FirebaseUtil.getCurrentProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
+                .addOnCompleteListener(task1 -> {
+                    if(task1.isSuccessful()){
+                        Uri uri = task1.getResult();
+                        AndroidUtil.setProfilePic(this, uri, profilePic);
+                    }
+                });
 
         backBtn.setOnClickListener((v) -> {
             onBackPressed();

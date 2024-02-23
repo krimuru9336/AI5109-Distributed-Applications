@@ -2,6 +2,7 @@ package com.example.letschat.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +41,16 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
                         String lastMessageText = model.getLastMsg().getMessage();
 
                         User otherUser = task.getResult().toObject(User.class);
-
                         if (otherUser != null) {
+                        FirebaseUtil.getCurrentProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
+                                .addOnCompleteListener(task1 -> {
+                                    if(task1.isSuccessful()){
+                                        Uri uri = task1.getResult();
+                                        AndroidUtil.setProfilePic(context, uri, holder.profilePic );
+                                    }
+                                });
+
+
                             if (otherUser.getUserId().equals(FirebaseUtil.currentUserId())) {
                                 holder.usernameText.setText(String.format("%s (Me)", otherUser.getUsername()));
                             } else {

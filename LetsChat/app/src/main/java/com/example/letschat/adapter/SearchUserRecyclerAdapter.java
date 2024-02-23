@@ -2,6 +2,7 @@ package com.example.letschat.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,17 @@ public class SearchUserRecyclerAdapter  extends FirestoreRecyclerAdapter<User, S
     protected void onBindViewHolder(@NonNull UserModelViewHolder holder, int position, @NonNull User model) {
         holder.usernameText.setText(model.getUsername());
         holder.phoneText.setText(model.getPhone());
-        if(model.getUserId().equals(FirebaseUtil.currentUserId()))
+        if(model.getUserId().equals(FirebaseUtil.currentUserId())) {
             holder.usernameText.setText(String.format("%s (Me)", model.getUsername()));
+        }
+
+        FirebaseUtil.getCurrentProfilePicStorageRef(model.getUserId()).getDownloadUrl()
+                .addOnCompleteListener(task1 -> {
+                    if(task1.isSuccessful()){
+                        Uri uri = task1.getResult();
+                        AndroidUtil.setProfilePic(context, uri, holder.profilePic );
+                    }
+                });
 
         holder.itemView.setOnClickListener(v->{
             //navigate to chat activity
@@ -59,6 +69,7 @@ public class SearchUserRecyclerAdapter  extends FirestoreRecyclerAdapter<User, S
             super(itemView);
             usernameText = itemView.findViewById(R.id.username_text);
             phoneText = itemView.findViewById(R.id.phone_text);
+            profilePic = itemView.findViewById(R.id.profile_pic_img_view);
 
         }
 
