@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Management</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h3>User Management</h3>
+    
+    
+    <form action="/add" method="post" th:object="${user}">
+        <input type="hidden" th:field="*{id}" />
+        Name: <input type="text" th:field="*{name}" /><br />
+        Phone Number: <input type="text" th:field="*{phoneNumber}" /><br />
+        <input type="submit" value="Save" />
+        
+    </form>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="user : ${index}">
+            <td th:text="${user.id}">ID</td>
+            <td th:text="${user.name}">Name</td>
+            <td th:text="${user.phoneNumber}">Phone Number</td>
+            <td>
+                <a th:href="'/delete/' + ${user.id}">Delete</a>
+            </td>
+        </tr>
+    </table>
+    
+    <footer>
+        <p>Done By Louay Ben Hadj Said - Matriculation Number: 1438941</p>
+    </footer>
+    
+</body>
+
+</html>
+<!-- Author: Louay Ben Hadj Said created: 01/11/2023 -->
