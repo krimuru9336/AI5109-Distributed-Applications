@@ -60,6 +60,7 @@
         android:id="@+id/bottom_layout">
 
         <EditText
+            android:id="@+id/chat_message_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -71,10 +72,10 @@
             android:background="@drawable/edit_text_rounded"
             android:elevation="4dp"
             android:hint="Type message here..."
-            android:textColorHint="@color/light_gray"
-            android:textColor="@color/black"
             android:padding="10dp"
-            android:id="@+id/chat_message_input"/>
+            android:drawableRight="@drawable/icon_attachment"
+            android:textColor="@color/black"
+            android:textColorHint="@color/light_gray" />
 
         <ImageButton
             android:layout_width="48dp"

@@ -1,16 +1,24 @@
 package com.example.cchat;
 
+import static java.security.AccessController.getContext;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,6 +33,7 @@ import com.example.cchat.model.UserModel;
 import com.example.cchat.utils.AndroidUtil;
 import com.example.cchat.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,6 +42,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONObject;
 
@@ -40,6 +51,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -60,6 +73,11 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     TextView username;
     RecyclerView recyclerView;
     ImageView imageView;
+    String msgType;
+    ActivityResultLauncher<Intent> imagePickerLauncher;
+    Uri selectedImageUri;
+
+
 
     public static Context context;
 
@@ -70,6 +88,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
 
         ChatActivity.context = this.getApplicationContext();
 
+        setupImagePicker();
 
         //getUserModel
         otherUser = AndroidUtil.getUserModelFromIntent(getIntent());
@@ -96,12 +115,14 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
 
         sendMsgBtn.setOnClickListener((v) -> {
             String message = messageInput.getText().toString().trim();
+            msgType = "text";
             if(message.isEmpty())
                 return;
 
             sendMessageToUser(message);
         });
 
+        setupListeners();
         getOrCreateChatroom();
         setupChatRecyclerView();
 
@@ -127,12 +148,89 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         });
     }
 
+    void setupListeners() {
+        messageInput.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    Drawable[] drawables = messageInput.getCompoundDrawables();
+                    if(drawables[2] != null) {
+                        int rightDrawableEnd = messageInput.getRight() - messageInput.getPaddingRight();
+                        int rightDrawableStart = rightDrawableEnd - drawables[2].getIntrinsicWidth();
+                        if(event.getRawX() >= rightDrawableStart && event.getRawX() <= rightDrawableEnd) {
+                            Log.i("touch", "clicked on attachment");
+                            openImagePicker();
+                            return true;
+                        }
+                    } else {
+                        Log.i("touch", "else");
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    void setupImagePicker() {
+        imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if(result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if(data!=null && data.getData() != null) {
+                            selectedImageUri = data.getData();
+                            uploadMedia();
+                        }
+                    }
+                }
+        );
+    }
+
+    void openImagePicker() {
+        ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512, 512)
+                .createIntent(new Function1<Intent, Unit>() {
+                    @Override
+                    public Unit invoke(Intent intent) {
+                        imagePickerLauncher.launch(intent);
+                        return null;
+                    }
+                });
+    }
+
+    void uploadMedia() {
+        Log.d("media", "uploadMedia:" + selectedImageUri);
+        if(selectedImageUri != null) {
+            Log.d("media", selectedImageUri.getPath().substring(selectedImageUri.getPath().lastIndexOf(".") + 1));
+            String filePath = System.currentTimeMillis() + ".jpg";
+            FirebaseUtil.getChatMediaStorageRef(chatroomId).child(filePath).putFile(selectedImageUri).addOnCompleteListener(task -> {
+                if(task.isSuccessful()) {
+                    Log.d("media", "uploaded successfully");
+                    FirebaseUtil.getChatMediaFileRef(chatroomId, filePath).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            String message = uri.toString();
+                            msgType = "media";
+                            sendMessageToUser(message);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("media", filePath + "Media Not found");
+
+                        }
+                    });
+                } else {
+                    Log.e("media", "Not found");
+                }
+            });
+        }
+    }
+
     void sendMessageToUser(String message) {
         updateChatRoom(message);
 
         FirebaseUtil.getChatroomReference(chatroomId).set(chatRoomModel);
 
-        ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserId(), Timestamp.now());
+        ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserId(), Timestamp.now(), msgType);
         FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
@@ -146,6 +244,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     }
 
     void getOrCreateChatroom(){
+        getOrCreateChatMediaRef();
         FirebaseUtil.getChatroomReference(chatroomId).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 chatRoomModel = task.getResult().toObject(ChatRoomModel.class);
@@ -163,10 +262,29 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         });
     }
 
+    void getOrCreateChatMediaRef() {
+        FirebaseUtil.getChatMediaStorageRef(chatroomId).child(chatroomId).getDownloadUrl().addOnCompleteListener(task -> {
+           if(task.isSuccessful()) {
+                Log.i("ref", "folder found");
+           } else {
+               StorageReference storageRef = FirebaseUtil.getCurrentStorageRef().child(chatroomId + "/");
+               storageRef.child(chatroomId).putBytes(new byte[0]).addOnCompleteListener(task1 -> {
+                   if(task1.isSuccessful()) {
+                       Log.i("ref", "created folder");
+                   } else {
+                       Log.e("ref", "failed to create a folder");
+                   }
+               });
+               Log.e("ref", "folder not found");
+           }
+        });
+    }
+
     void updateChatRoom(String message) {
         chatRoomModel.setLastMessageTimestamp(Timestamp.now());
         chatRoomModel.setLastMessageSenderId(FirebaseUtil.currentUserId());
         chatRoomModel.setLastMessage(message);
+        chatRoomModel.setLastMessageType(msgType);
     }
 
     void sendNotification(String message) {

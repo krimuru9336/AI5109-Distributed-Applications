@@ -7,13 +7,24 @@ public class ChatMessageModel {
     private String senderId;
     private Timestamp timestamp;
 
+    public String getMsgType() {
+        return msgType;
+    }
+
+    public void setMsgType(String msgType) {
+        this.msgType = msgType;
+    }
+
+    private String msgType;
+
     public ChatMessageModel() {
     }
 
-    public ChatMessageModel(String message, String senderId, Timestamp timestamp) {
+    public ChatMessageModel(String message, String senderId, Timestamp timestamp, String msgType) {
         this.message = message;
         this.senderId = senderId;
         this.timestamp = timestamp;
+        this.msgType = msgType;
     }
 
     public String getMessage() {

@@ -42,6 +42,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
                 .get().addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
                         boolean lastMessageSentByMe = model.getLastMessageSenderId().equals(FirebaseUtil.currentUserId());
+                        boolean isMediaMessage = model.getLastMessageType().equals("media");
                         UserModel otherUserModel = task.getResult().toObject(UserModel.class);
 
                         FirebaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUserId()).getDownloadUrl()
@@ -54,8 +55,12 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
                         if(lastMessageSentByMe)
                             holder.lastMessageText.setText("You: " + model.getLastMessage());
                         else
-
                             holder.lastMessageText.setText(model.getLastMessage());
+
+                        if(isMediaMessage && lastMessageSentByMe)
+                            holder.lastMessageText.setText("You: Image");
+                        else
+                            holder.lastMessageText.setText("Image");
                         holder.lastMessageTimeText.setText(FirebaseUtil.timestampToString(model.getLastMessageTimestamp()));
 
                         holder.itemView.setOnClickListener(v -> {

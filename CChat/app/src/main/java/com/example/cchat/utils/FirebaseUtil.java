@@ -88,5 +88,18 @@ public class FirebaseUtil {
                 .child(userId);
     }
 
+    public static StorageReference getChatMediaStorageRef(String chatroomId) {
+        return FirebaseStorage.getInstance().getReference().child(chatroomId);
+    }
+
+    public static StorageReference getChatMediaFileRef(String chatroomId, String fileName) {
+        return FirebaseStorage.getInstance().getReference().child(chatroomId)
+                .child(fileName);
+    }
+
+    public static StorageReference getCurrentStorageRef() {
+        return FirebaseStorage.getInstance().getReference();
+    }
+
 
 }

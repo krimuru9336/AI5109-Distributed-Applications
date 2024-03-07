@@ -11,6 +11,16 @@ public class ChatRoomModel {
     String lastMessageSenderId;
     String lastMessage;
 
+    public String getLastMessageType() {
+        return lastMessageType;
+    }
+
+    public void setLastMessageType(String lastMessageType) {
+        this.lastMessageType = lastMessageType;
+    }
+
+    String lastMessageType;
+
     public ChatRoomModel() {
     }
 

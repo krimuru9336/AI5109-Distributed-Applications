@@ -20,6 +20,11 @@
             android:textSize="18sp"
             android:id="@+id/received_msg_textview"/>
 
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:id="@+id/received_media_view"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,6 +33,7 @@
             android:textColor="@color/black"
             android:id="@+id/received_msg_timestamp"/>
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -45,13 +51,19 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:id="@+id/sent_msg_textview"/>
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:id="@+id/sent_media_view"/>
+
         <TextView
+            android:id="@+id/sent_msg_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
-            android:textColor="@color/black"
-            android:id="@+id/sent_msg_timestamp"/>
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black" />
     </LinearLayout>
 
 </RelativeLayout>
