@@ -1,10 +1,12 @@
 package com.example.chitchat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +16,8 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder>{
     private static List<String> userList;
+
+    public final static int countChatrooms = 3;
     private TextView uotv;
     public UserAdapter(List<String> ul,TextView uotv){
         userList = ul;
@@ -39,7 +43,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public String getUsersOnlineText(){
-        return "Users online ("+this.getItemCount()+")";
+        int usersOnline = getItemCount();
+        int countUsers = Math.max(usersOnline-countChatrooms,0);
+        return "Users online ("+countUsers+")";
     }
     public void addUser(String username){
         userList.add(0, username);

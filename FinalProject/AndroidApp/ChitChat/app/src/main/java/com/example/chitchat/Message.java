@@ -10,9 +10,10 @@ public class Message {
     private final UUID id;
     private String content;
     private String sendername;
+
+    private String displayname;
     private boolean isIncoming;
     private Date timestamp;
-
     private Date changedTimestamp;
 
     private State state;
@@ -23,16 +24,26 @@ public class Message {
         this.id=UUID.randomUUID();
         this.content = content;
         this.sendername = sendername;
+        this.displayname = sendername;
         this.isIncoming = isIncoming;
         this.timestamp = new Date(System.currentTimeMillis());
         this.state = State.DEFAULT;
     }
 
     public Message(String content, String sendername, boolean isIncoming,long timestamp, UUID id){
-
         this.id=id;
         this.content = content;
         this.sendername = sendername;
+        this.displayname = sendername;
+        this.isIncoming = isIncoming;
+        this.timestamp = new Date(timestamp);
+        this.state = State.DEFAULT;
+    }
+    public Message(String content, String sendername, String displayname, boolean isIncoming, long timestamp, UUID id){
+        this.id=id;
+        this.content = content;
+        this.sendername = sendername;
+        this.displayname = displayname;
         this.isIncoming = isIncoming;
         this.timestamp = new Date(timestamp);
         this.state = State.DEFAULT;
@@ -47,6 +58,9 @@ public class Message {
     }
     public String getSendername(){
         return this.sendername;
+    }
+    public String getDisplayname(){
+        return this.displayname;
     }
     public boolean getIsIncoming(){
         return this.isIncoming;

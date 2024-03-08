@@ -168,7 +168,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
         public void bind(Message msg){
             this.msgTextView.setText(msg.getContent());
-            String displayName = msg.getIsIncoming() ? msg.getSendername() : "You";
+            String displayName = msg.getIsIncoming() ? msg.getDisplayname() : "You";
             this.usernameTextView.setText(displayName);
             this.timestampTextView.setText(this.sdf.format(msg.getTimestamp()));
             int bgIndex = msg.getIsIncoming()?R.drawable.recv_msg_bg:R.drawable.sent_msg_bg;

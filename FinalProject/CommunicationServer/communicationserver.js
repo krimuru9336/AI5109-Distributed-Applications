@@ -13,6 +13,11 @@ const currentUsers = [];
 // Arrays of positive adjectives and animal names
 const adjectives = csconfig.adjectives;
 const animals = csconfig.animals;
+const chatrooms = csconfig.chatrooms;
+//Add chatrooms as current users
+for(let i = 0; i<chatrooms.length;i++){
+	currentUsers.push({user_name:chatrooms[i], socket_id:-1});
+}
 
 // Function to generate a random username
 function generateRandomUsername() {
@@ -97,17 +102,32 @@ sio.on('connection',(socket) => {
 			console.log(usernameDest);
 			console.log(messageContent);
 			const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
-			const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
-			if(socketidDest){
-				sio.to(socketidDest).emit('message',{
-					data: {
-						usernameSource: usernameSource,
+			
+			if(usernameDest.includes("Chatroom")){
+				socket.broadcast.emit('groupMessage',{
+				data: {
+						usernameSource: usernameDest,
+						displayname: usernameSource,
 						message: messageContent,
 						timestamp: timestamp,
 						msgID: msgID,
 					},
 					action:'message',
-				});
+				});	
+			}
+			else{
+				const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
+				if(socketidDest){
+					sio.to(socketidDest).emit('message',{
+						data: {
+							usernameSource: usernameSource,
+							message: messageContent,
+							timestamp: timestamp,
+							msgID: msgID,
+						},
+						action:'message',
+					});
+				}
 			}
 		}
 		catch(error){
@@ -122,18 +142,29 @@ sio.on('connection',(socket) => {
 			const usernameDest = message.usernameDest;
 			const msgID = message.msgID;
 			const timestamp = message.timestamp;
-
-			const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
-			const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
-			if(socketidDest){
-				sio.to(socketidDest).emit('delete',{
+			if(usernameDest.includes("Chatroom")){
+				socket.broadcast.emit('delete',{
 					data: {
-						usernameSource: usernameSource,
+						usernameSource: usernameDest,
 						timestamp: timestamp,
 						msgID: msgID,
 					},
 					action:'delete',
 				});
+			}
+			else{
+				const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
+				const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
+				if(socketidDest){
+					sio.to(socketidDest).emit('delete',{
+						data: {
+							usernameSource: usernameSource,
+							timestamp: timestamp,
+							msgID: msgID,
+						},
+						action:'delete',
+					});
+				}
 			}
 		}
 		catch(error){
@@ -149,13 +180,10 @@ sio.on('connection',(socket) => {
 			const msgID = message.msgID;
 			const messageContent = message.messageContent;
 			const timestamp = message.timestamp;
-
-			const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
-			const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
-			if(socketidDest){
-				sio.to(socketidDest).emit('edit',{
+			if(usernameDest.includes("Chatroom")){
+				socket.broadcast.emit('edit',{
 					data: {
-						usernameSource: usernameSource,
+						usernameSource: usernameDest,
 						timestamp: timestamp,
 						msgID: msgID,
 						messageContent: messageContent,
@@ -163,6 +191,22 @@ sio.on('connection',(socket) => {
 					action:'edit',
 				});
 			}
+			else{
+				const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
+				const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
+				if(socketidDest){
+					sio.to(socketidDest).emit('edit',{
+						data: {
+							usernameSource: usernameSource,
+							timestamp: timestamp,
+							msgID: msgID,
+							messageContent: messageContent,
+						},
+						action:'edit',
+					});
+				}
+			}
+			
 		}
 		catch(error){
 			console.log("Edit error.");

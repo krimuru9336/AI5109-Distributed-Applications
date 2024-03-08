@@ -177,6 +177,23 @@ public class WebSocketHandler {
 
         this.messageListener = ml;
         if(!this.messageListenerSet){
+            socket.on("groupMessage",args -> {
+                if(args.length > 0 && args[0] instanceof JSONObject){
+                    try{
+                        JSONObject json = (JSONObject) args[0];
+                        if(json.has("data") && json.has("action")){
+                            if(json.getString("action").equals("message")){
+                                JSONObject jsonMsg = json.getJSONObject(("data"));
+                                Message msg = new Message(jsonMsg.getString("message"),
+                                        jsonMsg.getString("usernameSource"),jsonMsg.getString("displayname"),true,jsonMsg.getLong("timestamp"), UUID.fromString(jsonMsg.getString("msgID")));
+                                messageListener.onMessageReceived(msg);
+                            }
+                        }
+                    }catch(JSONException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
             socket.on("message",args -> {
                 if(args.length > 0 && args[0] instanceof JSONObject){
                     try{

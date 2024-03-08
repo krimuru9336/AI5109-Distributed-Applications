@@ -1,6 +1,11 @@
 module.exports =
 {
 	port: process.env.PORT || 8081,
+	chatrooms: [
+		"Zoo Crew [Chatroom]",
+		"Furball Fiesta [Chatroom]",
+		"Wildlife Wonders [Chatroom]"
+	],
 	adjectives: [
   "Adorable",
   "Affectionate",
