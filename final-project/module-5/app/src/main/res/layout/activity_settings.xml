@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+    <TextView
+        android:id="@+id/settings_authorInfoTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/author_information"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:textColor="@color/colorPrimary"
+        />
+
+    <include
+        android:id="@+id/settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_authorInfoTextView"
+        layout="@layout/app_bar_layout"
+        android:layout_marginTop="12dp"
+        >
+    </include>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/settings_image"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:src="@drawable/default_profile_image"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp"
+        android:layout_below="@+id/settings_toolbar"
+        app:civ_border_width="0.5dp"
+        app:civ_border_color="@color/colorPrimary"/>
+
+    <EditText
+        android:id="@+id/settings_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/settings_image"
+        android:hint="@string/set_a_profile_name"
+        android:textSize="24sp"
+        android:inputType="textMultiLine"
+        android:background="@drawable/inputs"
+        android:padding="4dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        />
+
+    <EditText
+        android:id="@+id/settings_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/settings_name"
+        android:hint="@string/set_a_profile_status"
+        android:textSize="24sp"
+        android:inputType="textMultiLine"
+        android:background="@drawable/inputs"
+        android:padding="4dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        />
+
+    <Button
+        android:id="@+id/settings_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settings_status"
+        android:padding="4dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:text="@string/update"
+        android:textSize="24sp"
+        android:textColor="@color/colorAccent"
+        android:backgroundTint="@color/colorPrimary"
+        />
+
+</RelativeLayout>

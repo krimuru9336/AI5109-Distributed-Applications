@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "43516282611",
+    "project_id": "whatsdown-7baba",
+    "storage_bucket": "whatsdown-7baba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43516282611:android:004d63eda9d4ee7c1bd986",
+        "android_client_info": {
+          "package_name": "com.example.whatsdown"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp1y-5Gug9wT2LteiJhV9pYozhaVRU-q8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
