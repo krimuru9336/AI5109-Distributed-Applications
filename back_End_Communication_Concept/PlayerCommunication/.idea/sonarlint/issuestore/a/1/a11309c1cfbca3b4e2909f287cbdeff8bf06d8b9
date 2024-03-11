@@ -1,0 +1,6 @@
+
+g	java:S112D"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8í•”Ñà1
+T
+java:S26297"7Use the built-in formatting to construct this argument.(Ïñ…ó8î•”Ñà1
+u
+java:S2139B"XEither log this exception and handle it, or rethrow it with some contextual information.(ï­£Ä8€–”Ñà1
