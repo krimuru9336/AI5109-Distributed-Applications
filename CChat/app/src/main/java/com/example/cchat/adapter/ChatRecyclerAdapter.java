@@ -49,7 +49,6 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
             holder.sentMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    //alert here
                     if (clickListener != null) {
                         String messageId = getSnapshots().getSnapshot(position).getId();
                         clickListener.onChatMessageClicked(model, messageId);

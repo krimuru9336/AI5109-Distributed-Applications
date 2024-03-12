@@ -5,6 +5,7 @@ import static java.security.AccessController.getContext;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +48,11 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
 
                         FirebaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUserId()).getDownloadUrl()
                                         .addOnCompleteListener(task1 -> {
-                                            Uri uri = task1.getResult();
-                                            AndroidUtil.setProfilePicture(context, uri, holder.profilePicture);
+                                            Log.e("picture", "here");
+                                            if(task1.isSuccessful()) {
+                                                Uri uri = task1.getResult();
+                                                AndroidUtil.setProfilePicture(context, uri, holder.profilePicture);
+                                            }
                                         });
 
                         holder.usernameText.setText(otherUserModel.getUsername());

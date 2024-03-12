@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     ImageButton searchBtn;
 
+    ImageButton menuBtn;
     ChatFragment chatFragment;
     ProfileFragment profileFragment;
 
@@ -40,9 +41,13 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         searchBtn = findViewById(R.id.main_search_btn);
-
+        menuBtn = findViewById(R.id.main_menu_btn);
         searchBtn.setOnClickListener((v) -> {
             startActivity(new Intent(MainActivity.this, SearchUserActivity.class));
+        });
+
+        menuBtn.setOnClickListener((v) -> {
+            startActivity(new Intent(MainActivity.this, SelectUsersActivity.class));
         });
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

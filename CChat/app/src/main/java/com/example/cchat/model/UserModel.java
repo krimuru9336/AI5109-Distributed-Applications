@@ -7,7 +7,6 @@ public class UserModel {
     private String username;
     private Timestamp createdTimestamp;
     private String userId;
-
     private String fcmToken;
 
     public UserModel() {

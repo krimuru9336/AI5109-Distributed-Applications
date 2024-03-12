@@ -31,8 +31,19 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             app:tint="@color/white"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="50dp"
             android:id="@+id/main_search_btn"/>
+
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/icon_menu"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/main_menu_btn"/>
 
     </RelativeLayout>
 

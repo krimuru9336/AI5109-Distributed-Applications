@@ -10,25 +10,20 @@ public class ChatRoomModel {
     Timestamp lastMessageTimestamp;
     String lastMessageSenderId;
     String lastMessage;
-
-    public String getLastMessageType() {
-        return lastMessageType;
-    }
-
-    public void setLastMessageType(String lastMessageType) {
-        this.lastMessageType = lastMessageType;
-    }
-
     String lastMessageType;
+    String chatroomType;
+
+    String groupName;
 
     public ChatRoomModel() {
     }
 
-    public ChatRoomModel(String chatroomId, List<String> userIds, Timestamp lastMessageTimestamp, String lastMessageSenderId) {
+    public ChatRoomModel(String chatroomId, List<String> userIds, Timestamp lastMessageTimestamp, String lastMessageSenderId, String chatroomType) {
         ChatroomId = chatroomId;
         this.userIds = userIds;
         this.lastMessageTimestamp = lastMessageTimestamp;
         this.lastMessageSenderId = lastMessageSenderId;
+        this.chatroomType = chatroomType;
     }
 
     public String getChatroomId() {
@@ -69,5 +64,29 @@ public class ChatRoomModel {
 
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public String getLastMessageType() {
+        return lastMessageType;
+    }
+
+    public void setLastMessageType(String lastMessageType) {
+        this.lastMessageType = lastMessageType;
+    }
+
+    public String getChatroomType() {
+        return chatroomType;
+    }
+
+    public void setChatroomType(String chatroomType) {
+        this.chatroomType = chatroomType;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

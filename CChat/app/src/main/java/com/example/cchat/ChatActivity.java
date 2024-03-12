@@ -103,8 +103,10 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
 
         FirebaseUtil.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
                 .addOnCompleteListener(task1 -> {
-                    Uri uri = task1.getResult();
-                    AndroidUtil.setProfilePicture(this, uri, imageView);
+                    if(task1.isSuccessful()) {
+                        Uri uri = task1.getResult();
+                        AndroidUtil.setProfilePicture(this, uri, imageView);
+                    }
                 });
 
         backBtn.setOnClickListener(v -> {
@@ -254,8 +256,10 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             chatroomId,
                             Arrays.asList(FirebaseUtil.currentUserId(), otherUser.getUserId()),
                             Timestamp.now(),
-                            ""
+                            "",
+                            "p2p"
                     );
+                    
                     FirebaseUtil.getChatroomReference(chatroomId).set(chatRoomModel);
                 }
             }
