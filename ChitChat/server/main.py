@@ -5,31 +5,25 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List, Dict
 import json
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from datetime import datetime
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import StreamingResponse, FileResponse
 
-# load_dotenv()
+load_dotenv()
 print(os.getenv("CHITCHAT_USER"))
 
 MEDIA_DIR = "media"
 if not os.path.exists(MEDIA_DIR):
     os.makedirs(MEDIA_DIR)
 
-# conn = mysql.connector.connect(
-#     host=os.getenv("CHITCHAT_HOST"),
-#     user=os.getenv("CHITCHAT_USER"),
-#     password=os.getenv("CHITCHAT_PASSWORD"),
-#     database=os.getenv("CHITCHAT_DATABASE")
-# )
-
 conn = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='6jubwe32',
-    database='chitchat'
+    host=os.getenv("CHITCHAT_HOST"),
+    user=os.getenv("CHITCHAT_USER"),
+    password=os.getenv("CHITCHAT_PASSWORD"),
+    database=os.getenv("CHITCHAT_DATABASE")
 )
+
 
 app = FastAPI()
 
@@ -48,6 +42,12 @@ class User(BaseModel):
     id: Optional[int] = None
     name: str
     email: str
+
+
+class Group(BaseModel):
+    id: Optional[int] = None
+    name: str
+    members: str
 
 
 @app.post("/user/", response_model=User)
@@ -100,8 +100,57 @@ def read_user(user_id: Optional[int] = None):
             status_code=500, detail=f"Database error: {err}")
 
 
-# Websockets
+@app.get("/group/", response_model=List[Group])
+def read_user(group_id: Optional[int] = None):
+    cursor = conn.cursor()
+    try:
+        if group_id is not None:
+            # If user_id is provided, fetch a specific user
+            query = "SELECT * FROM group WHERE id=%s"
+            cursor.execute(query, (group_id,))
+            group = cursor.fetchone()
+            cursor.close()
+            if group is None:
+                raise HTTPException(status_code=404, detail="group not found")
+            print(group[0])
+            return [{"id": group[0], "members": group[2], "name": group[1]}]
+        else:
+            # If no user_id is provided, fetch all users
+            query_all = "SELECT * FROM group"
+            cursor.execute(query_all)
+            groups = cursor.fetchall()
+            cursor.close()
+            if not groups:
+                raise HTTPException(status_code=404, detail="No groups found")
+            # Convert the result to a list of dictionaries
+            return [{"id": group[0], "members": group[2], "name": group[1]} for group in groups]
+    except mysql.connector.Error as err:
+        raise HTTPException(
+            status_code=500, detail=f"Database error: {err}")
 
+
+@app.post("/group/", response_model=Group)
+def create_group(group: Group):
+    cursor = conn.cursor()
+    try:
+        query = "INSERT INTO groups (name, members) VALUES (%s, %s)"
+        cursor.execute(query, (group.name, group.members))
+        conn.commit()
+        group.id = cursor.lastrowid
+        cursor.close()
+        return group
+
+    except mysql.connector.Error as err:
+        if err.errno == 1062:  # MySQL error code for duplicate entry
+            raise HTTPException(
+                status_code=400, detail="Duplicate email, user already exists")
+        else:
+            # Handle other database errors
+            raise HTTPException(
+                status_code=500, detail=f"Database error: {err}")
+
+
+# Websockets
 clients: Dict[int, WebSocket] = {}
 
 
