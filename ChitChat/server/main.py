@@ -1,14 +1,21 @@
 from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Query
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Query, UploadFile, File, Form
 import mysql.connector
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List, Dict
 import json
 import os
 from dotenv import load_dotenv
+from datetime import datetime
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import StreamingResponse, FileResponse
 
 load_dotenv()
 print(os.getenv("CHITCHAT_USER"))
+
+MEDIA_DIR = "media"
+if not os.path.exists(MEDIA_DIR):
+    os.makedirs(MEDIA_DIR)
 
 conn = mysql.connector.connect(
     host=os.getenv("CHITCHAT_HOST"),
@@ -26,6 +33,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/media", StaticFiles(directory="media"), name="media")
 
 
 class User(BaseModel):
@@ -89,11 +98,25 @@ def read_user(user_id: Optional[int] = None):
 clients: Dict[int, WebSocket] = {}
 
 
+@app.post("/upload/")
+async def upload_media(file: bytes = File(...), name: str = Form()):
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    mediaName = f"{timestamp}_{name}"
+    filepath = os.path.join(MEDIA_DIR, mediaName)
+
+    # # Save the file to disk
+    with open(filepath, "wb") as f:
+        f.write(file)
+        f.close()
+
+    return {"mediaName": mediaName}
+
+
 @app.get("/past_messages/", response_model=List[Dict])
 async def get_past_messages(sender_id: int = Query(...), reciever_id: int = Query(...)):
     try:
         cursor = conn.cursor(dictionary=True)
-        query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp  FROM messages WHERE (receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s) ORDER BY timestamp"
+        query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type  FROM messages WHERE (receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s) ORDER BY timestamp"
         cursor.execute(query, (sender_id, reciever_id, reciever_id, sender_id))
         past_messages = cursor.fetchall()
         cursor.close()
@@ -165,16 +188,15 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                     except mysql.connector.Error as err:
                         raise HTTPException(
                             status_code=500, detail=f"Database error: {err}")
-
                 else:
 
                     target_client_id = data.get("recieverId")
 
                     try:
                         cursor = conn.cursor()
-                        query = "INSERT INTO messages (message, sender_id, receiver_id, timestamp) VALUES (%s, %s, %s, %s)"
+                        query = "INSERT INTO messages (message, sender_id, receiver_id, timestamp, type) VALUES (%s, %s, %s, %s, %s)"
                         cursor.execute(query, (data.get('text'), data.get(
-                            'senderId'), data.get('recieverId'), data.get('timestamp')))
+                            'senderId'), data.get('recieverId'), data.get('timestamp'), data.get('type')))
                         data['id'] = cursor.lastrowid
                         conn.commit()
                         cursor.close()
@@ -220,6 +242,7 @@ if __name__ == "__main__":
     import uvicorn
 
     if (conn):
-        uvicorn.run("main:app", host="::", port=8000, reload=True)
+        uvicorn.run("main:app", host="::", port=8000, reload=True,
+                    )
     else:
         print("MYSQL CONNECTION ERROR")
