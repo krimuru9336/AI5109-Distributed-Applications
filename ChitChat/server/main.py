@@ -18,10 +18,10 @@ if not os.path.exists(MEDIA_DIR):
     os.makedirs(MEDIA_DIR)
 
 conn = mysql.connector.connect(
-    host=os.getenv("CHITCHAT_HOST"),
-    user=os.getenv("CHITCHAT_USER"),
-    password=os.getenv("CHITCHAT_PASSWORD"),
-    database=os.getenv("CHITCHAT_DATABASE")
+    host="localhost",
+    user="root",
+    password="6jubwe32",
+    database="chitchat"
 )
 
 
@@ -131,6 +131,7 @@ def read_user(group_id: Optional[int] = None):
 
 @app.post("/group/", response_model=Group)
 def create_group(group: Group):
+    print(group)
     cursor = conn.cursor()
     try:
         query = "INSERT INTO groups (name, members) VALUES (%s, %s)"
