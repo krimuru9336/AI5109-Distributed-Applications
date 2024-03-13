@@ -106,7 +106,7 @@ def read_user(group_id: Optional[int] = None):
     try:
         if group_id is not None:
             # If user_id is provided, fetch a specific user
-            query = "SELECT * FROM group WHERE id=%s"
+            query = "SELECT * FROM groups WHERE id=%s"
             cursor.execute(query, (group_id,))
             group = cursor.fetchone()
             cursor.close()
@@ -116,7 +116,7 @@ def read_user(group_id: Optional[int] = None):
             return [{"id": group[0], "members": group[2], "name": group[1]}]
         else:
             # If no user_id is provided, fetch all users
-            query_all = "SELECT * FROM group"
+            query_all = "SELECT * FROM groups"
             cursor.execute(query_all)
             groups = cursor.fetchall()
             cursor.close()
