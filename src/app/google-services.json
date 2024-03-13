@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "461033868819",
+    "firebase_url": "https://da-chat-app-default-rtdb.firebaseio.com",
+    "project_id": "da-chat-app",
+    "storage_bucket": "da-chat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461033868819:android:80e81a6d77e3999d2ab9e6",
+        "android_client_info": {
+          "package_name": "com.sameetasadullah.i180479_180531"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461033868819-tqousdjrhpfr3frconpia92je73annl7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxzTczV0Kf69yqlWWpdMljxuteYkEfPKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461033868819-tqousdjrhpfr3frconpia92je73annl7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
