@@ -120,6 +120,7 @@ def read_user(group_id: Optional[int] = None):
             cursor.execute(query_all)
             groups = cursor.fetchall()
             cursor.close()
+            print(groups)
             if not groups:
                 raise HTTPException(status_code=404, detail="No groups found")
             # Convert the result to a list of dictionaries
