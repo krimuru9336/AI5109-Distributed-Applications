@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ChitChat" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@android:color/holo_blue_dark</item>
+        <item name="android:statusBarColor">@android:color/holo_blue_dark</item>
+
+
+    </style>
+
+    <style name="Theme.ChitChat" parent="Base.Theme.ChitChat" />
+</resources>
