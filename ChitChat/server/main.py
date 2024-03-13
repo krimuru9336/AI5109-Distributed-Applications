@@ -5,12 +5,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional, List, Dict
 import json
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from datetime import datetime
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import StreamingResponse, FileResponse
 
-load_dotenv()
+# load_dotenv()
 print(os.getenv("CHITCHAT_USER"))
 
 MEDIA_DIR = "media"
