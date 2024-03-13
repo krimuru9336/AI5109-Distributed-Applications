@@ -17,11 +17,18 @@ MEDIA_DIR = "media"
 if not os.path.exists(MEDIA_DIR):
     os.makedirs(MEDIA_DIR)
 
+# conn = mysql.connector.connect(
+#     host=os.getenv("CHITCHAT_HOST"),
+#     user=os.getenv("CHITCHAT_USER"),
+#     password=os.getenv("CHITCHAT_PASSWORD"),
+#     database=os.getenv("CHITCHAT_DATABASE")
+# )
+
 conn = mysql.connector.connect(
-    host=os.getenv("CHITCHAT_HOST"),
-    user=os.getenv("CHITCHAT_USER"),
-    password=os.getenv("CHITCHAT_PASSWORD"),
-    database=os.getenv("CHITCHAT_DATABASE")
+    host='localhost',
+    user='root',
+    password='6jubwe32',
+    database='chitchat'
 )
 
 app = FastAPI()
