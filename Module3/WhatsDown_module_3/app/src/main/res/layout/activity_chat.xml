@@ -1,75 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/background_light"
-    tools:context=".ChatActivity">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/headerLayout"
+    <!-- Header -->
+    <TextView
+        android:id="@+id/textViewHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="?attr/colorPrimary">
+        android:text="Chat"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:background="@color/colorPrimary"
+        android:padding="12dp"
+        android:textAlignment="center"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textViewChatTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chat Room"
-            android:textSize="20sp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"/>
-
-
-    </RelativeLayout>
-
+    <!-- Chat Messages -->
     <ListView
         android:id="@+id/listViewChat"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@+id/headerLayout"
-        android:layout_above="@+id/inputLayout"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="16dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/textViewHeader"
+        android:divider="@null"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"
-        android:background="@android:color/background_light"
-        app:layout_constraintBottom_toTopOf="@+id/inputLayout" />
+        android:transcriptMode="alwaysScroll" />
 
+    <!-- Message Input -->
     <RelativeLayout
-        android:id="@+id/inputLayout"
+        android:id="@+id/layoutMessageInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="?android:attr/editTextBackground">
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        android:padding="8dp">
 
+        <!-- Attach Video Button -->
+        <ImageButton
+            android:id="@+id/buttonAttachVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_attach_video" />
+
+        <!-- Attach Image Button -->
+        <ImageButton
+            android:id="@+id/buttonAttachImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/buttonAttachVideo"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_attach_image" />
+
+        <!-- Message Input Field -->
         <EditText
             android:id="@+id/editTextMessage"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/buttonSendMessage"
-            android:layout_toStartOf="@+id/buttonSendMessage"
-            android:hint="Type your message"
-            android:padding="8dp"
-            android:background="@android:color/white"/>
+            android:layout_toEndOf="@id/buttonAttachImage"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="Type your message..."
+            android:inputType="textMultiLine"
+            android:minLines="1"
+            android:maxLines="5"
+            android:background="@android:color/transparent" />
 
+        <!-- Send Button -->
         <Button
-            android:id="@+id/buttonSendMessage"
+            android:id="@+id/buttonSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="Send"
-            android:background="?attr/colorPrimary"/>
-
-
+            android:layout_marginEnd="8dp"
+            android:text="Send" />
     </RelativeLayout>
-
 </RelativeLayout>
