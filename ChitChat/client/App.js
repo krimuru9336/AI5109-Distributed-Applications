@@ -1,16 +1,16 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import SignUp from './screens/signUp';
-import HomeScreen from './screens/home';
-import Chat from './screens/chat';
-import { SocketProvider } from './SocketContext';
-import { Text, View, KeyboardAvoidingView } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import SignUp from "./screens/signUp";
+import HomeScreen from "./screens/home";
+import Chat from "./screens/chat";
+import { SocketProvider } from "./SocketContext";
+import { Text, View, KeyboardAvoidingView } from "react-native";
 
 const Stack = createStackNavigator();
 
 const CustomHeaderTitle = () => (
-  <View style={{ alignItems: 'center' }}>
+  <View style={{ alignItems: "center" }}>
     <Text style={{ fontWeight: 700 }}>Dipesh Kewalramani (fdai8004)</Text>
     <Text style={{ fontWeight: 700 }}>1493481 (Matrikel-Nr)</Text>
   </View>
@@ -20,12 +20,11 @@ const screenOptions = {
   headerTitle: () => <CustomHeaderTitle />,
 };
 
-
 export default App = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <NavigationContainer>
         <SocketProvider>
@@ -40,4 +39,3 @@ export default App = () => {
     </KeyboardAvoidingView>
   );
 };
-

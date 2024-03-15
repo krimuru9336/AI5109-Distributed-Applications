@@ -11,7 +11,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import StreamingResponse, FileResponse
 
 load_dotenv()
-print(os.getenv("CHITCHAT_USER"))
 
 MEDIA_DIR = "media"
 if not os.path.exists(MEDIA_DIR):
@@ -83,7 +82,6 @@ def read_user(user_id: Optional[int] = None):
             cursor.close()
             if user is None:
                 raise HTTPException(status_code=404, detail="User not found")
-            print(user[0])
             return [{"id": user[0], "email": user[1], "name": user[2]}]
         else:
             # If no user_id is provided, fetch all users
@@ -101,7 +99,7 @@ def read_user(user_id: Optional[int] = None):
 
 
 @app.get("/group/", response_model=List[Group])
-def read_user(group_id: Optional[int] = None):
+def read_group(group_id: Optional[int] = None):
     cursor = conn.cursor()
     try:
         if group_id is not None:
@@ -116,11 +114,10 @@ def read_user(group_id: Optional[int] = None):
             return [{"id": group[0], "members": group[2], "name": group[1]}]
         else:
             # If no user_id is provided, fetch all users
-            query_all = "SELECT * FROM groups"
+            query_all = "SELECT * FROM `groups`"
             cursor.execute(query_all)
             groups = cursor.fetchall()
             cursor.close()
-            print(groups)
             if not groups:
                 raise HTTPException(status_code=404, detail="No groups found")
             # Convert the result to a list of dictionaries
@@ -132,10 +129,9 @@ def read_user(group_id: Optional[int] = None):
 
 @app.post("/group/", response_model=Group)
 def create_group(group: Group):
-    print(group)
     cursor = conn.cursor()
     try:
-        query = "INSERT INTO groups (name, members) VALUES (%s, %s)"
+        query = "INSERT INTO `groups` (name, members) VALUES (%s, %s)"
         cursor.execute(query, (group.name, group.members))
         conn.commit()
         group.id = cursor.lastrowid
@@ -171,11 +167,17 @@ async def upload_media(file: bytes = File(...), name: str = Form()):
 
 
 @app.get("/past_messages/", response_model=List[Dict])
-async def get_past_messages(sender_id: int = Query(...), reciever_id: int = Query(...)):
+async def get_past_messages(sender_id: int = Query(...), reciever_id: int = Query(...), isGroup: int = Query(...)):
     try:
         cursor = conn.cursor(dictionary=True)
-        query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type  FROM messages WHERE (receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s) ORDER BY timestamp"
-        cursor.execute(query, (sender_id, reciever_id, reciever_id, sender_id))
+        if isGroup:
+            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE receiver_id = %s AND isGroup = %s ORDER BY timestamp"
+            print(query)
+            cursor.execute(query, (reciever_id, isGroup))
+        else:
+            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE ((receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s)) AND isGroup = %s ORDER BY timestamp"
+            cursor.execute(query, (sender_id, reciever_id,
+                                   reciever_id, sender_id, isGroup))
         past_messages = cursor.fetchall()
         cursor.close()
         return past_messages
@@ -248,13 +250,14 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                             status_code=500, detail=f"Database error: {err}")
                 else:
 
+                    isGroup = data.get("isGroup")
                     target_client_id = data.get("recieverId")
 
                     try:
                         cursor = conn.cursor()
-                        query = "INSERT INTO messages (message, sender_id, receiver_id, timestamp, type) VALUES (%s, %s, %s, %s, %s)"
+                        query = "INSERT INTO messages (message, sender_id, receiver_id, timestamp, type, isGroup) VALUES (%s, %s, %s, %s, %s, %s)"
                         cursor.execute(query, (data.get('text'), data.get(
-                            'senderId'), data.get('recieverId'), data.get('timestamp'), data.get('type')))
+                            'senderId'), data.get('recieverId'), data.get('timestamp'), data.get('type'), isGroup))
                         data['id'] = cursor.lastrowid
                         conn.commit()
                         cursor.close()
@@ -263,18 +266,32 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                             status_code=500, detail=f"Database error: {err}")
 
                     # Send the received message to the specific client
-                    if target_client_id:
-                        target_websocket = clients.get(target_client_id)
-                        if target_websocket:
-                            await target_websocket.send_text(json.dumps(data))
+                    if isGroup:
+                        members = data.get('members')
+                        for member in members.split(','):
+                            member = int(member)
+                            if member != client_id:
+                                target_websocket = clients.get(member)
+                                if target_websocket:
+                                    await target_websocket.send_text(json.dumps(data))
+                                else:
+                                    await websocket.send_text(json.dumps({
+                                        'error': "Error: Client {target_client_id} not found"
+                                    }))
+
+                    else:
+                        if target_client_id:
+                            target_websocket = clients.get(target_client_id)
+                            if target_websocket:
+                                await target_websocket.send_text(json.dumps(data))
+                            else:
+                                await websocket.send_text(json.dumps({
+                                    'error': "Error: Client {target_client_id} not found"
+                                }))
                         else:
                             await websocket.send_text(json.dumps({
                                 'error': "Error: Client {target_client_id} not found"
                             }))
-                    else:
-                        await websocket.send_text(json.dumps({
-                            'error': "Error: Client {target_client_id} not found"
-                        }))
 
                     if client_id:
                         client_websocket = clients.get(client_id)
