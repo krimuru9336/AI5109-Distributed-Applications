@@ -4,6 +4,16 @@
     android:background="#F5F5F5"
     android:padding="16dp">
 
+
+    <!-- Include the chat layout -->
+    <include
+        android:id="@+id/chatLayout"
+        layout="@layout/activity_chat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+
     <TextView
         android:id="@+id/appName"
         android:layout_width="wrap_content"
