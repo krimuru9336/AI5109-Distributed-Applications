@@ -1,6 +1,7 @@
 package com.example.disapp.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.disapp.data.OnGroupSelection
 import com.example.disapp.data.OnSelection
 import com.example.disapp.data.User
@@ -30,7 +32,10 @@ fun Header(onSelection: OnSelection, currentUser: User, groupSelectionHandler: O
                     .padding(vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("DA CHAT APP", textAlign = TextAlign.Center)
+                Column {
+                Text("Iman Emadi", textAlign = TextAlign.Center, fontSize = 18.sp)
+                Text("Matric.No: 1452312", textAlign = TextAlign.Center, fontSize = 16.sp)
+                }
                 UserMenu(onSelection, currentUser)
                 GroupMenu(groupSetter = groupSelectionHandler)
             }
