@@ -24,7 +24,7 @@
     <string name="recycler_view_username">Username</string>
     <string name="recycler_view_phone_text">+00 000 0000</string>
     <string name="chat_username">Username</string>
-    <string name="chat_message_hint">Write your message here…</string>
+    <string name="chat_message_hint">Message…</string>
     <string name="sender_message">Hello how are you?</string>
     <string name="chat_receiver_msg">I am fine.</string>
     <string name="recycler_view_timestamp">10:00</string>

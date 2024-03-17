@@ -16,6 +16,9 @@ public class ChatMessage implements Parcelable {
     private String id;
     private boolean deleted;
 
+    private MessageType messageType;
+
+
     public ChatMessage() {
     }
 
@@ -80,6 +83,14 @@ public class ChatMessage implements Parcelable {
         this.deleted = deleted;
     }
 
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -118,5 +129,12 @@ public class ChatMessage implements Parcelable {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             deleted = in.readBoolean();
         }
+    }
+
+    public enum MessageType {
+        TEXT,
+        IMAGE,
+        VIDEO,
+        GIF
     }
 }

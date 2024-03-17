@@ -71,4 +71,7 @@ dependencies {
     implementation ("com.github.dhaval2404:imagepicker:2.1")
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("com.google.android.exoplayer:exoplayer-core:2.19.1")
+    implementation ("com.google.android.exoplayer:exoplayer-ui:2.19.1")
+
 }

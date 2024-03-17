@@ -1,12 +1,15 @@
 package com.example.letschat;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,8 +44,11 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     ChatRoom chatRoom;
 
     ImageView profilePic;
+    ImageButton addImageBtn;
 
     ChatRecyclerAdapter chatRecyclerAdapter;
+
+    private static final int REQUEST_MEDIA_PICK = 1;
 
     FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -60,6 +66,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         otherUserView = findViewById(R.id.other_username);
         recyclerView = findViewById(R.id.chat_recycler_view);
         profilePic = findViewById(R.id.profile_pic_img_view);
+        addImageBtn = findViewById(R.id.send_image_btn);
 
         FirebaseUtil.getCurrentProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
                 .addOnCompleteListener(task1 -> {
@@ -73,6 +80,16 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
             onBackPressed();
         });
 
+        addImageBtn.setOnClickListener(v -> {
+            // Launch a picker to choose between images, videos, and gifs
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("*/*");
+            String[] mimeTypes = {"image/*", "video/*", "image/gif"};
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            startActivityForResult(intent,REQUEST_MEDIA_PICK);
+        });
+
         otherUserView.setText(otherUser.getUsername());
 
 
@@ -83,7 +100,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                 if (message.isEmpty()) {
                     return;
                 }
-                sendMessageToUser(message);
+                sendMessageToUser(message, ChatMessage.MessageType.TEXT);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -112,9 +129,10 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         });
     }
 
-    void sendMessageToUser(String message) {
+    void sendMessageToUser(String message, ChatMessage.MessageType type) {
 
         ChatMessage chatMessage = new ChatMessage(message, FirebaseUtil.currentUserId(), Timestamp.now(), FirebaseUtil.createMessageId(), false);
+        chatMessage.setMessageType(type);
         chatRoom.setLastMsgSenderId(FirebaseUtil.currentUserId());
         chatRoom.setLastMsg(chatMessage);
 
@@ -157,12 +175,77 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     }
 
     private void showBottomSheet(ChatMessage chatMessage) {
-        // no need to show edit or delete menu options . i.e : not allowed for already deleted message
         if (!chatMessage.isDeleted()) {
             MessageOptionsBottomSheet bottomSheet = MessageOptionsBottomSheet.newInstance(chatMessage, chatRoom);
             bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
         }
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_MEDIA_PICK && resultCode == RESULT_OK && data != null) {
+            // Get the URI of the selected media
+            Uri selectedMediaUri = data.getData();
+            if (selectedMediaUri != null) {
+                // Check the type of media based on its MIME type
+                String mimeType = getContentResolver().getType(selectedMediaUri);
+                Log.d("MiME TYPE", "onActivityResult: " +  mimeType);
+                if (mimeType != null) {
+                    if (mimeType.equals("image/gif")) {
+                        // Upload the selected GIF to Firebase Storage
+                        FirebaseUtil.uploadGif(selectedMediaUri, new FirebaseUtil.OnGifUploadListener() {
+                            @Override
+                            public void onGifUploadSuccess(Uri gifUrl) {
+                                // GIF upload successful, send a message with the GIF URL to the chat room
+                                sendMessageToUser(gifUrl.toString(), ChatMessage.MessageType.GIF);
+                            }
+
+                            @Override
+                            public void onGifUploadFailure(Exception e) {
+                                // GIF upload failed, show an error message
+                                Toast.makeText(ChatActivity.this, "Failed to upload GIF", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else if (mimeType.startsWith("image/")) {
+                        // Upload the selected image to Firebase Storage
+                        FirebaseUtil.uploadImage(selectedMediaUri, new FirebaseUtil.OnImageUploadListener() {
+                            @Override
+                            public void onImageUploadSuccess(Uri imageUrl) {
+                                // Image upload successful, send a message with the image URL to the chat room
+                                sendMessageToUser(imageUrl.toString(), ChatMessage.MessageType.IMAGE);
+                            }
+
+                            @Override
+                            public void onImageUploadFailure(Exception e) {
+                                // Image upload failed, show an error message
+                                Toast.makeText(ChatActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else if (mimeType.startsWith("video/")) {
+                        // Upload the selected video to Firebase Storage
+                        FirebaseUtil.uploadVideo(selectedMediaUri, new FirebaseUtil.OnVideoUploadListener() {
+                            @Override
+                            public void onVideoUploadSuccess(Uri videoUrl) {
+                                Log.d("Success", "video uploaded successfully :" + videoUrl);
+                                // Video upload successful, send a message with the video URL to the chat room
+                                sendMessageToUser(videoUrl.toString(), ChatMessage.MessageType.VIDEO);
+                            }
+
+                            @Override
+                            public void onVideoUploadFailure(Exception e) {
+                                Log.d("Failure", "video upload failed " + e);
+                                // Video upload failed, show an error message
+                                Toast.makeText(ChatActivity.this, "Failed to upload video", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+
 
 }

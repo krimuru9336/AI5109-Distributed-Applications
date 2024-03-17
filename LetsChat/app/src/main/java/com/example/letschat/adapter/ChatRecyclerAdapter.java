@@ -50,18 +50,82 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
             holder.leftChatLayout.setVisibility(View.GONE);
             holder.rightChatLayout.setVisibility(View.VISIBLE);
 
-            String messageText = isDeletedMessage ? "You deleted this message." : model.getMessage();
-            holder.rightChatTextView.setText(messageText);
+            switch (model.getMessageType()) {
+                case IMAGE:
+                    holder.rightChatImageView.setVisibility(View.VISIBLE);
+                    holder.rightChatTextView.setVisibility(View.GONE);
+                    Glide.with(holder.itemView.getContext()).load(model.getMessage()).into(holder.rightChatImageView);
+                    break;
+
+                case VIDEO:
+                    holder.rightChatImageView.setVisibility(View.GONE);
+                    holder.rightChatTextView.setVisibility(View.GONE);
+                    holder.rightVideoView.setVisibility(View.VISIBLE);
+                    String videoUrl = model.getMessage();
+                    holder.rightVideoView.setVideoURI(Uri.parse(videoUrl));
+                    MediaController mediaController = new MediaController(context);
+                    mediaController.setAnchorView(holder.rightVideoView);
+                    mediaController.setMediaPlayer(holder.rightVideoView);
+                    holder.rightVideoView.setMediaController(mediaController);
+                    holder.rightVideoView.start();
+                    break;
+
+                case GIF:
+                    holder.rightChatImageView.setVisibility(View.VISIBLE);
+                    holder.rightChatTextView.setVisibility(View.GONE);
+                    Glide.with(holder.itemView.getContext()).asGif().load(model.getMessage()).into(holder.rightChatImageView);
+                    break;
+
+                default:
+                    holder.rightChatImageView.setVisibility(View.GONE);
+                    holder.rightChatTextView.setVisibility(View.VISIBLE);
+                    String messageText = isDeletedMessage ? "You deleted this message." : model.getMessage();
+                    holder.rightChatTextView.setText(messageText);
+                    break;
+            }
+
             holder.rightChatTimestamp.setText(FirebaseUtil.timestampToString(model.getTimestamp()));
         } else {
             holder.leftChatLayout.setVisibility(View.VISIBLE);
             holder.rightChatLayout.setVisibility(View.GONE);
 
-            String messageText = isDeletedMessage ? "This message was deleted." : model.getMessage();
-            holder.leftChatTextView.setText(messageText);
+            switch (model.getMessageType()) {
+                case IMAGE:
+                    holder.leftChatImageView.setVisibility(View.VISIBLE);
+                    holder.leftChatTextView.setVisibility(View.GONE);
+                    Glide.with(holder.itemView.getContext()).load(model.getMessage()).into(holder.leftChatImageView);
+                    break;
+
+                case VIDEO:
+                    holder.leftChatImageView.setVisibility(View.GONE);
+                    holder.leftChatTextView.setVisibility(View.GONE);
+                    holder.leftVideoView.setVisibility(View.VISIBLE);
+                    String videoUrl = model.getMessage();
+                    holder.leftVideoView.setVideoURI(Uri.parse(videoUrl));
+                    MediaController mediaController = new MediaController(context);
+                    mediaController.setAnchorView(holder.leftVideoView);
+                    holder.leftVideoView.setMediaController(mediaController);
+                    holder.leftVideoView.start();
+                    break;
+
+                case GIF:
+                    holder.leftChatImageView.setVisibility(View.VISIBLE);
+                    holder.leftChatTextView.setVisibility(View.GONE);
+                    Glide.with(holder.itemView.getContext()).asGif().load(model.getMessage()).into(holder.leftChatImageView);
+                    break;
+
+                default:
+                    holder.leftChatImageView.setVisibility(View.GONE);
+                    holder.leftChatTextView.setVisibility(View.VISIBLE);
+                    String messageText = isDeletedMessage ? "This message was deleted." : model.getMessage();
+                    holder.leftChatTextView.setText(messageText);
+                    break;
+            }
+
             holder.leftChatTimestamp.setText(FirebaseUtil.timestampToString(model.getTimestamp()));
         }
     }
+
 
     @NonNull
     @Override
@@ -74,6 +138,9 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
 
         LinearLayout leftChatLayout, rightChatLayout;
         TextView leftChatTextView, rightChatTextView, leftChatTimestamp, rightChatTimestamp;
+        ImageView leftChatImageView, rightChatImageView;
+
+        VideoView  leftVideoView, rightVideoView;
 
         public ChatModelViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,6 +150,10 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
             rightChatTextView = itemView.findViewById(R.id.right_chat_textview);
             rightChatTimestamp = itemView.findViewById(R.id.right_chat_timestamp);
             leftChatTimestamp = itemView.findViewById(R.id.left_chat_timestamp);
+            leftChatImageView = itemView.findViewById(R.id.left_chat_image_view);
+            rightChatImageView = itemView.findViewById(R.id.right_chat_image_view);
+            leftVideoView = itemView.findViewById(R.id.left_chat_video_view);
+            rightVideoView = itemView.findViewById(R.id.right_chat_video_view);
 
             rightChatLayout.setOnLongClickListener(v->{
                 Log.d("Click", "Long Clicked message");

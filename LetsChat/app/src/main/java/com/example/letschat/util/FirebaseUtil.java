@@ -1,5 +1,7 @@
 package com.example.letschat.util;
 
+import android.net.Uri;
+
 import com.google.firebase.Firebase;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -8,10 +10,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 public class FirebaseUtil {
@@ -81,5 +85,78 @@ public class FirebaseUtil {
         return FirebaseStorage.getInstance().getReference().child("profile_pic")
                 .child(userId);
     }
+
+    public interface OnImageUploadListener {
+        void onImageUploadSuccess(Uri imageUrl);
+
+        void onImageUploadFailure(Exception e);
+    }
+
+    public static void uploadImage(Uri imageUri, OnImageUploadListener listener) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images").child(imageUri.getLastPathSegment());
+        UploadTask uploadTask = storageRef.putFile(imageUri);
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw Objects.requireNonNull(task.getException());
+            }
+            return storageRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult();
+                listener.onImageUploadSuccess(downloadUri);
+            } else {
+                listener.onImageUploadFailure(task.getException());
+            }
+        });
+    }
+
+    public interface OnVideoUploadListener {
+        void onVideoUploadSuccess(Uri videoUrl);
+
+        void onVideoUploadFailure(Exception e);
+    }
+
+    public static void uploadVideo(Uri videoUri, OnVideoUploadListener listener) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("videos").child(videoUri.getLastPathSegment());
+        UploadTask uploadTask = storageRef.putFile(videoUri);
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw Objects.requireNonNull(task.getException());
+            }
+            return storageRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult();
+                listener.onVideoUploadSuccess(downloadUri);
+            } else {
+                listener.onVideoUploadFailure(task.getException());
+            }
+        });
+    }
+
+    public interface OnGifUploadListener {
+        void onGifUploadSuccess(Uri gifUrl);
+
+        void onGifUploadFailure(Exception e);
+    }
+
+    public static void uploadGif(Uri gifUri, OnGifUploadListener listener) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("gifs").child(gifUri.getLastPathSegment());
+        UploadTask uploadTask = storageRef.putFile(gifUri);
+        uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw Objects.requireNonNull(task.getException());
+            }
+            return storageRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult();
+                listener.onGifUploadSuccess(downloadUri);
+            } else {
+                listener.onGifUploadFailure(task.getException());
+            }
+        });
+    }
+
 
 }

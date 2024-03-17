@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.letschat.ChatActivity;
 import com.example.letschat.R;
+import com.example.letschat.model.ChatMessage;
 import com.example.letschat.model.ChatRoom;
 import com.example.letschat.model.User;
 import com.example.letschat.util.AndroidUtil;
@@ -38,6 +39,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
 
                         boolean lastMessageSentByMe = model.getLastMsgSenderId().equals(FirebaseUtil.currentUserId());
                         boolean isDeletedLastMsg = model.getLastMsg().isDeleted();
+                        ChatMessage.MessageType type = model.getLastMsg().getMessageType();
                         String lastMessageText = model.getLastMsg().getMessage();
 
                         User otherUser = task.getResult().toObject(User.class);
@@ -60,6 +62,10 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
                         }
                         if (isDeletedLastMsg) {
                             lastMessageText = "This message was deleted.";
+                        }
+
+                        if (type != ChatMessage.MessageType.TEXT) {
+                            lastMessageText = "📷 Attachment";
                         }
 
                         if (lastMessageSentByMe) {
