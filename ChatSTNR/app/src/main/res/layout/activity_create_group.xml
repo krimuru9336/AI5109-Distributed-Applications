@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchUserActivity">
+
+    <!-- Toolbar -->
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/my_primary"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create New Group"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginStart="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/back_btn" />
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/back_icon"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/white"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <!-- Group Name EditText -->
+    <EditText
+        android:id="@+id/group_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_rounded_corner"
+        android:layout_below="@id/toolbar"
+        android:layout_margin="10dp"
+        android:hint="Groupname"
+        android:padding="10dp"
+        android:elevation="4dp" />
+
+    <!-- Users Recycler View (Horizontal) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/users_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/group_name_input"
+        android:padding="10dp"/>
+
+    <!-- Search User Input and Button -->
+    <RelativeLayout
+        android:id="@+id/create_group_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/users_recycler_view"
+        android:layout_margin="10dp">
+
+        <EditText
+            android:id="@+id/seach_username_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_rounded_corner"
+            android:layout_margin="10dp"
+            android:hint="Username"
+            android:padding="10dp"
+            android:elevation="4dp"
+            android:layout_toLeftOf="@id/search_user_btn" />
+
+        <ImageButton
+            android:id="@+id/search_user_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/search_icon"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/my_primary"
+            android:padding="4dp" />
+
+    </RelativeLayout>
+
+    <!-- Search User Recycler View -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_user_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_group_layout"
+        android:padding="10dp" />
+
+    <RelativeLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp">
+
+        <Button
+            android:id="@+id/create_group_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create"
+            android:background="@drawable/btn_rounded"
+            android:textColor="@color/white"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:drawablePadding="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

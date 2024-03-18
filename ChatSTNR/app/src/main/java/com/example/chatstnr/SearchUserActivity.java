@@ -61,17 +61,6 @@ public class SearchUserActivity extends AppCompatActivity {
         Query query = FirebaseUtil.allUserCollectionReference();
 //                .whereGreaterThanOrEqualTo("username",searchTerm);
 
-
-        query.get().addOnCompleteListener(task -> {
-           if(task.isSuccessful()){
-               AndroidUtil.showToast(getApplicationContext(), "Success " + task.getResult().size());
-
-           }else{
-               AndroidUtil.showToast(getApplicationContext(), "Failure");
-
-           }
-        });
-
         FirestoreRecyclerOptions<UserModel> options = new FirestoreRecyclerOptions.Builder<UserModel>()
                 .setQuery(query,UserModel.class).build();
 

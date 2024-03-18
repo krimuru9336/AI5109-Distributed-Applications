@@ -91,14 +91,21 @@ public class FirebaseUtil {
                 .child(chatroomId).child(messageId);
     }
 
-    public static void getLoadingCircleVideoUri(OnSuccessListener<Uri> onSuccessListener) {
-        // Get a reference to the Firebase Storage instance
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-
-        // Create a reference to the video file
-        StorageReference videoRef = storage.getReference().child("others/circle_loading.mov");
-
-        // Get the download URL asynchronously
-        videoRef.getDownloadUrl().addOnSuccessListener(onSuccessListener);
+    public static CollectionReference getAllGroupDetails(){
+        return FirebaseFirestore.getInstance().collection("groups");
     }
+
+    public static CollectionReference getGroupChatroomReference(String groupId) {
+        return FirebaseFirestore.getInstance().collection("groups").document(groupId).collection("chats");
+    }
+
+    public static DocumentReference getGroupReference(String groupId){
+        return FirebaseFirestore.getInstance().collection("groups").document(groupId);
+    }
+
+    public static StorageReference  getCurrentGroupChatStorageRef(String groupId, String messageId){
+        return FirebaseStorage.getInstance().getReference().child("group_chats")
+                .child(groupId).child(messageId);
+    }
+
 }

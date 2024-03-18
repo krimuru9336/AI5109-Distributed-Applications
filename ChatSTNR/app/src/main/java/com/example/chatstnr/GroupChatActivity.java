@@ -6,10 +6,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,50 +23,29 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.chatstnr.adapter.ChatRecyclerAdapter;
-import com.example.chatstnr.adapter.SearchUserRecyclerAdapter;
 import com.example.chatstnr.models.ChatMessageModel;
 import com.example.chatstnr.models.ChatroomModel;
+import com.example.chatstnr.models.GroupModel;
 import com.example.chatstnr.models.UserModel;
 import com.example.chatstnr.utils.AndroidUtil;
 import com.example.chatstnr.utils.FirebaseUtil;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import org.checkerframework.checker.units.qual.C;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.sql.Time;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-
-/*import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-*/
-public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapter.OnEditDeleteClickListener {
+public class GroupChatActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
-    UserModel otherUser;
-    String chatroomId;
+    GroupModel groupModel;
+    String groupId;
     ChatroomModel chatroomModel;
     ChatRecyclerAdapter adapter;
     ChatMessageModel chatMessageModel;
@@ -79,7 +55,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     ImageButton backBtn;
     ImageButton deleteMessageBtn;
     ImageButton addMediaBtn;
-    TextView otherUsername;
+    TextView groupName;
     RecyclerView recyclerView;
     ImageView imageView;
     ImageView mediaImageView;
@@ -91,16 +67,17 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_group_chat);
 
-        otherUser = AndroidUtil.getUserModelFromIntent(getIntent());
-        chatroomId = FirebaseUtil.getChatroomId(FirebaseUtil.currentUserid(), otherUser.getUserId());
+//        groupModel = AndroidUtil.getGroupModelFromIntent(getIntent());
+        groupId = AndroidUtil.getGroupModelFromIntent(getIntent());
+        getGroupModel();
 
         progressBar = findViewById(R.id.chat_progressbar);
         messageInput = findViewById(R.id.chat_message_input);
         sendMessageBtn = findViewById(R.id.message_send_btn);
         backBtn = findViewById(R.id.back_btn);
-        otherUsername = findViewById(R.id.other_username);
+        groupName = findViewById(R.id.group_name);
         recyclerView = findViewById(R.id.chat_recycler_view);
         imageView = findViewById(R.id.profile_pic_image_view);
         cancelMessageBtn = findViewById(R.id.message_cancel_btn);
@@ -108,6 +85,11 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         addMediaBtn = findViewById(R.id.add_media_btn);
         mediaImageView = findViewById(R.id.media_image_view);
         mediaVideoView = findViewById(R.id.media_video_view);
+
+        backBtn.setOnClickListener((v) -> {
+            onBackPressed();
+        });
+
 
         imagePickLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
@@ -126,7 +108,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                                 mediaImageView.setVisibility(View.VISIBLE);
                                 mediaVideoView.setVisibility(View.GONE);
                                 messageInput.setVisibility(View.GONE);
-                                Glide.with(ChatActivity.this).load(selectedImageUri).into(mediaImageView);
+                                Glide.with(GroupChatActivity.this).load(selectedImageUri).into(mediaImageView);
                             } else if (mimeType.startsWith("video/")) {
                                 // If it's a video, set the URI to the VideoView and start playing it
                                 messageType = "video";
@@ -138,7 +120,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             } else {
                                 // Handle other types of media, such as GIFs
                                 // You can add additional logic here based on MIME type
-                                Toast.makeText(ChatActivity.this, "Unsupported media type", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupChatActivity.this, "Unsupported media type", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -148,19 +130,9 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
             }
         });
 
-        FirebaseUtil.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
-                .addOnCompleteListener(t -> {
-                    if (t.isSuccessful()) {
-                        Uri uri = t.getResult();
-                        AndroidUtil.setProfilePic(this, uri, imageView);
-                    }
-                });
 
+        getOrCreateGroupChatroomModel();
 
-        backBtn.setOnClickListener((v) -> {
-            onBackPressed();
-        });
-        otherUsername.setText(otherUser.getUsername());
 
         sendMessageBtn.setOnClickListener((v -> {
             String message = messageInput.getText().toString().trim();
@@ -200,48 +172,39 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
             }
         });
 
-        getOrCreateChatroomModel();
-        setupChatRecyclerView();
 
     }
 
-    void setupChatRecyclerView() {
-        Query query = FirebaseUtil.getChatroomMessageReference(chatroomId)
-                .orderBy("timestamp", Query.Direction.DESCENDING);
+    void getGroupModel(){
+        FirebaseUtil.getGroupReference(groupId).get().addOnCompleteListener(task -> {
 
-        FirestoreRecyclerOptions<ChatMessageModel> options = new FirestoreRecyclerOptions.Builder<ChatMessageModel>()
-                .setQuery(query, ChatMessageModel.class).build();
+            if (task.isSuccessful()) {
+                groupModel = task.getResult().toObject(GroupModel.class);
+                if (groupModel != null) {
 
-        adapter = new ChatRecyclerAdapter(options, getApplicationContext());
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setReverseLayout(true);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                recyclerView.smoothScrollToPosition(0);
+                    groupName.setText(groupModel.getGroupName());
+
+                }
             }
         });
-
-        adapter.setOnEditDeleteClickListener(this);
     }
-
-    void getOrCreateChatroomModel() {
-        FirebaseUtil.getChatroomReference(chatroomId).get().addOnCompleteListener(task -> {
+    void getOrCreateGroupChatroomModel() {
+        FirebaseUtil.getGroupChatroomReference(groupId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                chatroomModel = task.getResult().toObject(ChatroomModel.class);
-                if (chatroomModel == null) {
-                    //first time chat
-                    chatroomModel = new ChatroomModel(
-                            chatroomId,
-                            Arrays.asList(FirebaseUtil.currentUserid(), otherUser.getUserId()),
-                            Timestamp.now(),
-                            ""
-                    );
-                    FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
+                boolean chatroomExists = false;
+                for (DocumentSnapshot document : task.getResult()) {
+                    if (document.exists()) {
+                        chatroomExists = true;
+                        // Chatroom exists, you can perform operations here if needed
+                        break;
+                    }
+                }
+
+                if (!chatroomExists) {
+                    // Chatroom does not exist, you can create it here
+                    // For example:
+                    // ChatMessageModel initialMessage = new ChatMessageModel("Welcome to the group!", "system", new Timestamp(new Date()));
+                    // chatroomRef.add(initialMessage);
                 }
             }
         });
@@ -254,13 +217,9 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         if (Objects.equals(messageType, "text")) {
             if (!isEdited) {
 
-                chatroomModel.setLastMessageTimestamp(Timestamp.now());
-                chatroomModel.setLastMessageSenderId(FirebaseUtil.currentUserid());
-                chatroomModel.setLastMessage(message);
-                FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
 
                 ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserid(), Timestamp.now());
-                FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
+                FirebaseUtil.getGroupChatroomReference(groupId).add(chatMessageModel)
                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentReference> task) {
@@ -271,22 +230,22 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                                     chatMessageModel.setMessageID(documentID);
                                     chatMessageModel.setMessageType(messageType);
 
-                                    FirebaseUtil.getChatroomMessageReference(chatroomId)
+                                    FirebaseUtil.getGroupChatroomReference(groupId)
                                             .document(documentID)
                                             .set(chatMessageModel);
-//                            sendNotification(message);
                                 }
                                 setInProgress(false);
                             }
                         });
 
-            } else if (!Objects.equals(message, "DELETED")) {
+            }
+            else if (!Objects.equals(message, "DELETED")) {
                 String documentID = chatMessageModel.getMessageID(); // Assuming getMessageID() returns the document ID
 
                 Map<String, Object> updateData = new HashMap<>();
                 updateData.put("message", message);
 
-                FirebaseUtil.getChatroomMessageReference(chatroomId)
+                FirebaseUtil.getGroupChatroomReference(groupId)
                         .document(documentID)
                         .update(updateData)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -304,14 +263,15 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                         });
 
                 chatMessageModel.setEditable(false);
-            } else {
+            }
+            else {
 
                 String documentID = chatMessageModel.getMessageID(); // Assuming getMessageID() returns the document ID
 
                 Map<String, Object> updateData = new HashMap<>();
                 updateData.put("deleted", true);
 
-                FirebaseUtil.getChatroomMessageReference(chatroomId)
+                FirebaseUtil.getGroupChatroomReference(groupId)
                         .document(documentID)
                         .update(updateData)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -329,20 +289,16 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                 chatMessageModel.setEditable(false);
 
             }
-        } else {
+        }
+        else {
 
             if (!isEdited) {
-
-                chatroomModel.setLastMessageTimestamp(Timestamp.now());
-                chatroomModel.setLastMessageSenderId(FirebaseUtil.currentUserid());
-                chatroomModel.setLastMessage(messageType);
-                FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
 
                 ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserid(), Timestamp.now());
 
                 chatMessageModel.setMessage("Sending");
 
-                FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
+                FirebaseUtil.getGroupChatroomReference(groupId).add(chatMessageModel)
                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentReference> task) {
@@ -353,17 +309,17 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                                     chatMessageModel.setMessageID(documentID);
                                     chatMessageModel.setMessageType(messageType);
 
-                                    FirebaseUtil.getChatroomMessageReference(chatroomId)
+                                    FirebaseUtil.getGroupChatroomReference(groupId)
                                             .document(documentID)
                                             .set(chatMessageModel);
 //                            sendNotification(message);
 
                                     //Add Media to storage
-                                    FirebaseUtil.getCurrentChatRoomStorageRef(chatroomId, chatMessageModel.getMessageID())
+                                    FirebaseUtil.getCurrentGroupChatStorageRef(groupId, chatMessageModel.getMessageID())
                                             .putFile(selectedImageUri)
                                             .addOnSuccessListener(taskSnapshot -> {
                                                 // Get the download URL of the uploaded file
-                                                StorageReference storageRef = FirebaseUtil.getCurrentChatRoomStorageRef(chatroomId, chatMessageModel.getMessageID());
+                                                StorageReference storageRef = FirebaseUtil.getCurrentGroupChatStorageRef(groupId, chatMessageModel.getMessageID());
                                                 storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                                                     // Handle the download URL (e.g., store it in Firestore)
                                                     String downloadUrl = uri.toString();
@@ -374,7 +330,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                                                     chatMessageModel.setMessage(downloadUrl);
                                                     // Save the ChatMessageModel in Firestore
                                                     // For example:
-                                                    FirebaseUtil.getChatroomMessageReference(chatroomId).document(chatMessageModel.getMessageID()).set(chatMessageModel);
+                                                    FirebaseUtil.getGroupChatroomReference(groupId).document(chatMessageModel.getMessageID()).set(chatMessageModel);
 
                                                     messageType = "text";
                                                     mediaImageView.setVisibility(View.GONE);
@@ -402,7 +358,6 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         }
     }
 
-
     void setInProgress(boolean inProgress) {
         if (inProgress) {
             progressBar.setVisibility(View.VISIBLE);
@@ -415,7 +370,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         }
     }
 
-
+    /*
     @Override
     public void OnEditDeleteClick(ChatMessageModel chatMessage) {
 
@@ -496,7 +451,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         }
 
     }
-
+*/
     public void onDelete(){
 
         String documentID = chatMessageModel.getMessageID(); // Assuming getMessageID() returns the document ID
@@ -504,7 +459,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         Map<String, Object> updateData = new HashMap<>();
         updateData.put("deleted", true);
 
-        FirebaseUtil.getChatroomMessageReference(chatroomId)
+        FirebaseUtil.getGroupChatroomReference(groupId)
                 .document(documentID)
                 .update(updateData)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -527,4 +482,5 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         chatMessageModel.setEditable(false);
 
     }
+
 }

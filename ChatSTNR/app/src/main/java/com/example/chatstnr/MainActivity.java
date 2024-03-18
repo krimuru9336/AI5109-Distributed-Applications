@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton searchBtn;
     ChatFragment chatFragment;
     ProfileFragment profileFragment;
+    GroupFragment groupFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         chatFragment = new ChatFragment();
         profileFragment = new ProfileFragment();
+        groupFragment = new GroupFragment();
 
         bnv = findViewById(R.id.bottom_nav);
         searchBtn = findViewById(R.id.search_button);
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(item.getItemId() == R.id.menu_chat){
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_layout, chatFragment).commit();
+                }
+                if(item.getItemId() == R.id.menu_group){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_layout, groupFragment).commit();
                 }
                 if(item.getItemId() == R.id.menu_profile){
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainframe_layout, profileFragment).commit();

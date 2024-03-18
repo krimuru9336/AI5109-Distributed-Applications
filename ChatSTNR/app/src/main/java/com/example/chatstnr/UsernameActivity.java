@@ -80,7 +80,7 @@ public class UsernameActivity extends AppCompatActivity {
                         usernameInput.setText(userModel.getUsername());
                     }
                 }else{
-
+                    AndroidUtil.showToast(getApplicationContext(), "Error in getUsername.");
                 }
             }
         });

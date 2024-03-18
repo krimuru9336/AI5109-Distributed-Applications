@@ -114,7 +114,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
     class ChatModelViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout leftChatLayout, rightChatLayout, deletedLeftChatLayout, deletedRightChatLayout;
-        TextView leftChatTextview, rightChatTextview, leftChatTimeview, rightChatTimeview, deletedLeftChatTextview, deletedRightChatTextview;
+        TextView leftChatTextview, rightChatTextview, leftChatTimeview, rightChatTimeview, deletedLeftChatTextview, deletedRightChatTextview, leftUsername, leftPno;
         ImageButton editDeleteBtn;
         ImageView leftChatImageview, rightChatImageview;
         VideoView leftChatVideoview, rightChatVideoview;
@@ -140,6 +140,8 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
 
             editDeleteBtn = itemView.findViewById(R.id.edit_delete_btn);
 
+            leftUsername = itemView.findViewById(R.id.left_chat_username);
+            leftPno = itemView.findViewById(R.id.left_chat_pno);
 
             if (editDeleteBtn != null) {
                 editDeleteBtn.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +232,9 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
                     leftChatTextview.setVisibility(View.VISIBLE);
                     leftChatTextview.setText(model.getMessageUrl());
                 }
+
+                leftUsername.setText(model.getMessageType());
+                leftPno.setText(model.getMessageType());
                 leftChatTimeview.setText(FirebaseUtil.timestampToString(model.getTimestamp()));
             }
         }

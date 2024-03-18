@@ -8,7 +8,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.chatstnr.models.GroupModel;
 import com.example.chatstnr.models.UserModel;
+
+import java.util.ArrayList;
 
 public class AndroidUtil {
     public static void showToast(Context context, String message){
@@ -34,5 +37,12 @@ public class AndroidUtil {
         Glide.with(context).load(imageUri).apply(RequestOptions.circleCropTransform()).into(imageView);
     }
 
+    public static void passGroupModelAsIntent(Intent intent, GroupModel groupModel){
+        intent.putExtra("groupId", groupModel.getGroupId());
+    }
+
+    public static String getGroupModelFromIntent(Intent intent){
+        return intent.getStringExtra("groupId");
+    }
 
 }

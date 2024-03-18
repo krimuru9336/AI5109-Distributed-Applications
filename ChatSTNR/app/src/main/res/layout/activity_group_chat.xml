@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/my_primary"
+        android:padding="10dp"
+        android:id="@+id/toolbar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Groupname"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginStart="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/profile_pic_layout"
+            android:id="@+id/group_name"
+            />
+
+        <include layout="@layout/profile_pic_view"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@id/back_btn"
+            android:id="@+id/profile_pic_layout"
+            />
+
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/back_icon"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/white"
+            android:layout_centerVertical="true"
+            android:id="@+id/back_btn"/>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/bottom_layout"
+        android:background="@color/light_grey"
+        android:id="@+id/chat_recycler_view"/>
+
+    <!-- Bottom Layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:id="@+id/bottom_layout">
+
+        <!-- Add Media Button -->
+        <ImageButton
+            android:id="@+id/add_media_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/add_media_icon"
+            app:tint="@color/my_secondary"/> <!-- initially invisible -->
+
+
+
+        <VideoView
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/circular_bg"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:elevation="4dp"
+            android:padding="10dp"
+            android:id="@+id/media_video_view"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/circular_bg"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:elevation="4dp"
+            android:padding="10dp"
+            android:id="@+id/media_image_view"
+            android:visibility="gone"/>
+
+        <!-- Edit Text -->
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_rounded_corner"
+            android:elevation="4dp"
+            android:hint="Write message here"
+            android:padding="10dp"
+            android:id="@+id/chat_message_input"
+            />
+
+        <!-- Cancel Button -->
+        <ImageButton
+            android:id="@+id/message_cancel_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/cancel_icon"
+            app:tint="@color/my_primary"
+            android:visibility="gone"/> <!-- initially invisible -->
+
+        <ImageButton
+            android:id="@+id/message_delete_btn"
+            android:src="@drawable/delete_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            app:tint="@color/my_primary"
+            android:visibility="gone"/>
+
+        <!-- Send Button -->
+        <ImageButton
+            android:id="@+id/message_send_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/send_icon"
+            app:tint="@color/my_secondary"/>
+
+        <ProgressBar
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/chat_progressbar"
+            android:visibility="gone"
+            />
+
+
+    </LinearLayout>
+
+</RelativeLayout>
+
+
+
+
+
+
+
+

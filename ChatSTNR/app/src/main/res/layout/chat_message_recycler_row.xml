@@ -9,12 +9,38 @@
         android:id="@+id/left_chat_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="80dp"
         android:background="@drawable/edit_text_rounded_corner"
         android:backgroundTint="@color/chat_color_sender"
         android:orientation="vertical"
         android:padding="8dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start">
+
+            <TextView
+                android:id="@+id/left_chat_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="username"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/left_chat_pno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="pno"
+                android:textSize="14sp" />
+
+        </LinearLayout>
         <TextView
             android:id="@+id/left_chat_textview"
             android:layout_width="wrap_content"
