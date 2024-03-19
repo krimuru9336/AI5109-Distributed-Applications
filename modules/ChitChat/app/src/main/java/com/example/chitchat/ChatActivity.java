@@ -111,8 +111,8 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CharSequence options[] = new CharSequence[] {
                         "Images",
-                        "PDF files",
-                        "MS Word files"
+                        "gifs",
+//                        "MS Word files"
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
                 builder.setTitle("Select a file");
@@ -129,12 +129,19 @@ public class ChatActivity extends AppCompatActivity {
                             startActivityForResult(intent.createChooser(intent, "Select a image"), 438);
                         }
                         if (i == 1) {
-                            checker = "pdf";
+//                            checker = "pdf";
+//
+//                            Intent intent = new Intent();
+//                            intent.setAction(Intent.ACTION_GET_CONTENT);
+//                            intent.setType("application/pdf");
+//                            startActivityForResult(intent.createChooser(intent, "Select a PDF file"), 438);
+
+                            checker = "image";
 
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_GET_CONTENT);
-                            intent.setType("application/pdf");
-                            startActivityForResult(intent.createChooser(intent, "Select a PDF file"), 438);
+                            intent.setType("image/gif");
+                            startActivityForResult(intent.createChooser(intent, "Select a gif"), 438);
                         }
                         if (i == 2) {
                             checker = "docx";

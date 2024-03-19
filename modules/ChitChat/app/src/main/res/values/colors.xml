@@ -3,4 +3,10 @@
     <color name="colorPrimary">#006257</color>
     <color name="colorPrimaryDark">#005048</color>
     <color name="colorAccent">#E6E6E6</color>
+    <color name="skyBlue">#E0FFC7</color>
+
+    <style name="MyToolbarStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/skyBlue</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
 </resources>
