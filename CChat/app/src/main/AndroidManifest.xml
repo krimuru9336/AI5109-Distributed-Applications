@@ -15,6 +15,9 @@
         android:theme="@style/Theme.CChat"
         tools:targetApi="31">
         <activity
+            android:name=".GroupChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".SelectUsersActivity"
             android:exported="false" />
         <activity

@@ -4,6 +4,7 @@ import static java.security.AccessController.getContext;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cchat.ChatActivity;
+import com.example.cchat.GroupChatActivity;
 import com.example.cchat.R;
 import com.example.cchat.model.ChatRoomModel;
 import com.example.cchat.model.UserModel;
@@ -27,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, RecentChatRecyclerAdapter.ChatRoomModelViewHolder> {
@@ -44,33 +47,51 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
                     if(task.isSuccessful()) {
                         boolean lastMessageSentByMe = model.getLastMessageSenderId().equals(FirebaseUtil.currentUserId());
                         boolean isMediaMessage = model.getLastMessageType().equals("media");
+                        boolean isGroup = model.getChatroomType().equals("group");
                         UserModel otherUserModel = task.getResult().toObject(UserModel.class);
 
-                        FirebaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUserId()).getDownloadUrl()
-                                        .addOnCompleteListener(task1 -> {
-                                            Log.e("picture", "here");
-                                            if(task1.isSuccessful()) {
-                                                Uri uri = task1.getResult();
-                                                AndroidUtil.setProfilePicture(context, uri, holder.profilePicture);
-                                            }
-                                        });
 
-                        holder.usernameText.setText(otherUserModel.getUsername());
-                        if(lastMessageSentByMe)
-                            holder.lastMessageText.setText("You: " + model.getLastMessage());
-                        else
-                            holder.lastMessageText.setText(model.getLastMessage());
+                        if(!isGroup) {
+                            holder.groupIcon.setVisibility(View.GONE);
+                            FirebaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUserId()).getDownloadUrl()
+                                    .addOnCompleteListener(task1 -> {
+                                        Log.e("picture", "here");
+                                        if(task1.isSuccessful()) {
+                                            Uri uri = task1.getResult();
+                                            AndroidUtil.setProfilePicture(context, uri, holder.profilePicture);
+                                        }
+                                    });
 
-                        if(isMediaMessage && lastMessageSentByMe)
-                            holder.lastMessageText.setText("You: Image");
-                        else
-                            holder.lastMessageText.setText("Image");
+                            holder.usernameText.setText(otherUserModel.getUsername());
+                        } else {
+                            holder.profilePicture.setVisibility(View.GONE);
+                            holder.usernameText.setText(model.getGroupName());
+                        }
+
+                        if(lastMessageSentByMe) {
+                            if(isMediaMessage)
+                                holder.lastMessageText.setText("You: Image");
+                            else
+                                holder.lastMessageText.setText("You: " + model.getLastMessage());
+                        } else {
+                            if(isMediaMessage)
+                                holder.lastMessageText.setText("Image");
+                            else
+                                holder.lastMessageText.setText(model.getLastMessage());
+                        }
+
                         holder.lastMessageTimeText.setText(FirebaseUtil.timestampToString(model.getLastMessageTimestamp()));
 
                         holder.itemView.setOnClickListener(v -> {
                             //Navigate to chat activity
-                            Intent intent = new Intent(context, ChatActivity.class);
-                            AndroidUtil.passUserModelAsIntent(intent, otherUserModel);
+                            Intent intent;
+                            if(!isGroup) {
+                                intent = new Intent(context, ChatActivity.class);
+                                AndroidUtil.passUserModelAsIntent(intent, otherUserModel);
+                            } else {
+                                intent = new Intent(context, GroupChatActivity.class);
+                                intent.putExtra("chatroomId", model.getChatroomId());
+                            }
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         });
@@ -89,8 +110,8 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
         TextView usernameText;
         TextView lastMessageText;
         TextView lastMessageTimeText;
-
         ImageView profilePicture;
+        ImageView groupIcon;
 
         public ChatRoomModelViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,6 +119,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoom
             lastMessageText = itemView.findViewById(R.id.last_msg_text);
             lastMessageTimeText = itemView.findViewById(R.id.timestamp_text);
             profilePicture = itemView.findViewById(R.id.profile_image_view);
+            groupIcon = itemView.findViewById(R.id.group_image_view);
         }
     }
 }

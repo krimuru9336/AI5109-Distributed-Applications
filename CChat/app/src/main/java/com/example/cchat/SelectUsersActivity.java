@@ -51,6 +51,7 @@ public class SelectUsersActivity extends AppCompatActivity implements AddUsersRe
             selectedUsers.add(FirebaseUtil.currentUserId());
             intent.putExtra("selectedUsers", selectedUsers);
             startActivity(intent);
+            finish();
         });
 
         setupRecyclerView();

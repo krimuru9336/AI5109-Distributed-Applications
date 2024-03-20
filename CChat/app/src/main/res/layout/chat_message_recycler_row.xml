@@ -11,11 +11,13 @@
         android:backgroundTint="@color/chat_color_sender"
         android:padding="8dp"
         android:layout_marginEnd="80dp"
-        android:id="@+id/received_msg_layout">
+        android:id="@+id/received_msg_layout"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="150dp"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:id="@+id/received_msg_textview"/>
@@ -28,8 +30,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
             android:textColor="@color/black"
             android:id="@+id/received_msg_timestamp"/>
     </LinearLayout>
@@ -43,11 +45,13 @@
         android:layout_alignParentEnd="true"
         android:padding="8dp"
         android:layout_marginStart="80dp"
-        android:id="@+id/sent_msg_layout">
+        android:id="@+id/sent_msg_layout"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="150dp"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:id="@+id/sent_msg_textview"/>
@@ -61,8 +65,8 @@
             android:id="@+id/sent_msg_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="end"
             android:textColor="@color/black" />
     </LinearLayout>
 

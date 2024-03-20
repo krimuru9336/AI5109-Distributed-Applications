@@ -17,6 +17,8 @@ public class ChatMessageModel {
 
     private String msgType;
 
+    private String senderName;
+
     public ChatMessageModel() {
     }
 
@@ -49,5 +51,13 @@ public class ChatMessageModel {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 }

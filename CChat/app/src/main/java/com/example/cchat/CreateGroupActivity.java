@@ -2,6 +2,7 @@ package com.example.cchat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,12 +52,19 @@ public class CreateGroupActivity extends AppCompatActivity {
         } else {
             chatroomId = UUID.randomUUID().toString();
             chatRoomModel = new ChatRoomModel(chatroomId, selectedUsers, Timestamp.now(), "", "group");
+            chatRoomModel.setLastMessage("");
+            chatRoomModel.setLastMessageType("");
             chatRoomModel.setGroupName(groupName);
         }
 
         FirebaseUtil.getChatroomReference(chatroomId).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()) {
                 FirebaseUtil.getChatroomReference(chatroomId).set(chatRoomModel);
+                Intent intent = new Intent(CreateGroupActivity.this, GroupChatActivity.class);
+                intent.putExtra("chatroomId", chatroomId);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                this.getApplicationContext().startActivity(intent);
+                finish();
             }
         });
     }

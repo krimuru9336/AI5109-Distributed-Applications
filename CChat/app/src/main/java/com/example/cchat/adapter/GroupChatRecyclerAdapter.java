@@ -17,22 +17,25 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cchat.R;
 import com.example.cchat.model.ChatMessageModel;
+import com.example.cchat.model.ChatRoomModel;
+import com.example.cchat.utils.AndroidUtil;
 import com.example.cchat.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageModel, ChatRecyclerAdapter.ChatModelViewHolder> {
-
+public class GroupChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageModel, GroupChatRecyclerAdapter.ChatModelViewHolder> {
     Context context;
-    private OnChatMessageClickListener clickListener;
-    public ChatRecyclerAdapter(@NonNull FirestoreRecyclerOptions<ChatMessageModel> options, Context context, OnChatMessageClickListener clickListener) {
+    private GroupChatRecyclerAdapter.OnChatMessageClickListener clickListener;
+    public GroupChatRecyclerAdapter(@NonNull FirestoreRecyclerOptions<ChatMessageModel> options, Context context, GroupChatRecyclerAdapter.OnChatMessageClickListener clickListener) {
         super(options);
         this.context = context;
         this.clickListener = clickListener;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position, @NonNull ChatMessageModel model) {
+    protected void onBindViewHolder(@NonNull GroupChatRecyclerAdapter.ChatModelViewHolder holder, int position, @NonNull ChatMessageModel model) {
+        int currentPosition = position + 1;
+
         if(model.getSenderId().equals(FirebaseUtil.currentUserId())) {
             holder.receivedMsgLayout.setVisibility(View.GONE);
             holder.sentMsgLayout.setVisibility(View.VISIBLE);
@@ -44,6 +47,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
                 Uri uri = Uri.parse(model.getMessage());
                 Glide.with(context).load(uri).apply(RequestOptions.noTransformation()).into(holder.sentMediaView);
             }
+
             holder.sentMsgTimestamp.setText(FirebaseUtil.timestampToString(model.getTimestamp()));
 
             holder.sentMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -60,6 +64,24 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
         } else {
             holder.receivedMsgLayout.setVisibility(View.VISIBLE);
             holder.sentMsgLayout.setVisibility(View.GONE);
+            holder.senderPlaceHolder.setText(model.getSenderName());
+            FirebaseUtil.getOtherProfilePicStorageRef(model.getSenderId()).getDownloadUrl()
+                    .addOnCompleteListener(task1 -> {
+                        Log.e("picture", "here");
+                        if(task1.isSuccessful()) {
+                            Uri uri = task1.getResult();
+                            AndroidUtil.setProfilePicture(context, uri, holder.senderProfilePicture);
+                        }
+                    });
+
+            if(currentPosition < getItemCount()) {
+                String previousSenderId = (String) getSnapshots().getSnapshot(currentPosition).get("senderId");
+                if(model.getSenderId().equals(previousSenderId)) {
+                    holder.senderPlaceHolder.setVisibility(View.GONE);
+                    holder.senderProfilePicture.setVisibility(View.GONE);
+                }
+            }
+
             if(model.getMsgType().equals("text")) {
                 holder.receivedMediaView.setVisibility(View.GONE);
                 holder.receivedMsgView.setText(model.getMessage());
@@ -74,9 +96,9 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
 
     @NonNull
     @Override
-    public ChatModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.chat_message_recycler_row,parent, false);
-        return new ChatModelViewHolder(view);
+    public GroupChatRecyclerAdapter.ChatModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.groupchat_recycler_row,parent, false);
+        return new GroupChatRecyclerAdapter.ChatModelViewHolder(view);
     }
 
     public interface OnChatMessageClickListener {
@@ -86,6 +108,9 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
 
         LinearLayout receivedMsgLayout;
         LinearLayout sentMsgLayout;
+
+        ImageView senderProfilePicture;
+        TextView senderPlaceHolder;
         TextView receivedMsgView;
         ImageView receivedMediaView;
         TextView receivedMsgTimestamp;
@@ -99,6 +124,8 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
             super(itemView);
             receivedMsgLayout = itemView.findViewById(R.id.received_msg_layout);
             sentMsgLayout = itemView.findViewById(R.id.sent_msg_layout);
+            senderProfilePicture = itemView.findViewById(R.id.profile_image_view);
+            senderPlaceHolder = itemView.findViewById(R.id.sender_placeholder);
             receivedMsgView = itemView.findViewById(R.id.received_msg_textview);
             receivedMediaView = itemView.findViewById(R.id.received_media_view);
             receivedMsgTimestamp = itemView.findViewById(R.id.received_msg_timestamp);

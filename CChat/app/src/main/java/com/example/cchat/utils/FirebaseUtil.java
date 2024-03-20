@@ -70,6 +70,11 @@ public class FirebaseUtil {
         }
     }
 
+    public static DocumentReference getUserFromChatroom(String userId) {
+        return allUserCollectionReference().document(userId);
+    }
+
+
     public static String timestampToString(Timestamp timestamp) {
         return new SimpleDateFormat("HH:mm").format(timestamp.toDate());
     }
