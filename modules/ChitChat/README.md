@@ -57,6 +57,6 @@ ChitChat is a real-time Android chat application developed in Android Studio usi
 
 ## Screenshots
 
-<img src="login-screen.png" alt="login" width="300"/>
-<img src="msg-screen.png" alt="message" width="300" style="margin-left: 20"/>
-<img src="msg-delete-screen.png" alt="message" width="300"/>
+<img src="media/login-screen.png" alt="login" width="300"/>
+<img src="media/msg-screen.png" alt="message" width="300" style="margin-left: 20"/>
+<img src="media/msg-delete-screen.png" alt="message" width="300"/>
