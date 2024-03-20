@@ -1,20 +1,21 @@
 package com.example.distributedapplicationsproject.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import androidx.appcompat.app.AppCompatDelegate;
-import com.example.distributedapplicationsproject.MainActivity;
 import com.example.distributedapplicationsproject.R;
 import com.example.distributedapplicationsproject.android.UserArrayAdapter;
 import com.example.distributedapplicationsproject.firebase.DatabaseService;
 import com.example.distributedapplicationsproject.models.User;
 import com.example.distributedapplicationsproject.utils.DataShare;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,17 +70,19 @@ public class SingInActivity extends AppCompatActivity {
     }
 
     public void onClickLogin(View view) {
-        User selectedUser = (User)this.userSpinner.getSelectedItem();
+        User selectedUser = (User) this.userSpinner.getSelectedItem();
         DataShare.getInstance().setCurrentUser(selectedUser);
 
         Toast.makeText(this, selectedUser.getName(), Toast.LENGTH_SHORT).show();
 
         User user1 = userList.stream().filter(user -> user.getName().equals("Nick")).collect(Collectors.toList()).get(0);
         User user2 = userList.stream().filter(user -> user.getName().equals("Olaf")).collect(Collectors.toList()).get(0);
+        User user3 = userList.stream().filter(user -> user.getName().equals("Test")).collect(Collectors.toList()).get(0);
         databaseService.createPrivateChat(user1, user2);
 
 //        databaseService.createGroupChat("Group 1", user1, user2);
 //        databaseService.createGroupChat("Group 2", user1, user2);
+//        databaseService.createGroupChat("Group Demo", user1, Arrays.asList(user1, user2, user3));
 
         startActivity(new Intent(this, HomeActivity.class));
     }
