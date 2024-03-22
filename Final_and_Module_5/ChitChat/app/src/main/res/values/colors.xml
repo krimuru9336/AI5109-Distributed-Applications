@@ -8,4 +8,5 @@
     <color name="colorTertiary">#C9E4FF</color>
     <color name="colorAccent">#876327</color>
     <color name="colorBanner">#273747</color>
+    <color name="colorOffline">#E2725B</color>
 </resources>

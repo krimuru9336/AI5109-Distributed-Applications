@@ -25,4 +25,8 @@ public class AppContextSingleton {
     public String getString(int resId) {
         return applicationContext.getResources().getString(resId);
     }
+
+    public Context getContext() {
+        return applicationContext;
+    }
 }

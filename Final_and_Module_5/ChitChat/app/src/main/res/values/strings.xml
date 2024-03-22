@@ -5,8 +5,8 @@
     <string name="name">Name:</string>
     <string name="enter_name">Enter Name</string>
     <string name="author">Sven Schickentanz</string>
-    <string name="appname">Module 4 - ChitChat App</string>
-    <string name="ip">http://192.168.0.204</string>
+    <string name="appname">Module 5 - ChitChat App</string>
+    <string name="ip">http://localhost</string>
     <string name="port">8081</string>
     <string name="type_your_message">Type your message</string>
     <string name="send">Send</string>

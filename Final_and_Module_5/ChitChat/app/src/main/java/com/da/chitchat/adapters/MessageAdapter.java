@@ -97,6 +97,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return message.getID();
     }
 
+    public void addTimestamp(UUID id, long timestamp, boolean isEditTimestamp) {
+        Message foundMessage = findMessageById(id);
+        if (foundMessage != null) {
+            if (isEditTimestamp) {
+                foundMessage.setEditTimestamp(new Date(timestamp));
+            } else {
+                foundMessage.setTimestamp(timestamp);
+            }
+            notifyItemChanged(messageList.indexOf(foundMessage));
+        }
+    }
+
     public void editMessage(UUID id, String userInput, Date editDate) {
         Message foundMessage = findMessageById(id);
         if (foundMessage != null) {
@@ -180,6 +192,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public void bind(Message message) {
             String username = message.isIncoming() ? message.getSender() : "You";
             usernameTextView.setText(username);
+
+            ViewGroup.LayoutParams layoutParams = usernameTextView.getLayoutParams();
+            layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            usernameTextView.setLayoutParams(layoutParams);
 
             messageTextView.setText(message.getText());
 

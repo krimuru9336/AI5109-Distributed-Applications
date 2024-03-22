@@ -12,9 +12,9 @@ public class Message {
 
     private final UUID id;
     private String text;
-    private final String sender;
+    private String sender;
     private final boolean isIncoming;
-    private final Date timestamp;
+    private Date timestamp;
     private Date editTimestamp;
     private State state;
 
@@ -29,15 +29,26 @@ public class Message {
         this.timestamp = new Date(currentTimeMillis);
     }
 
-    public Message(String text, String sender, boolean isIncoming, UUID id) {
+    public Message(String text, String sender, boolean isIncoming, long timestamp, UUID id) {
         this.id = id;
         this.text = text;
         this.sender = sender;
         this.isIncoming = isIncoming;
         this.state = State.UNMODIFIED;
 
-        long currentTimeMillis = System.currentTimeMillis();
-        this.timestamp = new Date(currentTimeMillis);
+        this.timestamp = new Date(timestamp);
+    }
+
+    public Message(String text, String sender, boolean isIncoming, long timestamp, UUID id,
+                   State state, long editTimestamp) {
+        this.id = id;
+        this.text = text;
+        this.sender = sender;
+        this.isIncoming = isIncoming;
+        this.timestamp = new Date(timestamp);
+        this.state = state;
+        if (editTimestamp > 0)
+            this.editTimestamp = new Date(editTimestamp);
     }
 
     public void setText(String text) {
@@ -60,6 +71,14 @@ public class Message {
         return timestamp;
     }
 
+    public void setTimestamp(long timestamp) {
+        this.timestamp = new Date(timestamp);
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
     public void setEditTimestamp(Date timestamp) {
         editTimestamp = timestamp;
     }
@@ -78,5 +97,13 @@ public class Message {
 
     public State getState() {
         return state;
+    }
+
+    public boolean isDeleted() {
+        return state == State.DELETED;
+    }
+
+    public boolean isEdited() {
+        return state == State.EDITED;
     }
 }

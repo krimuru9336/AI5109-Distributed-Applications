@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +20,7 @@ import com.da.chitchat.DialogHelper;
 import com.da.chitchat.Message;
 import com.da.chitchat.adapters.MessageAdapter;
 import com.da.chitchat.R;
+import com.da.chitchat.database.messages.MessageRepository;
 import com.da.chitchat.listeners.UserMessageListener;
 import com.da.chitchat.singletons.UserMessageListenerSingleton;
 import com.da.chitchat.WebSocketManager;
@@ -37,11 +37,13 @@ public class MessageActivity extends AppCompatActivity implements OnDataChangedL
     private MessageAdapter messageAdapter;
     private String targetUser = "";
     private RecyclerView recyclerView;
+    private MessageRepository messageDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        messageDB = new MessageRepository(this);
 
         sendButton = findViewById(R.id.sendButton);
         messageEditText = findViewById(R.id.messageEditText);
@@ -95,7 +97,10 @@ public class MessageActivity extends AppCompatActivity implements OnDataChangedL
         String messageText = messageEditText.getText().toString();
 
         if (!TextUtils.isEmpty(messageText)) {
-            UUID id = messageAdapter.addMessage(new Message(messageText, targetUser, false));
+            Message msg = new Message(messageText, targetUser, false);
+            UUID id = messageAdapter.addMessage(msg);
+            messageDB.addMessage(msg, targetUser);
+
             webSocketManager.sendMessage(targetUser, messageText, id);
 
             // Clear the message input field
@@ -107,6 +112,7 @@ public class MessageActivity extends AppCompatActivity implements OnDataChangedL
         if (!message.isIncoming()) {
             webSocketManager.deleteMessage(targetUser, message.getID());
         }
+        messageDB.deleteMessage(message.getID());
         messageAdapter.deleteMessage(message);
     }
 
@@ -117,6 +123,7 @@ public class MessageActivity extends AppCompatActivity implements OnDataChangedL
         if (!message.isIncoming()) {
             webSocketManager.editMessage(targetUser, message.getID(), input, editDate);
         }
+        messageDB.editMessage(message.getID(), input, editDate);
         messageAdapter.editMessage(message, input);
     }
 

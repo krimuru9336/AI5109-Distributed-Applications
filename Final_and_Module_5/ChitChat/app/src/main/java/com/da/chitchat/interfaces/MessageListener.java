@@ -9,4 +9,5 @@ public interface MessageListener {
     void onMessageReceived(Message message);
     void onMessageDelete(String target, UUID messageId);
     void onMessageEdit(String target, UUID messageId, String newInput, Date editDate);
+    void onTimestampReceived(UUID messageId, long timestamp, boolean isEditTimestamp);
 }

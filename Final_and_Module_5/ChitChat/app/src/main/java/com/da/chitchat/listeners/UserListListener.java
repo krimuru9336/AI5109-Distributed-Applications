@@ -24,7 +24,7 @@ public class UserListListener implements UserListener<String> {
                     userAdapter.addUser(userName);
                     break;
                 case ("disconnected"):
-                    UserMessageStore.clearMessagesFromUser(userName);
+                    //UserMessageStore.clearMessagesFromUser(userName);
                     userAdapter.removeUser(userName);
                     break;
             }

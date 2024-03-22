@@ -7,6 +7,7 @@ import com.da.chitchat.interfaces.MessageListener;
 import com.da.chitchat.interfaces.NameListener;
 import com.da.chitchat.interfaces.UserListener;
 import com.da.chitchat.singletons.UserMessageListenerSingleton;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,10 +29,9 @@ public class WebSocketManager {
     private NameListener<Boolean, String> nameListener;
     private int activityChangeCounter;
     private String ownUsername;
+    private String ownUUID;
 
     public WebSocketManager(Context ctx) {
-
-
         ownUsername = "";
         activityChangeCounter = 0;
         try {
@@ -63,9 +63,11 @@ public class WebSocketManager {
         return socket.connected();
     }
 
-    public void registerUser(String userId) {
-        socket.emit("registerUser", userId);
-        ownUsername = userId;
+    public void registerUser(String userName, String uuid) {
+
+        socket.emit("registerUser", userName, uuid);
+        ownUsername = userName;
+        ownUUID = uuid;
     }
 
     public void sendMessage(String targetUserId, String message, UUID id) {
@@ -109,6 +111,14 @@ public class WebSocketManager {
 
     public void checkUsername(String username) {
         socket.emit("userCheck", username);
+    }
+
+    public void checkUsername(String username, String userID) {
+        socket.emit("userCheck", username, userID);
+    }
+
+    public void getOfflineMessages(String username, String userID) {
+        socket.emit("getOfflineMessages", username, userID);
     }
 
     public void setUserNameListener(NameListener<Boolean, String> listener, MainActivity activity) {
@@ -200,6 +210,7 @@ public class WebSocketManager {
                                 if (messageListener != null) {
                                     Message msg = new Message(messageObj.getString("message"),
                                             messageObj.getString("senderUserId"), true,
+                                            messageObj.getLong("timestamp"),
                                             UUID.fromString(messageObj.getString("messageId")));
                                     messageListener.onMessageReceived(msg);
                                 }
@@ -234,6 +245,34 @@ public class WebSocketManager {
                 }
             });
 
+            // Get sent timestamp from server
+            socket.on("timestamp", args -> {
+                if (args.length > 0 && args[0] instanceof JSONObject) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) args[0];
+
+                        if (jsonObject.has("data") && jsonObject.has("action")) {
+                            boolean isEditTimestamp = false;
+                            if (jsonObject.getString("action").equals("editTimestamp")) {
+                                isEditTimestamp = true;
+                            }
+                            if (jsonObject.getString("action").equals("timestamp") ||
+                                    jsonObject.getString("action").equals("editTimestamp")) {
+                                JSONObject messageObj = jsonObject.getJSONObject("data");
+
+                                if (messageListener != null) {
+                                    UUID messageId = UUID.fromString(messageObj.getString("messageId"));
+                                    long timestamp = messageObj.getLong("timestamp");
+                                    messageListener.onTimestampReceived(messageId, timestamp, isEditTimestamp);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
             // User edits sent message
             socket.on("edit", args -> {
                 if (args.length > 0 && args[0] instanceof JSONObject) {
@@ -250,6 +289,53 @@ public class WebSocketManager {
                                     String message = messageObj.getString("message");
                                     Date editDate = new Date(messageObj.getLong("editDate"));
                                     messageListener.onMessageEdit(target, messageId, message, editDate);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            socket.on("offlineMessages", args -> {
+                if (args.length > 0 && args[0] instanceof JSONObject) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) args[0];
+
+                        if (jsonObject.has("data") && jsonObject.has("action")) {
+                            if (jsonObject.getString("action").equals("offlineMessages")) {
+                                JSONArray messageArray = jsonObject.getJSONArray("data");
+
+                                int length = messageArray.length();
+
+                                for (int i = 0; i < length; i++) {
+                                    JSONObject messageObject = messageArray.getJSONObject(i);
+
+                                    UUID id = UUID.fromString(messageObject.getString("id"));
+                                    String partnerName = messageObject.getString("partnerName");
+                                    String text = messageObject.getString("messageText");
+                                    boolean isIncoming = messageObject.getInt("incoming") == 1;
+                                    long timestamp = messageObject.getLong("timestamp");
+                                    long editTimestamp = 0;
+                                    if (!messageObject.isNull("timestampEdit"))
+                                        editTimestamp = messageObject.getLong("timestampEdit");
+                                    boolean isDeleted = messageObject.getInt("deleted") == 1;
+                                    Message.State state = isDeleted ? Message.State.DELETED :
+                                            (editTimestamp > 0 ? Message.State.EDITED :
+                                                    Message.State.UNMODIFIED);
+
+
+                                    Message msg = new Message(text, partnerName, isIncoming,
+                                            timestamp, id, state, editTimestamp);
+
+                                    if (messageListener != null) {
+                                        messageListener.onMessageReceived(msg);
+                                    }
+                                }
+
+                                if (length > 0) {
+                                    socket.emit("offlineReceived", ownUsername, ownUUID);
                                 }
                             }
                         }
