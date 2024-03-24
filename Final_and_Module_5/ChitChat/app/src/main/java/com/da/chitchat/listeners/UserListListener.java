@@ -2,12 +2,15 @@ package com.da.chitchat.listeners;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Pair;
 
 import com.da.chitchat.adapters.UserAdapter;
 import com.da.chitchat.UserMessageStore;
 import com.da.chitchat.interfaces.UserListener;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserListListener implements UserListener<String> {
     private final UserAdapter userAdapter;
@@ -32,11 +35,11 @@ public class UserListListener implements UserListener<String> {
     }
 
     @Override
-    public void onEvent(List<String> userList, String action) {
+    public void onEvent(List<Pair<String, Boolean>> userList, String action) {
         runOnUiThread(() -> {
             if (userAdapter != null) {
-                for (String user : userList) {
-                    userAdapter.addUser(user);
+                for (Pair<String, Boolean> user : userList) {
+                    userAdapter.addUser(user.first, user.second);
                 }
             }
         });

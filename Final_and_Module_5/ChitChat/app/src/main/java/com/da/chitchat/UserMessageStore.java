@@ -13,29 +13,35 @@ import java.util.UUID;
 
 public final class UserMessageStore {
     private static final Map<String, List<Message>> userMessageMap = new HashMap<>();
+    private static final Map<String, List<Message>> groupMessageMap = new HashMap<>();
+
     private UserMessageStore() {
 
     }
 
-    private static List<Message> createIfUserNotExists(String username) {
-        return userMessageMap.computeIfAbsent(username, k -> new ArrayList<>());
+    private static List<Message> createIfNotExists(Map<String, List<Message>> messageMap, String key) {
+        return messageMap.computeIfAbsent(key, k -> new ArrayList<>());
     }
 
-    public static List<Message> getUserMessages(String username) {
-        return Collections.unmodifiableList(Objects.requireNonNull(createIfUserNotExists(username)));
+    public static List<Message> getMessages(Map<String, List<Message>> messageMap, String key) {
+        return Collections.unmodifiableList(Objects.requireNonNull(createIfNotExists(messageMap, key)));
     }
 
-    public static void addMessageToUser(String username, Message message) {
-        createIfUserNotExists(username).add(message);
+    public static void addMessage(Map<String, List<Message>> messageMap, String key, Message message) {
+        if (message.isDeleted()) {
+            message.setText(AppContextSingleton.getInstance().getString(R.string.deleteMessageText));
+        }
+        createIfNotExists(messageMap, key).add(message);
     }
 
-    public static void deleteMessageFromUser(String username, UUID id) {
-        List<Message> userMessages = userMessageMap.get(username);
+    public static void deleteMessage(Map<String, List<Message>> messageMap, String key, UUID id) {
+        List<Message> messages = messageMap.get(key);
 
-        if (userMessages != null) {
-            userMessages.forEach(message -> {
+        if (messages != null) {
+            messages.forEach(message -> {
                 if (message.getID().equals(id)) {
-                    String deleteMessageText = AppContextSingleton.getInstance().getString(R.string.deleteMessageText);
+                    String deleteMessageText = AppContextSingleton
+                            .getInstance().getString(R.string.deleteMessageText);
                     message.setText(deleteMessageText);
                     message.setState(Message.State.DELETED);
                     message.setEditTimestamp(null);
@@ -44,11 +50,12 @@ public final class UserMessageStore {
         }
     }
 
-    public static void editMessageFromUser(String username, UUID id, String newInput, Date editDate) {
-        List<Message> userMessages = userMessageMap.get(username);
+    public static void editMessage(Map<String, List<Message>> messageMap, String key, UUID id,
+                                   String newInput, Date editDate) {
+        List<Message> messages = messageMap.get(key);
 
-        if (userMessages != null) {
-            userMessages.forEach(message -> {
+        if (messages != null) {
+            messages.forEach(message -> {
                 if (message.getID().equals(id)) {
                     message.setText(newInput);
                     message.setState(Message.State.EDITED);
@@ -58,12 +65,48 @@ public final class UserMessageStore {
         }
     }
 
-    public static void clearMessagesFromUser(String username) {
-        if (userMessageMap.containsKey(username)) {
-            List<Message> messages = userMessageMap.get(username);
+    public static void clearMessages(Map<String, List<Message>> messageMap, String key) {
+        if (messageMap.containsKey(key)) {
+            List<Message> messages = messageMap.get(key);
             if (messages != null) {
                 messages.clear();
             }
         }
+    }
+
+    public static List<Message> getUserMessages(String username) {
+        return getMessages(userMessageMap, username);
+    }
+
+    public static List<Message> getGroupMessages(String groupName) {
+        return getMessages(groupMessageMap, groupName);
+    }
+
+    public static void addMessageToUser(String username, Message message) {
+        addMessage(userMessageMap, username, message);
+    }
+
+    public static void addMessageToGroup(String groupName, Message message) {
+        addMessage(groupMessageMap, groupName, message);
+    }
+
+    public static void deleteMessageFromUser(String username, UUID id) {
+        deleteMessage(userMessageMap, username, id);
+    }
+
+    public static void deleteMessageFromGroup(String groupName, UUID id) {
+        deleteMessage(groupMessageMap, groupName, id);
+    }
+
+    public static void editMessageFromUser(String username, UUID id, String newInput, Date editDate) {
+        editMessage(userMessageMap, username, id, newInput, editDate);
+    }
+
+    public static void editMessageFromGroup(String groupName, UUID id, String newInput, Date editDate) {
+        editMessage(groupMessageMap, groupName, id, newInput, editDate);
+    }
+
+    public static void clearMessagesFromUser(String username) {
+        clearMessages(userMessageMap, username);
     }
 }

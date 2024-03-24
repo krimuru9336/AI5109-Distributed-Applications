@@ -6,12 +6,13 @@
     <string name="enter_name">Enter Name</string>
     <string name="author">Sven Schickentanz</string>
     <string name="appname">Module 5 - ChitChat App</string>
-    <string name="ip">http://localhost</string>
+    <string name="ip">http://192.168.0.84</string>
     <string name="port">8081</string>
     <string name="type_your_message">Type your message</string>
     <string name="send">Send</string>
     <string name="back_to_user_selection">Go back to user selection</string>
-    <string name="connected_users">Connected Users</string>
+    <string name="connected_users">Users</string>
+    <string name="group_overview">Your Groups</string>
     <string name="enter_username_long">Enter your username:</string>
     <string name="enter_username">Enter Username</string>
     <string name="connect">Connect</string>
@@ -25,4 +26,12 @@
     <string name="clear_text">Clear Text</string>
     <string name="edit_your_message">Edit your message</string>
     <string name="last_edited_on">Last edited on:</string>
+    <string name="message_group_addition">Group</string>
+    <string name="add_group_description">Add Group</string>
+    <string name="group_dialog_title">Create Group</string>
+    <string name="group_dialog_text">Please enter your group name</string>
+    <string name="select_group_member">Please select the group members</string>
+    <string name="add_to_group">Add users to group</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="only_admin">Only the admin is allowed to change group members!</string>
 </resources>

@@ -17,6 +17,7 @@ public class Message {
     private Date timestamp;
     private Date editTimestamp;
     private State state;
+    private String chatGroup = null;
 
     public Message(String text, String sender, boolean isIncoming) {
         this.id = UUID.randomUUID();
@@ -105,5 +106,17 @@ public class Message {
 
     public boolean isEdited() {
         return state == State.EDITED;
+    }
+
+    public void setChatGroup(String name) {
+        chatGroup = name;
+    }
+
+    public String getChatGroup() {
+        return chatGroup;
+    }
+
+    public boolean isGroup() {
+        return chatGroup != null;
     }
 }

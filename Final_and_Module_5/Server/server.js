@@ -20,8 +20,7 @@ async function main() {
 
         const users = await db.getAllUsers();
         const hashUser = createHashUserMap(users);
-        console.log(users);
-        console.log(hashUser);
+        const chatGroups = await createGroupMap();
 
         function createHashWithSalt(...args) {
             const salt = process.env.SALT;
@@ -49,20 +48,82 @@ async function main() {
             return map;
         }
 
-        function addMessageToDatabase(sender, messageObject) {
-            if (!messageObject.partnerName || !sender)
-                return;
+        async function createGroupMap() {
+            const map = new Map();
+            try {
+                const databaseGroupEntries = await db.getAllGroupEntries();
+                databaseGroupEntries.forEach(entry => {
+                    let userName = hashUser.get(entry.id);
+                    if (!map.has(entry.groupName)) {
+                        map.set(entry.groupName, {
+                            users: [userName],
+                            admin: "",
+                        });
+                    } else {
+                        map.get(entry.groupName).users.push(userName);
+                    }
+                    if (entry.isAdmin) {
+                        map.get(entry.groupName).admin = userName;
+                    }
+                });
+            } catch (error) {
+                return map;
+            }
+            console.log(map);
+            return map;
+        }
 
-            const user = users.find(user => user.userName === messageObject.partnerName);
-            messageObject.partnerName = sender.userName;
-            if (messageObject.timestampEdit) {
-                db.addEditMessage(user.uuid, messageObject);
-                return;
-            } else if (messageObject.deleted) {
-                messageObject.messageText = "Message has been deleted.";
-                db.addDeleteMessage(user.uuid, messageObject);
-            } else {
-                db.addMessage(user.uuid, messageObject);
+        function findUserByName(userName) {
+            return users.find(user => user.userName === userName);
+        }
+
+        function findUserBySocketID(socketID) {
+            return users.find(user => user.id === socketID);
+        }
+
+        function addMessageToDatabase(sender, messageObject) {
+            try {
+                if (!messageObject.partnerName || !sender)
+                    return;
+
+                const user = findUserByName(messageObject.partnerName);
+                messageObject.partnerName = sender.userName;
+                if (messageObject.timestampEdit) {
+                    db.addEditMessage(user.uuid, messageObject);
+                    return;
+                } else if (messageObject.deleted) {
+                    messageObject.messageText = "Message has been deleted.";
+                    db.addDeleteMessage(user.uuid, messageObject);
+                } else {
+                    db.addMessage(user.uuid, messageObject);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function addUserToGroupDB(groupName, userName, isAdmin) {
+            try {
+                console.log("Adding user " + userName +  " to group " + groupName + " with isAdmin: " + isAdmin);
+                const user = findUserByName(userName);
+                console.log(user);
+                if (user) {
+                    db.addUserToGroup(user.uuid, groupName, isAdmin);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function removeUserFromGroupDB(groupName, userName) {
+            try {
+                console.log("Removing user " + userName +  " from group " + groupName);
+                const user = findUserByName(userName);
+                if (user) {
+                    db.removeUserFromGroup(user.uuid, groupName);
+                }
+            } catch (error) {
+                console.log(error);
             }
         }
 
@@ -77,7 +138,7 @@ async function main() {
                             checkUsername = false;
                         }
                     }
-                    if (checkUsername && users.find(user => user.userName === userName)) {
+                    if (checkUsername && findUserByName(userName)) {
                         userUnavailable = true;
                     }
                     socket.emit('userExists', { 
@@ -92,8 +153,6 @@ async function main() {
 
             // Handle new user connection
             socket.on('registerUser', (userName, userUUID) => {
-                console.log("NEW ID");
-                console.log(socket.id);
                 try {
                     if (userUUID != undefined && validator.isUUID(userUUID)) {
                         if (isCorrectUser(userName, userUUID)) {
@@ -105,7 +164,7 @@ async function main() {
                             db.createUserMessageTable(hashVal);
                         }
 
-                        // Check if users array already contains the username and the hashed user
+                        // Check if users array already contains the userName and the hashed user
                         const hashedUUID = createHashWithSalt(userName, userUUID);
                         const curUser = users.find(user => (
                             user.userName === userName && user.uuid === hashedUUID
@@ -126,7 +185,6 @@ async function main() {
                         action: 'connected'
                     });
                     console.log(`User ${userName} connected`);
-                    console.log(users);
                 } catch (error) {
                     console.log(error);
                 }
@@ -135,80 +193,222 @@ async function main() {
             // Handle incoming messages
             socket.on('message', (message) => {
                 try {
-                    console.log(message);
                     const { targetUserId, messageId, message: messageText } = message;
-                    const senderUser = users.find(user => user.id === socket.id);
+                    const senderUser = findUserBySocketID(socket.id);
                     const senderUserId = senderUser?.userName;
 
-                    // Find the socket ID of the target user
-                    const targetUser = users.find(({ userName }) => userName === targetUserId);
-                    console.log("New Target ID:");
-                    console.log(targetUser.id);
+                    if (message.isGroup) {
+                        sendGroupMessage(targetUserId, senderUserId, messageId, messageText, socket);
+                    } else {
+                        // Find the user
+                        const targetUser = findUserByName(targetUserId);
 
-                    // If the target user is found, send the message to that user
-                    if (targetUser) {
-                        console.log(targetUser);
-                        if (targetUser.id) {
-                            io.to(targetUser.id).emit('message', {
-                                data: {
-                                    senderUserId,
-                                    message: messageText,
-                                    messageId,
+                        // If the target user is found, send the message to that user
+                        if (targetUser) {
+                            if (targetUser.id) {
+                                io.to(targetUser.id).emit('message', {
+                                    data: {
+                                        senderUserId,
+                                        message: messageText,
+                                        messageId,
+                                        timestamp: Date.now(),
+                                    },
+                                    action: 'message',
+                                });
+                            } else {
+                                addMessageToDatabase(senderUser, {
+                                    partnerName: targetUserId,
+                                    incoming: true,
+                                    messageText,
                                     timestamp: Date.now(),
-                                },
-                                action: 'message',
-                            });
-                        } else {
-                            addMessageToDatabase(senderUser, {
-                                partnerName: targetUserId,
-                                incoming: true,
-                                messageText,
-                                timestamp: Date.now(),
-                                id: messageId,
-                            });
+                                    id: messageId,
+                                });
+                            }
                         }
-                        io.to(socket.id).emit('timestamp', {
-                            data: {
-                                messageId,
-                                timestamp: Date.now(),
-                            },
-                            action: 'timestamp',
-                        });
                     }
+                    io.to(socket.id).emit('timestamp', {
+                        data: {
+                            messageId,
+                            timestamp: Date.now(),
+                        },
+                        action: 'timestamp',
+                    });
                 } catch (error) {
                     console.log(error);
                 }
             });
+
+            function sendGroupMessage(chatGroup, senderUserId, messageId, messageText, socket) {
+                socket.to(chatGroup).emit('message', {
+                    data: {
+                        senderUserId,
+                        message: messageText,
+                        messageId,
+                        timestamp: Date.now(),
+                        chatGroup,
+                    },
+                    action: 'message',
+                });
+            }
+
+            socket.on('joinChatGroup', (chatGroup, userName) => {
+                if (chatGroups.has(chatGroup) && chatGroups.get(chatGroup).users.includes(userName)) {
+                    console.log(userName + " joined chatGroup " + chatGroup);
+                    socket.join(chatGroup);
+                }
+            });
+
+            socket.on('socketJoinGroup', (chatGroup) => {
+                socket.join(chatGroup);
+            });
+
+            socket.on('socketLeaveGroup', (chatGroup) => {
+                socket.leave(chatGroup);
+            });
+
+            socket.on('createChatGroup', (chatGroup, userName) => {
+                if (createChatGroupIfNotExists(chatGroup, userName)) {
+                    console.log(userName + " created chatGroup " + chatGroup);
+                    io.to(socket.id).emit('groupCreated', {
+                        data: chatGroup,
+                        action: 'groupCreated',
+                    });
+                    addUserToGroupDB(chatGroup, userName, true);
+                    socket.join(chatGroup);
+                } else {
+                    io.to(socket.id).emit('groupExists', {
+                        data: chatGroup,
+                        action: 'groupExists',
+                    });
+                }
+            });
+
+            socket.on('updateChatGroup', (chatGroup, userNames) => {
+                const group = chatGroups.get(chatGroup);
+                if (group.admin !== findUserBySocketID(socket.id).userName) {
+                    io.to(socket.id).emit('unauthorizedGroup');
+                    return;
+                };
+                userNames = JSON.parse(userNames);
+                const usersToAdd = userNames.filter(user => !group.users.includes(user));
+                const usersToRemove = group.users.filter(user => {
+                    return user !== group.admin && !userNames.includes(user);
+                });
+                addUsersToChatGroup(chatGroup, usersToAdd);
+                removeUsersFromChatGroup(chatGroup, usersToRemove);
+                usersToAdd.forEach(userName => {
+                    const user = findUserByName(userName);
+                    if (user.id) {
+                        io.to(user.id).emit('joinChatGroup', {
+                            data: chatGroup,
+                            action: 'joinChatGroup',
+                        });
+                    }
+                });
+                usersToRemove.forEach(userName => {
+                    const user = findUserByName(userName);
+                    if (user.id) {
+                        io.to(user.id).emit('leaveChatGroup', {
+                            data: chatGroup,
+                            action: 'leaveChatGroup',
+                        });
+                    }
+                });
+            });
+
+            socket.on('getGroups', (userName) => {
+                console.log(userName);
+                const userGroups = Array.from(chatGroups.entries()).filter(([_, group]) => group.users.includes(userName)).map(([group, _]) => group);
+                console.log(userGroups);
+                socket.emit('groups', {
+                    data: userGroups,
+                    action: 'groups',
+                });
+                for (const group of userGroups) {
+                    socket.join(group);
+                }
+            });
+
+            socket.on('usersInGroup', (chatGroup) => {
+                const group = chatGroups.get(chatGroup);
+                if (group) {
+                    socket.emit('usersInGroup', {
+                        data: group.users,
+                        action: 'usersInGroup',
+                    });
+                }
+            });
+
+            function createChatGroupIfNotExists(chatGroup, userName) {
+                if (!chatGroups.has(chatGroup)) {
+                    chatGroups.set(chatGroup, {
+                        users: [userName],
+                        admin: userName,
+                    });
+                    return true;
+                }
+                return false;
+            }
+
+            function removeUsersFromChatGroup(chatGroup, userNames) {
+                try {
+                    const group = chatGroups.get(chatGroup);
+                    userNames.forEach(user => {
+                        removeUserFromGroupDB(chatGroup, user);
+                    });
+                    group.users = group.users.filter(user => !userNames.includes(user));
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            function addUsersToChatGroup(chatGroup, userNames) {
+                try {
+                    const group = chatGroups.get(chatGroup);
+                    userNames.forEach(user => {
+                        if (!group.users.includes(user)) {
+                            group.users.push(user);
+                            addUserToGroupDB(chatGroup, user, false);
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
 
             // Handle deleting messages
             socket.on('delete', (message) => {
                 try {
                     console.log(message);
-                    const { targetUserId, messageId } = message;
-                    const senderUser = users.find(user => user.id === socket.id);
+                    const { targetUserId, messageId, isGroup } = message;
+                    const senderUser = findUserBySocketID(socket.id);
                     const senderUserId = senderUser?.userName;
 
-                    // Find the socket ID of the target user
-                    const targetUser = users.find(({ userName }) => userName === targetUserId);
+                    if (isGroup) {
+                        deleteGroupMessage(targetUserId, senderUserId, messageId, socket);
+                    } else {
+                        // Find the user
+                        const targetUser = findUserByName(targetUserId);
 
-                    // If the target user is found, send the message to that user
-                    if (targetUser) {
-                        if (targetUser.id) {
-                            io.to(targetUser.id).emit('delete', {
-                                data: {
-                                    senderUserId,
-                                    messageId,
-                                },
-                                action: 'delete',
-                            });
-                        } else {
-                            addMessageToDatabase(senderUser, {
-                                partnerName: targetUserId,
-                                incoming: true,
-                                timestamp: Date.now(),
-                                id: messageId,
-                                deleted: true,
-                            });
+                        // If the target user is found, send the message to that user
+                        if (targetUser) {
+                            if (targetUser.id) {
+                                io.to(targetUser.id).emit('delete', {
+                                    data: {
+                                        senderUserId,
+                                        messageId,
+                                    },
+                                    action: 'delete',
+                                });
+                            } else {
+                                addMessageToDatabase(senderUser, {
+                                    partnerName: targetUserId,
+                                    incoming: true,
+                                    timestamp: Date.now(),
+                                    id: messageId,
+                                    deleted: true,
+                                });
+                            }
                         }
                     }
                 } catch (error) {
@@ -216,41 +416,55 @@ async function main() {
                 }
             });
 
+            function deleteGroupMessage(chatGroup, senderUserId, messageId, socket) {
+                console.log("Send delete to chatGroup " + chatGroup);
+                socket.to(chatGroup).emit('delete', {
+                    data: {
+                        senderUserId,
+                        messageId,
+                        chatGroup,
+                    },
+                    action: 'delete',
+                });
+            }
+
             // Handle editing messages
             socket.on('edit', (message) => {
                 try {
-                    console.log(message);
-                    const { targetUserId, messageId, message: messageText, editDate } = message;
-                    const senderUser = users.find(user => user.id === socket.id);
+                    const { targetUserId, messageId, message: messageText, editDate, isGroup } = message;
+                    const senderUser = findUserBySocketID(socket.id);
                     const senderUserId = senderUser?.userName;
+                    
+                    if (isGroup) { 
+                        editGroupMessage(targetUserId, senderUserId, messageId, messageText, socket);
+                    } else {
+                        // Find the user
+                        const targetUser = findUserByName(targetUserId);
 
-                    // Find the socket ID of the target user
-                    const targetUser = users.find(({ userName }) => userName === targetUserId);
-
-                    // If the target user is found, send the message to that user
-                    if (targetUser) {
-                        if (targetUser.id) {
-                            io.to(targetUser.id).emit('edit', {
-                                data: {
-                                    senderUserId,
-                                    messageId,
-                                    message: messageText,
-                                    editDate: Date.now(),
-                                },
-                                action: 'edit',
-                            });
-                        } else {
-                            addMessageToDatabase(senderUser, {
-                                partnerName: targetUserId,
-                                incoming: true,
-                                messageText,
-                                timestamp: Date.now(),
-                                id: messageId,
-                                timestampEdit: Date.now()
-                            });
+                        // If the target user is found, send the message to that user
+                        if (targetUser) {
+                            if (targetUser.id) {
+                                io.to(targetUser.id).emit('edit', {
+                                    data: {
+                                        senderUserId,
+                                        messageId,
+                                        message: messageText,
+                                        editDate: Date.now(),
+                                    },
+                                    action: 'edit',
+                                });
+                            } else {
+                                addMessageToDatabase(senderUser, {
+                                    partnerName: targetUserId,
+                                    incoming: true,
+                                    messageText,
+                                    timestamp: Date.now(),
+                                    id: messageId,
+                                    timestampEdit: Date.now()
+                                });
+                            }
                         }
                     }
-
                     io.to(socket.id).emit('timestamp', {
                         data: {
                             messageId,
@@ -262,6 +476,20 @@ async function main() {
                     console.log(error);
                 }
             });
+
+            function editGroupMessage(chatGroup, senderUserId, messageId, messageText, socket) {
+                console.log("Send edit to chatGroup " + chatGroup);
+                socket.to(chatGroup).emit('edit', {
+                    data: {
+                        senderUserId,
+                        messageId,
+                        message: messageText,
+                        editDate: Date.now(),
+                        chatGroup
+                    },
+                    action: 'edit',
+                });
+            }
 
             // Handle user disconnection
             socket.on('disconnect', () => {
@@ -284,7 +512,7 @@ async function main() {
             socket.on('getOfflineMessages', async (userName, userUUID) => {
                 try {
                     if (isCorrectUser(userName, userUUID)) {
-                        const user = users.find(user => user.userName === userName);
+                        const user = findUserByName(userName);
                         const messages = await db.getMessages(user.uuid);
                         socket.emit('offlineMessages', {
                             data: messages,
@@ -297,11 +525,9 @@ async function main() {
             });
 
             socket.on('offlineReceived', async (userName, userUUID) => {
-                console.log("OFFLINE RECEIVED");
-                console.log(userName);
                 try {
                     if (isCorrectUser(userName, userUUID)) {
-                        const user = users.find(user => user.userName === userName);
+                        const user = findUserByName(userName);
                         db.clearTable(user.uuid);
                     }
                 } catch (error) {
@@ -311,8 +537,10 @@ async function main() {
 
             function sendUserListToSender(socketID) {
                 try {
-                    const userList = users.filter(user => user.id && user.id !== socket.id).map(user => user.userName);
-                    console.log(userList);
+                    const userList = users.filter(user => user.id !== socket.id).map(user => ({
+                        userName: user.userName,
+                        isOnline: !!user.id
+                    }));
                     io.to(socketID).emit('init', { 
                         data: userList,
                         action: 'init' 

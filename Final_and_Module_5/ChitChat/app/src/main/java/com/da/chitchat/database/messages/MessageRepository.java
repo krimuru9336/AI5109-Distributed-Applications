@@ -17,7 +17,7 @@ public class MessageRepository {
     private static final String TAG = "MessageRepository";
 
     private SQLiteDatabase database;
-    private MessageDbHelper dbHelper;
+    private final MessageDbHelper dbHelper;
 
     public MessageRepository(Context context) {
         dbHelper = new MessageDbHelper(context);
@@ -42,6 +42,9 @@ public class MessageRepository {
         values.put(MessageContract.MessageEntry.COLUMN_NAME_DELETED, message.isDeleted() ? 1 : 0);
         if (message.getEditTimestamp() != null) {
             values.put(MessageContract.MessageEntry.COLUMN_NAME_TIMESTAMP_EDIT, message.getEditTimestamp().getTime());
+        }
+        if (message.getChatGroup() != null) {
+            values.put(MessageContract.MessageEntry.COLUMN_NAME_CHAT_GROUP, message.getChatGroup());
         }
 
         database.insert(MessageContract.MessageEntry.TABLE_NAME, null, values);
@@ -80,6 +83,23 @@ public class MessageRepository {
             values,
             selection,
             selectionArgs
+        );
+        close();
+    }
+
+    public void updateTimestamp(UUID id, long timestamp) {
+        open();
+        ContentValues values = new ContentValues();
+        values.put(MessageContract.MessageEntry.COLUMN_NAME_TIMESTAMP, timestamp);
+
+        String selection = MessageContract.MessageEntry.COLUMN_NAME_ID + " = ?";
+        String[] selectionArgs = {id.toString()};
+
+        database.update(
+                MessageContract.MessageEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
         );
         close();
     }
@@ -125,9 +145,11 @@ public class MessageRepository {
         int timestampIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_TIMESTAMP);
         int editTimestampIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_TIMESTAMP_EDIT);
         int deletedIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_DELETED);
+        int chatGroupIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_CHAT_GROUP);
 
         if (idIndex == -1 || partnerIndex == -1 || incomingIndex == -1 || messageIndex == -1 ||
-                timestampIndex == -1 || editTimestampIndex == -1 || deletedIndex == -1) {
+                timestampIndex == -1 || editTimestampIndex == -1 || deletedIndex == -1 ||
+                chatGroupIndex == -1) {
             return null;
         }
 
@@ -139,7 +161,11 @@ public class MessageRepository {
         long editTimestamp = cursor.getLong(editTimestampIndex);
         boolean isDeleted = cursor.getInt(deletedIndex) == 1;
         State state = isDeleted ? State.DELETED : (editTimestamp > 0 ? State.EDITED : State.UNMODIFIED);
+        String chatGroup = cursor.getString(chatGroupIndex);
 
-        return new Message(text, partnerName, isIncoming, timestamp, id, state, editTimestamp);
+        Message msg = new Message(text, partnerName, isIncoming, timestamp, id, state, editTimestamp);
+        if (chatGroup != null) msg.setChatGroup(chatGroup);
+
+        return msg;
     }
 }

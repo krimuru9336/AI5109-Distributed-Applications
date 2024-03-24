@@ -22,8 +22,14 @@ public class UserMessageListener implements MessageListener {
         messageDB = new MessageRepository(AppContextSingleton.getInstance().getContext());
     }
 
-    public MessageAdapter createAdapter(String username, OnDataChangedListener listener) {
-        this.messageAdapter = new MessageAdapter(UserMessageStore.getUserMessages(username), username, listener);
+    public MessageAdapter createAdapter(String partnerName, boolean isGroup, OnDataChangedListener listener) {
+        if (isGroup) {
+            this.messageAdapter = new MessageAdapter(UserMessageStore.getGroupMessages(partnerName),
+                    partnerName, listener, true);
+        } else {
+            this.messageAdapter = new MessageAdapter(UserMessageStore.getUserMessages(partnerName),
+                    partnerName, listener, false);
+        }
         return this.messageAdapter;
     }
 
@@ -31,10 +37,16 @@ public class UserMessageListener implements MessageListener {
     public void onMessageReceived(Message message) {
         runOnUiThread(() -> {
             String sender = message.getSender();
-            UserMessageStore.addMessageToUser(sender, message);
+            boolean isGroup = (message.getChatGroup() != null);
+            if (isGroup) {
+                UserMessageStore.addMessageToGroup(message.getChatGroup(), message);
+            } else {
+                UserMessageStore.addMessageToUser(sender, message);
+            }
             messageDB.addMessage(message, sender);
             if (messageAdapter != null) {
-                if (messageAdapter.currentUser().equals(sender)) {
+                if (isGroup && messageAdapter.currentUser().equals(message.getChatGroup()) ||
+                    !isGroup && messageAdapter.currentUser().equals(sender)) {
                     messageAdapter.showNewMessage();
                 }
             }
@@ -42,25 +54,33 @@ public class UserMessageListener implements MessageListener {
     }
 
     @Override
-    public void onMessageDelete(String target, UUID messageId) {
+    public void onMessageDelete(String target, UUID messageId, boolean isGroup) {
         runOnUiThread(() -> {
             messageDB.deleteMessage(messageId);
             if (messageAdapter != null && messageAdapter.currentUser().equals(target)) {
                 messageAdapter.deleteMessage(messageId);
             } else {
-                UserMessageStore.deleteMessageFromUser(target, messageId);
+                if (isGroup) {
+                    UserMessageStore.deleteMessageFromGroup(target, messageId);
+                } else {
+                    UserMessageStore.deleteMessageFromUser(target, messageId);
+                }
             }
         });
     }
 
     @Override
-    public void onMessageEdit(String target, UUID messageId, String newInput, Date editDate) {
+    public void onMessageEdit(String target, UUID messageId, String newInput, Date editDate, boolean isGroup) {
         runOnUiThread(() -> {
             messageDB.editMessage(messageId, newInput, editDate);
             if (messageAdapter != null && messageAdapter.currentUser().equals(target)) {
                 messageAdapter.editMessage(messageId, newInput, editDate);
             } else {
-                UserMessageStore.editMessageFromUser(target, messageId, newInput, editDate);
+                if (isGroup) {
+                    UserMessageStore.editMessageFromGroup(target, messageId, newInput, editDate);
+                } else {
+                    UserMessageStore.editMessageFromUser(target, messageId, newInput, editDate);
+                }
             }
         });
     }
@@ -70,6 +90,9 @@ public class UserMessageListener implements MessageListener {
         runOnUiThread(() -> {
             if (messageAdapter != null) {
                 messageAdapter.addTimestamp(messageId, timestamp, isEditTimestamp);
+                if (!isEditTimestamp) {
+                    messageDB.updateTimestamp(messageId, timestamp);
+                }
             }
         });
     }

@@ -30,12 +30,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private final String username;
     private final OnDataChangedListener onDataChangedListener;
     private int position;
+    private final boolean isGroup;
 
-    public MessageAdapter(List<Message> messageList, String username, OnDataChangedListener listener) {
+    public MessageAdapter(List<Message> messageList, String username, OnDataChangedListener listener,
+                          boolean isGroup) {
         this.onDataChangedListener = listener;
 
         MessageAdapter.messageList = messageList;
         this.username = username;
+        this.isGroup = isGroup;
 
         loadAllUserMessages();
     }
@@ -70,6 +73,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return username;
     }
 
+    public boolean isGroup() {
+        return isGroup;
+    }
+
     public Message getItem(int position) {
         if (position >= 0 && position < messageList.size()) {
             return messageList.get(position);
@@ -91,8 +98,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
     }
 
-    public UUID addMessage(Message message) {
-        UserMessageStore.addMessageToUser(username, message);
+    public UUID addMessage(Message message, boolean isGroup) {
+        if (isGroup) {
+            UserMessageStore.addMessageToGroup(username, message);
+        } else {
+            UserMessageStore.addMessageToUser(username, message);
+        }
         showNewMessage();
         return message.getID();
     }
