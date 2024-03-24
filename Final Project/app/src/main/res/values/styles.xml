@@ -1,0 +1,34 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:colorButtonNormal">@drawable/button_selector</item>
+        <item name="colorButtonNormal">@drawable/button_selector</item>
+        <item name="android:buttonStyle">@style/ChatButtonStyle</item>
+    </style>
+
+    <style name="ChatButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/colorTitle</item>
+    </style>
+
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@android:color/holo_green_dark</item>
+    </style>
+
+
+</resources>
