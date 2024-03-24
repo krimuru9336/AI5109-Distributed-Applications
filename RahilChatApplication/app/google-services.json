@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "476583528780",
-    "project_id": "rahilchatapplicationuniversity",
-    "storage_bucket": "rahilchatapplicationuniversity.appspot.com"
+    "project_number": "246515779869",
+    "firebase_url": "https://rahilnewuniproject-default-rtdb.firebaseio.com",
+    "project_id": "rahilnewuniproject",
+    "storage_bucket": "rahilnewuniproject.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:476583528780:android:aff8914af2f781c8ff67e9",
+        "mobilesdk_app_id": "1:246515779869:android:99a8698e4ebefafbdcf9f4",
         "android_client_info": {
           "package_name": "com.example.rahilchatapplication"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyClY9MGQ8KhXuUlCu2SPd3QC2NxoF5w_EQ"
+          "current_key": "AIzaSyDbas5KoLTFayo9oJ0FX8hoLdpBY6HW5wg"
         }
       ],
       "services": {
