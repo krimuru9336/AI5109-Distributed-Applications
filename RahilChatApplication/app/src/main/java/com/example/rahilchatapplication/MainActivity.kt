@@ -65,6 +65,11 @@ class MainActivity : AppCompatActivity() {
             finish()
             startActivity(intent)
             return true;
+        }else if(item.itemId == R.id.create_group) {
+            val intent = Intent(this, CreateGroup::class.java)
+            finish()
+            startActivity(intent)
+            return true;
         }
 
         return true;
