@@ -75,6 +75,11 @@ class MainActivity : AppCompatActivity() {
             finish()
             startActivity(intent)
             return true;
+        }else if(item.itemId == R.id.chat_list) {
+            val intent = Intent(this, MainActivity::class.java)
+            finish()
+            startActivity(intent)
+            return true;
         }
 
         return true;
