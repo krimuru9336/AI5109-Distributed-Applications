@@ -2,14 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/txtGroupName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:textSize="16sp"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnAddMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Me" />
 
 </LinearLayout>
