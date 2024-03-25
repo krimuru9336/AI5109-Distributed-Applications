@@ -70,6 +70,11 @@ class MainActivity : AppCompatActivity() {
             finish()
             startActivity(intent)
             return true;
+        } else if(item.itemId == R.id.list_groups) {
+            val intent = Intent(this, GroupList::class.java)
+            finish()
+            startActivity(intent)
+            return true;
         }
 
         return true;

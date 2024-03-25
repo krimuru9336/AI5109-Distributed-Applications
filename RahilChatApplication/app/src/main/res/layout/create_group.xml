@@ -27,4 +27,11 @@
         android:text="Create Group"
         android:layout_marginTop="16dp"/>
 
+    <Button
+        android:id="@+id/btnListGroups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List Groups"
+        android:layout_marginTop="16dp"/>
+
 </LinearLayout>

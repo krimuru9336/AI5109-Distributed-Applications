@@ -1,5 +1,6 @@
 package com.example.rahilchatapplication
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
@@ -13,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 class CreateGroup : AppCompatActivity(){
     private lateinit var etGroupName: EditText
     private lateinit var btnCreateGroup: Button
+    private lateinit var btnListGroups: Button
     private lateinit var mDbRef: DatabaseReference
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -22,6 +24,7 @@ class CreateGroup : AppCompatActivity(){
 
         etGroupName = findViewById(R.id.etGroupName)
         btnCreateGroup = findViewById(R.id.btnCreateGroup)
+        btnListGroups = findViewById(R.id.btnListGroups)
         mDbRef = FirebaseDatabase.getInstance().reference
 
         btnCreateGroup.setOnClickListener {
@@ -31,6 +34,12 @@ class CreateGroup : AppCompatActivity(){
             } else {
                 showToast("Please enter a group name.")
             }
+        }
+
+        btnListGroups.setOnClickListener {
+            val intent = Intent(this, GroupList::class.java)
+            finish()
+            startActivity(intent)
         }
     }
 
