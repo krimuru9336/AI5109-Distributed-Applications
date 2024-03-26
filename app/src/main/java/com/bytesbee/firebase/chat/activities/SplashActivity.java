@@ -38,8 +38,9 @@ public class SplashActivity extends AppCompatActivity {
         Utils.setWindow(getWindow());
         setContentView(R.layout.activity_splash);
 
-        ((TextView) findViewById(R.id.txtName)).setText(String.format(getString(R.string.app_company), getString(R.string.app_company)));
+        ((TextView) findViewById(R.id.txtName)).setText(String.format(getString(R.string.app_company_name), getString(R.string.app_company)));
 
+        StartAnimations();
         load();
     }
 
@@ -73,6 +74,18 @@ public class SplashActivity extends AppCompatActivity {
         }, IConstants.SPLASH_DELAY);
     }
 
+    private void StartAnimations() {
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
+        anim.reset();
+        RelativeLayout l = findViewById(R.id.lin_lay);
+        l.clearAnimation();
+        l.startAnimation(anim);
 
+        anim = AnimationUtils.loadAnimation(this, R.anim.translate);
+        anim.reset();
+        LinearLayout iv = findViewById(R.id.layout);
+        iv.clearAnimation();
+        iv.startAnimation(anim);
+    }
 
 }
