@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import Flask, request,jsonify
+from flask import Flask, request,jsonify, url_for
 from flask_socketio import SocketIO,emit,send, join_room
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -10,6 +10,8 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 import os
 import uuid
 from flask_cors import CORS
+from werkzeug.utils import secure_filename
+import traceback
 
 load_dotenv()
 
@@ -32,6 +34,12 @@ CORS(app,resources={r"/*":{"origins":"decoded_token*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
 
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+
+current_directory = os.path.dirname(os.path.abspath(__file__))
+app.config['UPLOAD_FOLDER'] = os.path.join(current_directory, 'static')
+
+# vaild file types
+fileTypes = ["image", "video", "gif"]
 
 dbConfig = {
   'user': dbUser,
@@ -59,8 +67,8 @@ insert_new_user = (
 "INSERT INTO users (id, username, password)"
 "VALUES (%s, %s, %s)")
 insert_new_message = (
-"INSERT INTO messages (id, sender_id, sender_username, receiver_user_id, receiver_group_id, content)"
-"VALUES (%s, %s, %s, %s, %s, %s)")
+"INSERT INTO messages (id, sender_id, sender_username, receiver_user_id, receiver_group_id, content, content_type)"
+"VALUES (%s, %s, %s, %s, %s, %s, %s)")
 
 select_user_by_username = "SELECT * from users WHERE username=%s"
 select_user_by_id = "SELECT * from users WHERE id=%s"
@@ -91,6 +99,7 @@ def connected():
         print("client has connected with socket id:", request.sid)
         userIdToSid[userId] = request.sid
         sidToUserId[request.sid] = userId
+        return userId
     except:
         return False
 
@@ -98,7 +107,17 @@ def connected():
 def handle_new_message(data):
     userSid = request.sid
     recipient_id = data.get('recipient_id')
-    msg = data.get("message")
+    message_type = data.get('content_type')
+    message_content = data.get("content")
+
+    # Handle different types of messages
+    if message_type == 'text':
+        content = message_content
+    elif message_type in fileTypes:
+        # Handle file uploads
+        file = request.files['file']
+        file_path = save_file(file)
+        content = file_path
 
     recipientSid = userIdToSid[recipient_id]
     senderId = sidToUserId[userSid]
@@ -116,7 +135,7 @@ def handle_new_message(data):
             messageId = getUniqueId()
 
             # Storing the message
-            dbCur.execute(insert_new_message, (messageId, senderId, senderUsername, recipient_id, None, msg))
+            dbCur.execute(insert_new_message, (messageId, senderId, senderUsername, recipient_id, None, content, message_type))
             dbCnx.commit()
 
             # retreiving a stored
@@ -130,12 +149,14 @@ def handle_new_message(data):
 
             roomName = recipientSid
             join_room(roomName)
-            print(f"Sending message: '{msg}' to room: '{roomName}'")
-            emit("new_message", {"content":newMessage["content"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=recipientSid)
-        except:
+            print(f"Sending message: '{messageId}' to room: '{roomName}'")
+
+            emit("new_message", {"content":newMessage["content"], "content_type": newMessage["content_type"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=recipientSid)
+        except Exception:
+            traceback.print_exc()
             return False; 
     else:
-        print(f"Broadcasting message: {msg}")
+        print(f"Broadcasting message: {messageId}")
         # # If recipientSid is not provided, broadcast the message to all connected clients
         # emit("data", {'message': msg, 'sender': userSid,  'id': userSid, 'timestamp': timestamp}, broadcast=True)
 
@@ -143,10 +164,10 @@ def handle_new_message(data):
 def handle_edit_message(data):
     userSid = request.sid
     message_id = data.get('message_id')
-    msg = data.get("message")
+    content = data.get("content")
 
     try:
-        dbCur.execute(update_message_by_id, (msg, message_id,))
+        dbCur.execute(update_message_by_id, (content, message_id,))
         dbCnx.commit()
 
         dbCur.execute(select_message_by_id, (message_id,))
@@ -261,7 +282,34 @@ def chat_history():
             return "Username already taken.", 400
         else:
             return f"Unexpected {ex=}, {type(ex)=}", 400
+        
+@app.route("/upload_file", methods=['POST'])
+# @jwt_required()
+def upload_file():
+    files = request.files
+    file_type = request.form.get("file_type")
+    if 'file' not in files:
+        return jsonify({"error": "No files"}), 400
+    if not file_type:
+        return jsonify({"error": "No file type specified"}), 400
+    if file_type not in fileTypes:
+        return jsonify({"error": "Invalid file type"}), 400
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    
+    if file:
+        return save_file(file, file_type)
 
+# It saves uploaded files into the server's filesystem
+def save_file(file, type):
+    orignal_filename = secure_filename(file.filename)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_extension = os.path.splitext(orignal_filename)[1]
+    unique_filename = f"{timestamp}_{uuid.uuid4().hex}{file_extension}" # constructing a unique file name
+    file.save(os.path.join(f"{app.config['UPLOAD_FOLDER']}/{type}", unique_filename))
+    return url_for('static', filename=f"{type}/{unique_filename}")
 
 if __name__ == "__main__":
     socketio.run(app, debug=False)

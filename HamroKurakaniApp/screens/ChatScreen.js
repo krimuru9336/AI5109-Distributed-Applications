@@ -67,7 +67,7 @@ function App({ route }) {
     const sendMessage = useCallback(() => {
         socket.emit("new_message", {
             recipient_id: recipientId,
-            message: newMessage
+            content: newMessage
         })
         setNewMessage("")
     }, [socket, newMessage, recipientId])
@@ -75,7 +75,7 @@ function App({ route }) {
     const editMessage = useCallback(() => {
         socket.emit("edit", {
             message_id: editMessageId,
-            message: newMessage
+            content: newMessage
         })
         setNewMessage("")
     }, [socket, newMessage, editMessageId])
