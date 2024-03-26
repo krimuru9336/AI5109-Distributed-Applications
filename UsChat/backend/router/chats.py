@@ -5,30 +5,16 @@ import databases
 import databases.core
 from sqlalchemy.sql import func
 import json
+
+
+from pydantic import BaseModel
+
+class MessageEdit(BaseModel):
+    new_text: str
+
 router = APIRouter()
 
-# ... (existing code)
 
-# @router.get("/get-all-chats/{user_id}")
-# async def get_all_chats(user_id: int, db: databases.Database = Depends(get_db)):
-#     try:
-#         # Join chat_room_members, chat_rooms, messages, and users tables to get all chats with user details
-#         query = (
-#             select(chat_room_members, chat_rooms, messages, users.c.username)
-#             .join(chat_rooms, chat_room_members.c.chat_room_id == chat_rooms.c.chat_room_id)
-#             .join(messages, chat_rooms.c.chat_room_id == messages.c.chat_room_id)
-#             .join(users, messages.c.receiver_id == users.c.user_id)  
-#             .where(chat_room_members.c.user_id == user_id)
-#             .order_by(messages.c.created_at.desc())
-#         )
-
-#         result = await db.fetch_all(query)
-#         return result
-#     except databases.DatabaseError as e:
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-#             detail=f"Error Getting Chats: {str(e)}"
-#         )
     
 
 @router.get("/get-all-chats/{user_id}")
@@ -77,7 +63,7 @@ async def get_messages(chat_room_id: int, db: databases.Database = Depends(get_d
             .join(chat_room_members, messages.c.chat_room_id == chat_room_members.c.chat_room_id)
             .join(users, messages.c.sender_id == users.c.user_id)
             .where(chat_room_members.c.chat_room_id == chat_room_id)
-            .order_by(messages.c.created_at)
+            .order_by(messages.c.created_at.desc())
         )
 
         result = await db.fetch_all(query)
@@ -107,3 +93,50 @@ async def get_messages(chat_room_id: int, db: databases.Database = Depends(get_d
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error Getting Messages: {str(e)}"
         )
+
+
+# Edit message
+@router.put("/edit-message/{message_id}")
+async def edit_message(message_id: str, message_edit: MessageEdit, db: databases.Database = Depends(get_db)):
+    try:
+        # Perform the update query using db.execute
+        query = messages.update().where(messages.c.message_id == message_id).values(message_text=message_edit.new_text)
+        await db.execute(query)
+        # Return a success message
+        return {"status": "Message edited successfully"}
+    except Exception as e:
+        # Handle exceptions, log the error, and return an error response
+        return {"status": "Error", "error": str(e)}
+
+# Delete message
+@router.delete("/delete-message/{message_id}")
+async def delete_message(message_id: str, db: databases.Database = Depends(get_db)):
+    try:
+        # Get the chat_room_id associated with the current message_id
+        chat_room_id_query = select([messages.c.chat_room_id]).where(messages.c.message_id == message_id)
+        chat_room_id = await db.fetch_val(chat_room_id_query)
+
+        # Get the last_message_id of the chat_room (excluding the current message_id)
+        last_message_query = (
+            select([messages.c.message_id])
+            .where(messages.c.chat_room_id == chat_room_id)
+            .where(messages.c.message_id != message_id)
+            .order_by(messages.c.created_at.desc())
+            .limit(1)
+        )
+        last_message_id = await db.fetch_val(last_message_query)
+
+        # Update the corresponding chat_rooms row with the new last_message_id
+        update_query = chat_rooms.update().values(last_message_id=last_message_id).where(chat_rooms.c.chat_room_id == chat_room_id)
+        await db.execute(update_query)
+
+        # Now, delete the message
+        delete_query = messages.delete().where(messages.c.message_id == message_id)
+        await db.execute(delete_query)
+
+        # Return a success message
+        return {"status": "Message deleted successfully"}
+
+    except Exception as e:
+        # Handle exceptions, log the error, and return an error response
+        return {"status": "Error", "error": str(e)}

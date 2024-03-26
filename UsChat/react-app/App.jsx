@@ -14,7 +14,7 @@ import SearchScreen from './src/screens/Search';
 import useGlobalStore from './src/core/global';
 import ChatScreen from './src/screens/Chat';
 import ChatListScreen from './src/screens/ChatListScreen';
-
+import {PaperProvider} from 'react-native-paper';
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -22,28 +22,30 @@ function App() {
   // const [authenticated] = useState(false);
   const authenticated = useGlobalStore(state => state.authenticated);
   return (
-    <NavigationContainer>
-      <StatusBar barStyle={'dark-content'}></StatusBar>
-      <Stack.Navigator>
-        {!initialized ? (
-          <>
-            <Stack.Screen name="Splash" component={SplashScreen} />
-          </>
-        ) : !authenticated ? (
-          <>
-            <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="Home" component={ChatListScreen} />
-            <Stack.Screen name="Search" component={SearchScreen} />
-            <Stack.Screen name="Messages" component={MessagesScreen} />
-            <Stack.Screen name="Chat" component={ChatScreen} />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
+        <StatusBar barStyle={'dark-content'}></StatusBar>
+        <Stack.Navigator>
+          {!initialized ? (
+            <>
+              <Stack.Screen name="Splash" component={SplashScreen} />
+            </>
+          ) : !authenticated ? (
+            <>
+              <Stack.Screen name="SignIn" component={SignInScreen} />
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Home" component={ChatListScreen} />
+              <Stack.Screen name="Search" component={SearchScreen} />
+              <Stack.Screen name="Messages" component={MessagesScreen} />
+              <Stack.Screen name="Chat" component={ChatScreen} />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 
