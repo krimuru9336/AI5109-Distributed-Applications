@@ -17,6 +17,12 @@
         android:id="@+id/btnAddMe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Me" />
+        android:text="ADD ME" />
+
+    <Button
+        android:id="@+id/btnShowGroupUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SHOW USERS" />
 
 </LinearLayout>

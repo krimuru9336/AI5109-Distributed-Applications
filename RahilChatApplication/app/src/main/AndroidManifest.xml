@@ -9,6 +9,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RahilChatApplication">
         <activity
+            android:name=".GroupUsers"
+            android:exported="false" />
+        <activity
             android:name=".GroupList"
             android:exported="false" />
         <activity

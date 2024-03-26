@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class GroupAdapter(
     private val groupList: List<String>,
-    private val onAddMeClick: (String) -> Unit
+    private val onAddMeClick: (String) -> Unit,
+    private val showGroupUsers: (String) -> Unit
 ) : RecyclerView.Adapter<GroupAdapter.GroupViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
@@ -22,6 +23,7 @@ class GroupAdapter(
         val groupName = groupList[position]
         holder.bind(groupName)
         holder.btnAddMe.setOnClickListener { onAddMeClick(groupName) }
+        holder.btnShowGroupUsers.setOnClickListener { showGroupUsers(groupName) }
     }
 
     override fun getItemCount(): Int {
@@ -31,7 +33,7 @@ class GroupAdapter(
     inner class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val txtGroupName: TextView = itemView.findViewById(R.id.txtGroupName)
         val btnAddMe: Button = itemView.findViewById(R.id.btnAddMe)
-
+        val btnShowGroupUsers: Button = itemView.findViewById(R.id.btnShowGroupUsers)
         fun bind(groupName: String) {
             txtGroupName.text = groupName
         }

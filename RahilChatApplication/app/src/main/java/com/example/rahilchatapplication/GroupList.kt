@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,9 +26,12 @@ class GroupList : AppCompatActivity() {
         supportActionBar?.show()
         recyclerViewGroups = findViewById(R.id.recyclerViewGroups)
         mDbRef = FirebaseDatabase.getInstance().getReference("groups")
-        groupAdapter = GroupAdapter(groupList) { groupName ->
-            onAddMeClick(groupName)
-        }
+        groupAdapter = GroupAdapter(
+            groupList,
+            { groupName -> onAddMeClick(groupName) },
+            { groupName -> showGroupUsers(groupName) }
+        )
+
         mAuth = FirebaseAuth.getInstance()
 
         recyclerViewGroups.apply {
@@ -66,34 +68,68 @@ class GroupList : AppCompatActivity() {
         })
     }
 
+    private fun showGroupUsers(groupName: String) {
+        val intent = Intent(this, GroupUsers::class.java)
+        intent.putExtra("groupName", groupName)
+        startActivity(intent)
+    }
+
     private fun onAddMeClick(groupName: String) {
         val currentUser = mAuth.currentUser
         currentUser?.let { user ->
-            val groupRef = mDbRef.child(groupName).child("members")
+            val userEmail = user.email
+            if (userEmail != null) {
+                val usersRef = FirebaseDatabase.getInstance().getReference("user")
+                val userRef = usersRef.child(user.uid)
 
-            // Check if the current user ID is already in the group's members
-            groupRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.hasChild(user.uid)) {
-                        showToast("You are already a member of this group.")
-                    } else {
-                        // Add the user ID to the group's members
-                        groupRef.child(user.uid).setValue(true)
-                            .addOnSuccessListener {
-                                showToast("Added to $groupName group successfully.")
-                            }
-                            .addOnFailureListener { exception ->
-                                showToast("Failed to add to $groupName group: ${exception.message}")
-                            }
+                userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val userName = snapshot.child("name").getValue(String::class.java)
+                        if (userName != null) {
+                            val groupRef = mDbRef.child(groupName).child("members")
+
+                            // Check if the current user ID is already in the group's members
+                            groupRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    if (snapshot.hasChild(user.uid)) {
+                                        showToast("You are already a member of this group.")
+                                    } else {
+                                        // Add the user ID, name, and email to the group's members
+                                        val userData = HashMap<String, Any>()
+                                        userData["id"] = user.uid
+                                        userData["name"] = userName
+                                        userData["email"] = userEmail
+
+                                        groupRef.child(user.uid).setValue(userData)
+                                            .addOnSuccessListener {
+                                                showToast("Added to $groupName group successfully.")
+                                            }
+                                            .addOnFailureListener { exception ->
+                                                showToast("Failed to add to $groupName group: ${exception.message}")
+                                            }
+                                    }
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    // Handle onCancelled event
+                                }
+                            })
+                        } else {
+                            showToast("User name not found.")
+                        }
                     }
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    // Handle onCancelled event
-                }
-            })
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle onCancelled event
+                    }
+                })
+            } else {
+                showToast("User email not found.")
+            }
         }
     }
+
+
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
