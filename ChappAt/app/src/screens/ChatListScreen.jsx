@@ -1,9 +1,21 @@
 // ChatListScreen.js
-import React, {useEffect, useState, useLayoutEffect} from 'react';
+import React, {useEffect, useState, useLayoutEffect, useRef} from 'react';
 import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import useGlobalStore from '../core/global';
 import {getAllChats} from '../core/api';
+
+function useDidUpdate(callback, deps) {
+  const hasMount = useRef(false);
+
+  useEffect(() => {
+    if (hasMount.current) {
+      callback();
+    } else {
+      hasMount.current = true;
+    }
+  }, deps);
+}
 
 const ChatListScreen = ({navigation}) => {
   const [chats, setChats] = useState([]);
@@ -25,13 +37,17 @@ const ChatListScreen = ({navigation}) => {
   }, []);
 
   const navigateToChat = chat => {
-    console.log(navigation);
     // Navigate to 'Chat' screen, pass chat details as route params
     navigation.navigate('Chat', {chat});
   };
   useLayoutEffect(() => {
-    console.log(navigation);
+    // console.log(navigation);
+    console.log('Here');
   });
+
+  useDidUpdate(() => {
+    console.log('Did Updated');
+  }, [chats]);
 
   return (
     <View style={styles.container}>
