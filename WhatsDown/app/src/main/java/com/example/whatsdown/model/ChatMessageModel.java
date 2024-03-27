@@ -12,16 +12,17 @@ public class ChatMessageModel {
     private String chatroomID;
     private Timestamp timestamp;
 
+    private String mediaType = "gif";
+
     public ChatMessageModel() {
     }
 
-
-
-    public ChatMessageModel(String message, String senderId, Timestamp timestamp, String chatroomId) {
+    public ChatMessageModel(String message, String senderId, Timestamp timestamp, String chatroomId, String mediaType) {
         this.message = message;
         this.senderId = senderId;
         this.timestamp = timestamp;
         this.chatroomID = chatroomId;
+        this.mediaType = mediaType;
     }
 
     public String getChatroomID() {
@@ -46,6 +47,14 @@ public class ChatMessageModel {
 
     public void setSenderId(String senderId) {
         this.senderId = senderId;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
 
     public Timestamp getTimestamp() {

@@ -18,13 +18,27 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:id="@+id/left_chat_textview"/>
+            android:id="@+id/left_chat_textview"
+            android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/left_chat_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/left_chat_textview"
+            android:visibility="gone" />
+        <VideoView
+            android:id="@+id/left_chat_videoview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/left_chat_textview"
+            android:visibility="gone" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="8dp"
             android:id="@+id/left_chat_timestamp"/>
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -41,13 +55,27 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:id="@+id/right_chat_textview"/>
+            android:id="@+id/right_chat_textview"
+            android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/right_chat_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/right_chat_textview"
+            android:visibility="gone" />
+        <VideoView
+            android:id="@+id/right_chat_videoview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/right_chat_textview"
+            android:visibility="gone" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="8dp"
-            android:id="@+id/right_chat_timestamp"/>
+            android:id="@+id/right_chat_timestamp"
+            />
     </LinearLayout>
 
 </RelativeLayout>

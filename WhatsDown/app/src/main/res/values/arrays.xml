@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="options_array">
+        <item>Edit Message</item>
+        <item>Delete Message</item>
+    </string-array>
+</resources>

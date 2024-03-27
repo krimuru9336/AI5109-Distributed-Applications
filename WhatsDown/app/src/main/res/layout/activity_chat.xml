@@ -49,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
+        android:layout_alignParentStart="true"
         android:layout_above="@id/bottom_layout"
         android:id="@+id/chat_recycler_view"/>
 
@@ -59,33 +60,47 @@
         android:padding="8dp"
         android:id="@+id/bottom_layout">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/message_send_btn"
+
+            android:layout_width="28dp"
+            android:layout_height="48dp"
+
             android:layout_centerInParent="true"
+            android:layout_marginStart="10dp"
+            android:layout_toStartOf="@id/chat_message_input"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/icon_send"
+            app:tint="@color/my_primary" />
+
+        <EditText
+            android:id="@+id/chat_message_input"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_toLeftOf="@id/message_send_btn"
+            android:layout_toLeftOf="@id/upload_media_btn"
             android:background="@drawable/edit_text_rounded_corner"
             android:elevation="4dp"
             android:hint="Write message here"
-            android:padding="10dp"
-            android:id="@+id/chat_message_input"/>
+            android:padding="10dp" />
 
         <ImageButton
-            android:layout_width="48dp"
+            android:id="@+id/upload_media_btn"
+            android:layout_width="28dp"
             android:layout_height="48dp"
-            android:src="@drawable/icon_send"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/my_primary"
-            android:id="@+id/message_send_btn"
-            android:padding="8dp"
             android:layout_marginStart="10dp"
-            />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/icon_image"
+            app:tint="@color/my_primary" />
+
+
 
     </RelativeLayout>
 
