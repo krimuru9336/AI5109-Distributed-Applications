@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import RegisterScreen from './components/RegisterScreen';
 import UsersScreen from './components/UserScreen';
 import PersonalChatScreen from './components/PersonalChat';
+import GroupScreen from './components/GroupScreen';
 import { View,Text } from 'react-native';
 
 
@@ -13,7 +14,7 @@ const Stack = createStackNavigator();
 const CustomHeaderTitle = () => (
   <View style={{alignItems:'center'}}>
     <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Hauva vali</Text>
-    <Text style={{ fontSize: 14, fontWeight: 'normal' }}>Matriculation Number:1493577</Text>
+    <Text style={{ fontSize: 14, fontWeight: 'normal', marginLeft:10 }}>Matriculation Number:1493577</Text>
   </View>
 );
 
@@ -31,6 +32,7 @@ const App = () => {
         <Stack.Screen name="Register" component={RegisterScreen}/>
         <Stack.Screen name="Users" component={UsersScreen}  />
         <Stack.Screen name="PersonalChat" component={PersonalChatScreen}  />
+        <Stack.Screen name="Groups" component={GroupScreen} />
        </Stack.Navigator>
         
     </NavigationContainer>

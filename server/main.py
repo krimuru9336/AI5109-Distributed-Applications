@@ -2,12 +2,15 @@ from typing import List, Optional, Dict
 import uvicorn
 from fastapi import  FastAPI, Depends, HTTPException, status, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, File, UploadFile, Form
 from pydantic import BaseModel
 import mysql.connector
 from mysql.connector import Error 
 import json
+import os
 from datetime import datetime
 from typing import Any
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -22,7 +25,7 @@ app.add_middleware(
 connection = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='Hauva@123',
+        password='hath2153',
         database='chatapp'
     )
 
@@ -30,6 +33,11 @@ class User(BaseModel):
     id: Optional[int] = None
     username:str
     password:str
+class Group(BaseModel):
+    id: Optional[int] = None
+    name:str
+    user_ids: str
+
 
 class UserID(BaseModel):
     id:int
@@ -115,33 +123,54 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int):
             data = await websocket.receive_text()
             data = json.loads(data)
             receiver_id = data.get('receiver_id')
+            group_id = data.get('group_id')
+            sender_id = int(user_id)                
             if(data.get('type') == 'send'):
-                sender_id = int(user_id)                
                 timestamp = datetime.utcnow()
 
                 # Save the message to the database
                 cursor = connection.cursor()
                 query = """
-                INSERT INTO messages (text,receiver_id,user_id,timestamp)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO messages (text,receiver_id,user_id,timestamp,group_id)
+                VALUES (%s, %s, %s, %s, %s)
                 """
-                values = (json.dumps(data), receiver_id, sender_id, timestamp)
+                values = (json.dumps(data), None if group_id else receiver_id, sender_id, timestamp,group_id)
                 cursor.execute(query, values)
                 connection.commit()
                 cursor.close()
 
                 # Broadcast the message to the reciever
-                if receiver_id:
-                    receiver_socket = connections.get(receiver_id)
-                    if receiver_socket:
-                        await receiver_socket.send_json(data)
+                if group_id:
+                    if len(receiver_id) != 0:
+                        for id in receiver_id:
+                            if int(id) != sender_id:
+                                receiver_socket = connections.get(int(id))
+                                if receiver_socket:
+                                    await receiver_socket.send_json(data)
+                else:
+                    if receiver_id:
+                        receiver_socket = connections.get(receiver_id)
+                        if receiver_socket:
+                            await receiver_socket.send_json(data)
             elif(data.get('type') == 'refresh'):
-                if receiver_id:
-                    receiver_socket = connections.get(receiver_id)
-                    if receiver_socket:
-                        await receiver_socket.send_json({
+                print(group_id)
+                if group_id:
+                    if len(receiver_id) != 0:
+                        for id in receiver_id:
+                            if int(id) != sender_id:
+                                receiver_socket = connections.get(int(id))
+                                if receiver_socket:
+                                    await receiver_socket.send_json({
+                                            'type':'refresh'
+                                        })
+                else:
+                    if receiver_id:
+                        receiver_socket = connections.get(receiver_id)
+                        if receiver_socket:
+                            await receiver_socket.send_json({
                             'type':'refresh'
                         })
+                
 
             
     except WebSocketDisconnect:
@@ -184,8 +213,30 @@ async def get_chat_history(sender_id ,receiver_id):
     try:
         # Fetch  old chats between two users
         cursor = connection.cursor(dictionary=True)
-        query ="SELECT * from messages where (user_id = %s and receiver_id = %s) or (user_id= %s and receiver_id = %s) order by timestamp desc"
+        query ="SELECT * from messages where (user_id = %s and receiver_id = %s) or (user_id= %s and receiver_id = %s) AND group_id = NULL order by timestamp desc"
         cursor.execute(query,[sender_id,receiver_id,receiver_id,sender_id])
+        messages = cursor.fetchall()
+        return messages
+
+    except Error as e:
+        print(f"Error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+    finally:
+        cursor.close()
+
+@app.get("/get-group-history/{group_id}")
+async def get_group_history(group_id):
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        # Fetch  old chats in a group
+        cursor = connection.cursor(dictionary=True)
+        query ="SELECT * from messages where group_id = %s order by timestamp desc"
+        cursor.execute(query,[group_id])
         messages = cursor.fetchall()
         return messages
 
@@ -242,6 +293,67 @@ async def edit_message(data:EditMessage):
 
     finally:
         cursor.close()
+
+@app.post("/upload/")
+def upload_image(file: bytes = File(...), name: str = Form(), type: str = Form()):
+    app.mount("/media", StaticFiles(directory="media"), name="media")
+    file_path = os.path.join('media', name)
+   
+    try:
+        
+        with open(file_path, "wb") as f:
+            f.write(file)
+        return {"filename": name}
+
+    except Error as e:
+        print(f"Error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Image upload to server failed : Internal Server Error",
+        )
+#Create New Group
+@app.post("/create-group/")
+async def create_group(group: Group):
+    print(group.name,group.user_ids)
+    cursor = connection.cursor()
+    try:
+        # Insert the new group
+        cursor.execute("INSERT INTO `groups` (name,user_ids) VALUES (%s, %s)", (group.name, group.user_ids))
+        group.id = cursor.lastrowid
+        connection.commit()
+
+    except Error as e:
+        print(f"Error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+    finally:
+        cursor.close()
+    return group
+
+#Read goups
+
+@app.get("/get-groups/")
+async def get_groups():
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        # Fetch the list of registered users from the database
+        cursor.execute("SELECT id,name,user_ids FROM `groups`")
+        groups = cursor.fetchall()
+        return groups
+
+    except Error as e:
+        print(f"Error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+    finally:
+        cursor.close()
+
 
 if __name__ == "__main__":
     uvicorn.run('main:app',host='0.0.0.0', port=8001, reload=True)

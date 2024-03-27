@@ -36,9 +36,8 @@ const UsersScreen = () => {
 
   const navigateToPersonalChat = async (receiver_id) => {
     try {
-
       if (curUser?.current?.id) {
-        navigation.navigate('PersonalChat', { user_id: curUser?.current?.id, receiver_id });
+        navigation.navigate('PersonalChat', { user_id: curUser?.current?.id, receiver_id, isGroup: false,username: curUser?.current?.username});
       } else {
         console.warn('User_id not found in AsyncStorage');
       }
@@ -54,6 +53,14 @@ const UsersScreen = () => {
       console.error('Error logging out:', error);
     }
   };
+  const navigateToGroupScreen = async () =>{
+    try {
+        navigation.navigate('Groups');
+    }catch(error) {
+      console.error('Error navigating to Group Chats:', error);
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -67,6 +74,7 @@ const UsersScreen = () => {
         </View>
       )}
     />
+    <Button onPress= {navigateToGroupScreen}>Group Chat</Button>
     <Button onPress={fetchRegisteredUsers}>Refresh Users</Button>
     <Button onPress={handleLogout}>Logout</Button>
   </View>
