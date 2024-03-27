@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".UserListActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:onClick="logOut"
+            android:visibility="visible"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:src="@drawable/baseline_logout_24"
+            app:tint="@color/black" />
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_gravity="center"
+            android:layout_height="20pt"
+            android:layout_margin="1dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Name"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:id="@+id/name"/>
+
+
+        </LinearLayout>
+
+
+
+        <ImageView
+            android:visibility="visible"
+            android:src="@drawable/baseline_add_circle_outline_24"
+            android:id="@+id/add_btn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            />
+
+
+    </LinearLayout>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
+</LinearLayout>

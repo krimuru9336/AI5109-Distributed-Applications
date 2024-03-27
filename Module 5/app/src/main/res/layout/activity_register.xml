@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:id="@+id/root_layout"
+    tools:context=".RegisterActivity">
+
+    <LinearLayout
+        android:id="@+id/uper"
+        android:orientation="vertical"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Easy Chat"
+            android:textSize="36sp"
+            android:textAlignment="center"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <!--<TextView-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:text="PARTNER"-->
+        <!--android:textSize="16sp"-->
+        <!--android:textAlignment="center"-->
+        <!--android:textColor="#000"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_marginBottom="50pt"
+        app:srcCompat="@drawable/main_icon"
+        android:layout_below="@+id/uper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_forgot_password"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textAlignment="center"
+        android:text="FORGOT PASSWORD? JUST TAP HERE !"
+        android:textSize="12sp"
+        android:textColor="#B4000000"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_above="@+id/txt_forgot_password"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:background="@drawable/btn_sign_in_back"
+            android:id="@+id/btnSignIn"
+            android:textColor="@android:color/white"
+            android:text="SIGN IN"
+            android:layout_marginRight="6dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <Button
+            android:background="@drawable/btn_sign_in_back"
+            android:id="@+id/btnRegister"
+            android:textColor="@android:color/white"
+            android:text="REGISTER"
+            android:layout_marginRight="6dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
