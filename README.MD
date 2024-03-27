@@ -23,6 +23,12 @@ To run Chatapp application on your machine, follow these steps:
 
     -CREATE TABLE `messages` (`id` int NOT NULL AUTO_INCREMENT,`text` varchar(255) NOT NULL,`receiver_id` int NOT NULL,`user_id` int NOT NULL, `timestamp` datetime DEFAULT NULL, PRIMARY KEY (`id`), UNIQUE KEY `id_UNIQUE` (`id`),KEY        `receiver_id` (`receiver_id`),KEY `user_id` (`user_id`),CONSTRAINT `receiver_id` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`),CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))
 
+CREATE TABLE `groups` (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(45) NOT NULL,
+    user_ids VARCHAR(255), 
+    PRIMARY KEY (id)
+);
 
     - Open the project in Visual Studio or any other IDE.
 
