@@ -103,8 +103,8 @@ def read_group(group_id: Optional[int] = None):
     cursor = conn.cursor()
     try:
         if group_id is not None:
-            # If user_id is provided, fetch a specific user
-            query = "SELECT * FROM groups WHERE id=%s"
+            # If group_id is provided, fetch a specific group
+            query = "SELECT * FROM `groups` WHERE id=%s"
             cursor.execute(query, (group_id,))
             group = cursor.fetchone()
             cursor.close()
@@ -113,7 +113,7 @@ def read_group(group_id: Optional[int] = None):
             print(group[0])
             return [{"id": group[0], "members": group[2], "name": group[1]}]
         else:
-            # If no user_id is provided, fetch all users
+            # If no group_id is provided, fetch all groups
             query_all = "SELECT * FROM `groups`"
             cursor.execute(query_all)
             groups = cursor.fetchall()
@@ -171,11 +171,11 @@ async def get_past_messages(sender_id: int = Query(...), reciever_id: int = Quer
     try:
         cursor = conn.cursor(dictionary=True)
         if isGroup:
-            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE receiver_id = %s AND isGroup = %s ORDER BY timestamp"
+            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE receiver_id = %s AND isGroup = %s ORDER BY id DESC"
             print(query)
             cursor.execute(query, (reciever_id, isGroup))
         else:
-            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE ((receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s)) AND isGroup = %s ORDER BY timestamp"
+            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE ((receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s)) AND isGroup = %s ORDER BY id DESC"
             cursor.execute(query, (sender_id, reciever_id,
                                    reciever_id, sender_id, isGroup))
         past_messages = cursor.fetchall()
@@ -199,6 +199,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
 
                 try:
                     data = json.loads(data)
+                    isGroup = data.get("isGroup")
                 except json.JSONDecodeError as e:
                     print(f"Error decoding JSON: {e}")
                     continue
@@ -218,12 +219,27 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
 
                     # Send deletion signal to the recipient
                     target_client_id = data.get("recieverId")
-                    target_websocket = clients.get(target_client_id)
-                    if target_websocket:
-                        await target_websocket.send_text(json.dumps({
-                            "messageType": "delete",
-                            "messageId": message_id,
-                        }))
+
+                    if isGroup:
+                        members = data.get('members')
+                        for member in members.split(','):
+                            member = int(member)
+                            if member != client_id:
+                                target_websocket = clients.get(member)
+                                if target_websocket:
+                                    await target_websocket.send_text(json.dumps({
+                                        "messageType": "delete",
+                                        "messageId": message_id,
+                                    }))
+
+                    else:
+                        if target_client_id:
+                            target_websocket = clients.get(target_client_id)
+                            if target_websocket:
+                                await target_websocket.send_text(json.dumps({
+                                    "messageType": "delete",
+                                    "messageId": message_id,
+                                }))
                 elif data.get("messageType") == "update":
                     # Handle update signal
                     try:
@@ -236,21 +252,34 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                             update_query, (updated_text, message_id))
                         conn.commit()
                         cursor.close()
-
-                        # Send update signal to the recipient
-                        target_client_id = data.get("recieverId")
-                        target_websocket = clients.get(target_client_id)
-                        if target_websocket:
-                            await target_websocket.send_text(json.dumps({
-                                "messageType": "update",
-                                "messageId": message_id,
-                            }))
                     except mysql.connector.Error as err:
                         raise HTTPException(
                             status_code=500, detail=f"Database error: {err}")
+
+                    target_client_id = data.get("recieverId")
+
+                    if isGroup:
+                        members = data.get('members')
+                        for member in members.split(','):
+                            member = int(member)
+                            if member != client_id:
+                                target_websocket = clients.get(member)
+                                if target_websocket:
+                                    await target_websocket.send_text(json.dumps({
+                                        "messageType": "update",
+                                        "messageId": message_id,
+                                    }))
+                    else:
+                        if target_client_id:
+                            target_websocket = clients.get(target_client_id)
+                            if target_websocket:
+                                await target_websocket.send_text(json.dumps({
+                                    "messageType": "update",
+                                    "messageId": message_id,
+                                }))
+
                 else:
 
-                    isGroup = data.get("isGroup")
                     target_client_id = data.get("recieverId")
 
                     try:
@@ -274,20 +303,12 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                                 target_websocket = clients.get(member)
                                 if target_websocket:
                                     await target_websocket.send_text(json.dumps(data))
-                                else:
-                                    await websocket.send_text(json.dumps({
-                                        'error': "Error: Client {target_client_id} not found"
-                                    }))
 
                     else:
                         if target_client_id:
                             target_websocket = clients.get(target_client_id)
                             if target_websocket:
                                 await target_websocket.send_text(json.dumps(data))
-                            else:
-                                await websocket.send_text(json.dumps({
-                                    'error': "Error: Client {target_client_id} not found"
-                                }))
                         else:
                             await websocket.send_text(json.dumps({
                                 'error': "Error: Client {target_client_id} not found"
@@ -297,10 +318,6 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                         client_websocket = clients.get(client_id)
                         if client_websocket:
                             await client_websocket.send_text(json.dumps(data))
-                        else:
-                            await websocket.send_text(json.dumps({
-                                'error': "Error: Client {client_id} not found"
-                            }))
                     else:
                         await websocket.send_text(json.dumps({
                             'error': "Error: Client {client_id} not found"
