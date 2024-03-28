@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Student details</h1>
+        <hr>
+        <h2>Save Student</h2>
+        
+        <!-- Modify the form action to point to the backend endpoint -->
+        <form id="addStudentForm">
+            <input type="text" id="name" name="name" placeholder="Name" class="form-control mb-4 col-4">
+
+            <input type="text" id="contact" name="contact" placeholder="Contact" class="form-control mb-4 col-4">
+
+            <button type="submit" class="btn btn-info col-2">Save Student</button>
+        </form>
+
+        <hr>
+
+        <a href="/">Back to List</a>
+    </div>
+
+    <script>
+        // Add event listener for form submission
+        document.getElementById('addStudentForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const name = document.getElementById('name').value;
+            const contact = document.getElementById('contact').value;
+
+            const student = {
+                name: name,
+                contact: contact
+            };
+
+            fetch('https://dabackend.azurewebsites.net/api/students', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(student) // Serialize form data to JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('New student added:', data);
+                // You may choose to redirect to the list page or display a success message
+            })
+            .catch(error => console.error('Error adding student:', error));
+        });
+    </script>
+</body>
+
+</html>

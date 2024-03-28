@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container my-2">
+        <h1>Student Information</h1>
+
+        <table border="1" class="table table-responsive-md">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody id="studentTableBody">
+                <!-- Student data will be displayed here -->
+            </tbody>
+        </table>
+
+        <!-- Change the button behavior to navigate to add_student.html -->
+        <a href="add_student.html" class="btn btn-primary btn-sm mb-3">Add Student</a>
+    </div>
+
+    <script>
+        // Fetch students data from backend and populate the table
+        fetch('https://dabackend.azurewebsites.net/api/students')
+            .then(response => response.json())
+            .then(data => {
+                const studentTableBody = document.getElementById('studentTableBody');
+                data.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${student.name}</td>
+                        <td>${student.contact}</td>
+                    `;
+                    studentTableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching students:', error));
+    </script>
+</body>
+
+</html>
