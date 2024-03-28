@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create Group"
+        android:background="@drawable/rounded_button_background"
         android:layout_marginTop="16dp"/>
 
     <Button
@@ -32,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="List Groups"
+        android:background="@drawable/rounded_button_background"
         android:layout_marginTop="16dp"/>
 
 </LinearLayout>
