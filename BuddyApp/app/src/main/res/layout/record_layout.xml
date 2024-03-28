@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="MissingDefaultResource"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:id="@+id/tv_record_status"
+        android:text="Status"
+        android:textAlignment="center"/>
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:background="@drawable/button_back"
+        android:textColor="@android:color/white"
+        android:textSize="23sp"
+        android:layout_margin="3dp"
+        android:id="@+id/btn_start_rc"/>
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        android:background="@drawable/button_back"
+        android:textColor="@android:color/white"
+        android:textSize="23sp"
+        android:layout_margin="3dp"
+        android:id="@+id/btn_stop_rc"/>
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="SEND FILE"
+        android:background="@drawable/button_back"
+        android:textColor="@android:color/white"
+        android:textSize="23sp"
+        android:layout_margin="3dp"
+        android:id="@+id/btn_send_rc"/>
+</LinearLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:id="@+id/related_f2">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:text="Related"
+            android:textColor="@color/red"
+            android:drawableStart="@drawable/baseline_bookmark_24"
+            android:drawablePadding="10dp"
+            android:padding="10dp"/>
+
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:id="@+id/your_question_f2">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:text="Your Questions"
+            android:textColor="@color/red"
+            android:drawableStart="@drawable/baseline_lock_reset_24"
+            android:drawablePadding="10dp"
+            android:padding="10dp"/>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

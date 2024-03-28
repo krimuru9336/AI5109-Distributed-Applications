@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@color/black"
+    tools:context=".ImageActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:id="@+id/tv_name_image"
+        android:textSize="20sp"
+        android:textColor="@color/white"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/iv_expand"
+        android:scaleType="centerCrop"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:id="@+id/btn_edit_iv"
+        android:background="@drawable/button_back"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Image"
+        android:layout_marginTop="10dp"
+        android:id="@+id/btn_delete_iv"
+        android:background="@drawable/button_back"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
+</LinearLayout>

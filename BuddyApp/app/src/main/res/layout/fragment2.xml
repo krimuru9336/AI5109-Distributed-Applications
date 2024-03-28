@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="15dp"
+            android:drawableStart="@drawable/baseline_keyboard_arrow_left_24"
+            android:drawableLeft="@drawable/baseline_keyboard_arrow_left_24"
+            android:drawablePadding="5dp"
+            android:paddingStart="5dp"
+            android:paddingLeft="20dp"
+            android:text="Questions"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="15dp"
+            android:background="@color/white"
+            app:cardCornerRadius="15dp"
+            app:cardPreventCornerOverlap="false">
+
+            <ImageView
+                android:id="@+id/iv_f2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/baseline_account_circle_24"
+                android:clickable="true"
+                android:scaleType="fitCenter" />
+        </androidx.cardview.widget.CardView>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        app:layout_constraintVertical_bias="1.0"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/red"
+        android:src="@drawable/baseline_add_circle_outline_24"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="1dp"
+        android:id="@+id/rv_f2"
+        android:paddingTop="60dp"
+        android:layout_margin="3dp"
+        tools:layout_editor_absoluteY="58dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

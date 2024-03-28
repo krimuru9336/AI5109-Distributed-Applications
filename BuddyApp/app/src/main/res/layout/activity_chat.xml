@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ChatActivity">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search"
+        android:layout_margin="5dp"
+        android:id="@+id/search_chuser"
+        android:background="@drawable/search_back"
+        android:drawableStart="@drawable/baseline_manage_search_24"
+        android:paddingStart="10dp"
+        android:drawablePadding="10dp"
+        android:textColor="@color/black"
+        android:padding="10dp"/>
+    <Button
+        android:id="@+id/grouproom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Group Room"
+        android:background="@android:color/holo_red_dark"
+        android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:layout_gravity="center"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:id="@+id/rv_chat"/>
+
+
+</LinearLayout>

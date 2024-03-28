@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.BuddyApp"
+        tools:targetApi="31">
+        <activity
+            android:name=".AddUser"
+            android:exported="false" />
+        <activity
+            android:name=".GroupName"
+            android:exported="false" />
+        <activity
+            android:name=".SentGif"
+            android:exported="false" />
+        <activity
+            android:name=".SentVideo"
+            android:exported="false" />
+        <activity
+            android:name=".UpdatePhoto"
+            android:exported="false" />
+        <activity
+            android:name=".SentImage"
+            android:exported="false" />
+        <activity
+            android:name=".MessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IndividualPost"
+            android:exported="false"
+            android:label="@string/title_activity_individual_post"
+            android:theme="@style/Theme.BuddyApp.NoActionBar" />
+        <activity
+            android:name=".PostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AnswerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReplyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".YourQuestion"
+            android:exported="false" />
+        <activity
+            android:name=".Related"
+            android:exported="false" />
+        <activity
+            android:name=".AskActivity"
+            android:exported="false"
+            android:label="@string/title_activity_ask"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
+        <activity
+            android:name=".ImageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity android:name=".PrivacyActivity" />
+        <activity
+            android:name=".UpdateProfile"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".CreateProfile"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".groupchat.GroupMessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".groupchat.CreateGroup"
+            android:exported="false" />
+        <activity
+            android:name=".groupchat.GroupRoom"
+            android:exported="false" />
+
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

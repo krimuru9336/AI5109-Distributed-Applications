@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="4dp"
+    android:id="@+id/cv_logout">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="logout"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:drawableStart="@drawable/baseline_power_settings_new_24"
+        android:drawablePadding="10dp"
+        android:padding="5dp"/>
+</androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="4dp"
+        android:id="@+id/cv_delete">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:drawableStart="@drawable/baseline_delete_24"
+            android:drawablePadding="10dp"
+            android:padding="5dp"/>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="4dp"
+        android:id="@+id/cv_privacy">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Privacy"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:drawableStart="@drawable/baseline_lock_24"
+            android:drawablePadding="10dp"
+            android:padding="5dp"/>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".groupchat.CreateGroup">
+    <TextView
+        android:id="@+id/title_cr_grp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Group"
+        android:textSize="25dp"
+        android:textAlignment="center"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter group name"
+        android:layout_margin="5dp"
+        android:id="@+id/groupname_create"
+        android:background="@drawable/search_back"
+        android:paddingStart="10dp"
+        android:drawablePadding="10dp"
+        android:textColor="@color/black"
+        android:padding="10dp"/>
+    <Button
+        android:id="@+id/creategroup_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/red"
+        android:layout_gravity="center"
+        android:textSize="14sp"
+        android:text="Create Group"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:id="@+id/rv_users_for_group"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-127dp">
+
+
+    </ScrollView>
+
+
+
+</LinearLayout>

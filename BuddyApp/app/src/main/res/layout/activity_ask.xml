@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".AskActivity">
+    
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:textSize="20sp"
+        android:id="@+id/ask_et_questions"
+        android:background="@drawable/custom_input_question"
+        android:textStyle="bold"
+        android:layout_margin="20dp"
+        android:padding="10dp"
+        android:hint="Ask Anything"
+        android:textColorHint="@color/red"
+        android:textColor="@color/black"
+        android:paddingLeft="20dp"/>
+    
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_margin="20dp"
+        android:id="@+id/btn_submit"
+        android:background="@drawable/button_back"
+        android:layout_gravity="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+</LinearLayout>

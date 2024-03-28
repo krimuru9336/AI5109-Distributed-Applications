@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="10dp"
+    android:background="@android:color/white"
+    android:layout_margin="5dp">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/white"
+                app:cardCornerRadius="35dp"
+                app:cardPreventCornerOverlap="false">
+
+            <ImageView
+                android:id="@+id/iv_ch_item"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/baseline_account_circle_24"
+                android:clickable="true"
+                android:scaleType="fitCenter" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/red"
+                android:id="@+id/send_message_item_btn"
+                android:text="Send Message "
+                android:layout_gravity="right"
+                tools:ignore="HardcodedText,RtlHardcoded,SmallSp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/name_ch_item_tv"
+                android:paddingStart="5dp"
+                android:hint="Name"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@android:color/black"
+                android:paddingStart="5dp"
+                android:id="@+id/ch_itemprof_tv"
+                android:hint="Questions"/>
+            
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
