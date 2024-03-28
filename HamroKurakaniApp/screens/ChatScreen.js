@@ -7,6 +7,13 @@ import SocketContext from '../context/SocketContext';
 import { Input, InputField, Button, ButtonText } from '@gluestack-ui/themed';
 import AuthContext from '../context/AuthContext';
 import { API_URL } from "@env";
+import { launchImageLibrary } from 'react-native-image-picker';
+
+const FILE_TYPES = {
+    text: "text",
+    image: "image",
+    video: "video"
+}
 
 const modes = {
     NEW_MESSAGE: 'new message',
@@ -64,13 +71,14 @@ function App({ route }) {
         })
     }, [socket])
 
-    const sendMessage = useCallback(() => {
+    const sendMessage = useCallback((message, type) => {
         socket.emit("new_message", {
             recipient_id: recipientId,
-            content: newMessage
+            content: message,
+            message_type: type
         })
         setNewMessage("")
-    }, [socket, newMessage, recipientId])
+    }, [socket, recipientId])
 
     const editMessage = useCallback(() => {
         socket.emit("edit", {
@@ -85,6 +93,38 @@ function App({ route }) {
             message_id: messageId,
         })
     }, [socket])
+
+    const pickAndSendMediaFile = useCallback(async () => {
+        const file = await launchImageLibrary({
+            mediaType: 'image/video',
+        })
+
+        const fileType = file.assets[0].type.split("/")[0];
+
+        const asset = file.assets[0];
+        const fileObject = {
+            uri: asset.uri,
+            type: asset.type,
+            name: asset.fileName
+        }
+
+        const formData = new FormData();
+        formData.append("file", fileObject);
+        formData.append("file_type", fileType);
+
+        try {
+            const response = await axios.post(`${API_URL}/upload_file`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+            });
+            const imageUri = response.data;
+            sendMessage(imageUri, fileType)
+        } catch (err) {
+            console.log(err);
+        }
+    }, [])
 
     return (
         <View className="ChatScreen" style={{ height: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10 }}>
@@ -130,14 +170,26 @@ function App({ route }) {
                 </Input>
                 {
                     mode == modes.NEW_MESSAGE ?
-                        <Button
-                            onPress={sendMessage}
-                            size="md"
-                            variant="solid"
-                            action="primary"
-                        >
-                            <ButtonText>Send</ButtonText>
-                        </Button> :
+                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                            <Button
+                                onPress={() => sendMessage(newMessage, FILE_TYPES.text)}
+                                size="md"
+                                variant="solid"
+                                action="primary"
+                                style={{ flex: 1 }}
+                            >
+                                <ButtonText>Send</ButtonText>
+                            </Button>
+                            <Button
+                                onPress={pickAndSendMediaFile}
+                                size="md"
+                                variant="solid"
+                                action="secondary"
+                            >
+                                <ButtonText>+</ButtonText>
+                            </Button>
+                        </View>
+                        :
                         <View style={{ display: 'flex', flexDirection: "row" }}>
                             <Button
                                 onPress={editMessage}

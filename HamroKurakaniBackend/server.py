@@ -39,7 +39,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 app.config['UPLOAD_FOLDER'] = os.path.join(current_directory, 'static')
 
 # vaild file types
-fileTypes = ["image", "video", "gif"]
+fileTypes = ["image", "video"]
 
 dbConfig = {
   'user': dbUser,
@@ -107,22 +107,17 @@ def connected():
 def handle_new_message(data):
     userSid = request.sid
     recipient_id = data.get('recipient_id')
-    message_type = data.get('content_type')
-    message_content = data.get("content")
+    message_type = data.get('message_type')
+    content = data.get("content")
 
-    # Handle different types of messages
-    if message_type == 'text':
-        content = message_content
-    elif message_type in fileTypes:
-        # Handle file uploads
-        file = request.files['file']
-        file_path = save_file(file)
-        content = file_path
-
-    recipientSid = userIdToSid[recipient_id]
+    recipientConnected = recipient_id in userIdToSid
+    if(recipientConnected):
+        recipientSid = userIdToSid[recipient_id]
+    else:
+        recipientSid = None
     senderId = sidToUserId[userSid]
 
-    if recipientSid and senderId:
+    if senderId:
         try:
             dbCur.execute(select_user_by_id, (senderId,))
             senders = dbCur.fetchall()
@@ -147,11 +142,12 @@ def handle_new_message(data):
             messages = [dict(zip(columns, row)) for row in rows]
             newMessage = messages[0]
 
-            roomName = recipientSid
-            join_room(roomName)
-            print(f"Sending message: '{messageId}' to room: '{roomName}'")
+            if recipientConnected:
+                roomName = recipientSid
+                join_room(roomName)
+                print(f"Sending message: '{messageId}' to room: '{roomName}'")
 
-            emit("new_message", {"content":newMessage["content"], "content_type": newMessage["content_type"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=recipientSid)
+                emit("new_message", {"content":newMessage["content"], "content_type": newMessage["content_type"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=recipientSid)
         except Exception:
             traceback.print_exc()
             return False; 

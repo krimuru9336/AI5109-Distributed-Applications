@@ -11,12 +11,16 @@ export default function ChatListScreen({ navigation }) {
 
     useEffect(() => {
         (async () => {
-            const res = await axios.get(`${API_URL}/chats`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            setChats(res.data.chats)
+            try {
+                const res = await axios.get(`${API_URL}/chats`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+                setChats(res.data.chats)
+            } catch(err) {
+                console.log(err)
+            }
         })()
     }, [])
 
