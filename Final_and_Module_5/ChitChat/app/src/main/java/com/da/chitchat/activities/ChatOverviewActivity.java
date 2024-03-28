@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,12 +31,13 @@ import java.util.UUID;
 public class ChatOverviewActivity extends AppCompatActivity {
 
     private WebSocketManager webSocketManager;
-    private GroupAdapter groupAdapter;
+    private TextView userNameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+        userNameTextView = findViewById(R.id.ownNameTextView);
 
         AppContextSingleton.getInstance().initialize(getApplicationContext());
 
@@ -45,7 +47,7 @@ public class ChatOverviewActivity extends AppCompatActivity {
         UserAdapter userAdapter = new UserAdapter(userList);
 
         List<String> groups = new ArrayList<>();
-        groupAdapter = new GroupAdapter(groups);
+        GroupAdapter groupAdapter = new GroupAdapter(groups);
 
         RecyclerView recyclerViewGroups = findViewById(R.id.groupRecyclerView);
         recyclerViewGroups.setLayoutManager(new LinearLayoutManager(this));
@@ -59,6 +61,7 @@ public class ChatOverviewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String username = intent.getStringExtra("USERNAME");
         String uuid = intent.getStringExtra("USERID");
+        userNameTextView.setText("Hello " + username + "!");
 
         List<Message> messages = messageDB.getAllMessages();
         for (Message msg : messages) {

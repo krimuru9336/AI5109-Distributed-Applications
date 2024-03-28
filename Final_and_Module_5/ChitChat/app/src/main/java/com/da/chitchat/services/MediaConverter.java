@@ -124,6 +124,37 @@ public class MediaConverter {
         return "";
     }
 
+    public String convertVideoToBase64(Context ctx, Uri videoUri) {
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        try {
+            byteArrayOutputStream = new ByteArrayOutputStream();
+
+            try (InputStream inputStream = ctx.getContentResolver().openInputStream(videoUri)) {
+                if (inputStream != null) {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        byteArrayOutputStream.write(buffer, 0, bytesRead);
+                    }
+                } else {
+                    return "";
+                }
+            }
+            byte[] videoBytes = byteArrayOutputStream.toByteArray();
+            return Base64.encodeToString(videoBytes, Base64.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (byteArrayOutputStream != null)
+                    byteArrayOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
     public void showImage(Context ctx, Uri selectedImageUri, ImageView imageView) {
         // Check if the selected image is a GIF
         boolean isGif = isGif(ctx, selectedImageUri);
@@ -220,8 +251,6 @@ public class MediaConverter {
         File directory = ctx.getExternalFilesDir("Media");
         File file = new File(directory, "image_" + System.currentTimeMillis() + fileExtension);
 
-        Log.d("FilePath", "File path: " + file.getAbsolutePath());
-
         Uri fileUri = FileProvider.getUriForFile(ctx, ctx.getApplicationContext().getPackageName() + ".provider", file);
         ctx.grantUriPermission(ctx.getApplicationContext().getPackageName(), fileUri,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -239,7 +268,16 @@ public class MediaConverter {
             values.put(MediaStore.Images.Media.SIZE, imageData.length);
             values.put(MediaStore.Images.Media.IS_PENDING, 1);
 
-            Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            Uri contentUri;
+            if (mimeType.startsWith("image")) {
+                contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            } else if (mimeType.startsWith("video")) {
+                contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+            } else {
+                // Unsupported MIME type
+                return;
+            }
+
             Uri imageUri = ctx.getContentResolver().insert(contentUri, values);
 
             if (imageUri != null) {
@@ -258,7 +296,7 @@ public class MediaConverter {
             }
 
             if (messageListener != null) {
-                messageListener.onMediaReceived(target, id, imageUri, isGroup);
+                messageListener.onMediaReceived(target, id, imageUri, isGroup, mimeType.startsWith("video"));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -274,6 +312,12 @@ public class MediaConverter {
                 return ".png";
             case "image/gif":
                 return ".gif";
+            case "video/mp4":
+                return ".mp4";
+            case "video/mpeg":
+                return ".mpeg";
+            case "video/webm":
+                return ".webm";
             default:
                 return null; // Unsupported MIME type
         }

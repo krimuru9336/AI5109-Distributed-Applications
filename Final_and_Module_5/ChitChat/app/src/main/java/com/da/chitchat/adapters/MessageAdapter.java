@@ -138,10 +138,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
     }
 
-    public void addMedia(UUID id, Uri mediaUri) {
+    public void addMedia(UUID id, Uri mediaUri, boolean isVideo) {
         Message foundMessage = findMessageById(id);
         if (foundMessage != null) {
             foundMessage.setMediaUri(mediaUri);
+            foundMessage.setIsVideo(isVideo);
             notifyItemChanged(messageList.indexOf(foundMessage));
         }
     }

@@ -151,7 +151,8 @@ public class MessageActivity extends AppCompatActivity implements OnDataChangedL
         UUID id = messageAdapter.addMessage(msg, isGroup);
 
         messageDB.addMessage(msg, targetPartner);
-        webSocketManager.sendMedia(targetPartner, msg.getText(), mediaUri, id, mimeType, isGroup);
+        webSocketManager.sendMedia(targetPartner, msg.getText(), mediaUri, id, mimeType, isGroup,
+                msg.isVideo());
     }
 
     public void sendMessage(View view) {

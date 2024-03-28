@@ -15,6 +15,7 @@ public class MessageContract {
         public static final String COLUMN_NAME_TIMESTAMP_EDIT = "timestampEdit";
         public static final String COLUMN_NAME_DELETED = "deleted";
         public static final String COLUMN_NAME_CHAT_GROUP = "chatGroup";
-        public static final String COLUMN_NAME_IMAGE_URI = "imageUri";
+        public static final String COLUMN_NAME_MEDIA_URI = "mediaUri";
+        public static final String COLUMN_NAME_IS_VIDEO = "isVideo";
     }
 }

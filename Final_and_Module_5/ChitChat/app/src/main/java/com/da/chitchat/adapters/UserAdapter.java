@@ -64,7 +64,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void addUser(String username, boolean isOnline) {
         String payload = "online";
         if (!isOnline) payload = "offline";
-        Log.d("OnlineLog", "" + payload);
         if (userList.contains(username)) {
             notifyItemChanged(userList.indexOf(username), payload);
         } else {

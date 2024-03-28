@@ -106,8 +106,13 @@ public class WebSocketManager {
     }
 
     public void sendMedia(String targetUserId, String message, Uri mediaUri, UUID id, String mimeType,
-                          boolean isGroup) {
-        String base64Media = mc.convertBitmapToBase64(ctx, mediaUri);
+                          boolean isGroup, boolean isVideo) {
+        String base64Media;
+        if (isVideo) {
+            base64Media = mc.convertVideoToBase64(ctx, mediaUri);
+        } else {
+            base64Media = mc.convertBitmapToBase64(ctx, mediaUri);
+        }
         int chunkCount = 0;
         JSONObject jsonMessage, jsonStartAndEndMessage;
 

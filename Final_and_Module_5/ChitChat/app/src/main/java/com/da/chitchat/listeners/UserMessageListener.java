@@ -89,17 +89,17 @@ public class UserMessageListener implements MessageListener {
     }
 
     @Override
-    public void onMediaReceived(String target, UUID messageId, Uri mediaUri, boolean isGroup) {
+    public void onMediaReceived(String target, UUID messageId, Uri mediaUri, boolean isGroup, boolean isVideo) {
         runOnUiThread(() -> {
             try {
-                messageDB.updateImage(messageId, mediaUri);
+                messageDB.updateMedia(messageId, mediaUri, isVideo);
                 if (messageAdapter != null) {
-                    messageAdapter.addMedia(messageId, mediaUri);
+                    messageAdapter.addMedia(messageId, mediaUri, isVideo);
                 } else {
                     if (isGroup) {
-                        UserMessageStore.editMediaFromGroup(target, messageId, mediaUri);
+                        UserMessageStore.editMediaFromGroup(target, messageId, mediaUri, isVideo);
                     } else {
-                        UserMessageStore.editMediaFromUser(target, messageId, mediaUri);
+                        UserMessageStore.editMediaFromUser(target, messageId, mediaUri, isVideo);
                     }
                 }
             } catch (Exception e) {

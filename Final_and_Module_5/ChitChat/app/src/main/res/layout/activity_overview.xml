@@ -18,6 +18,14 @@
             android:layout_below="@id/banner_layout"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/ownNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:layout_marginTop="4dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,7 +37,7 @@
                     android:text="@string/group_overview"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="4dp"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -38,7 +46,7 @@
                     android:id="@+id/addGroupButton"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/ic_plus"
                     android:contentDescription="@string/add_group_description"
                     android:onClick="createGroupDialog"
@@ -51,8 +59,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="18dp"/>
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/connectionStatusTextView"
@@ -72,8 +80,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="18dp"/>
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"/>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -226,15 +226,6 @@ async function main() {
                                 },
                                 action: 'mediaChunk',
                             });
-                        } else {
-                            // TODO
-                            // addMessageToDatabase(senderUser, {
-                            //     partnerName: targetUserId,
-                            //     incoming: true,
-                            //     messageText,
-                            //     timestamp: Date.now(),
-                            //     id: messageId,
-                            // });
                         }
                     }
                 }

@@ -70,13 +70,14 @@ public final class UserMessageStore {
     }
 
     public static void editMedia(Map<String, List<Message>> messageMap, String key, UUID id,
-                                 Uri mediaUri) {
+                                 Uri mediaUri, boolean isVideo) {
         List<Message> messages = messageMap.get(key);
 
         if (messages != null) {
             for (Message message : messages) {
                 if (message.getID().equals(id)) {
                     message.setMediaUri(mediaUri);
+                    message.setIsVideo(isVideo);
                     break;
                 }
             }
@@ -124,12 +125,12 @@ public final class UserMessageStore {
         editMessage(groupMessageMap, groupName, id, newInput, editDate);
     }
 
-    public static void editMediaFromUser(String username, UUID id, Uri mediaUri) {
-        editMedia(userMessageMap, username, id, mediaUri);
+    public static void editMediaFromUser(String username, UUID id, Uri mediaUri, boolean isVideo) {
+        editMedia(userMessageMap, username, id, mediaUri, isVideo);
     }
 
-    public static void editMediaFromGroup(String groupName, UUID id, Uri mediaUri) {
-        editMedia(groupMessageMap, groupName, id, mediaUri);
+    public static void editMediaFromGroup(String groupName, UUID id, Uri mediaUri, boolean isVideo) {
+        editMedia(groupMessageMap, groupName, id, mediaUri, isVideo);
     }
 
     public static void clearMessagesFromUser(String username) {

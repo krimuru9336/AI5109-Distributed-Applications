@@ -48,8 +48,9 @@ public class MessageRepository {
             values.put(MessageContract.MessageEntry.COLUMN_NAME_CHAT_GROUP, message.getChatGroup());
         }
         if (message.getMediaUri() != null) {
-            values.put(MessageContract.MessageEntry.COLUMN_NAME_IMAGE_URI, message.getMediaUri().toString());
+            values.put(MessageContract.MessageEntry.COLUMN_NAME_MEDIA_URI, message.getMediaUri().toString());
         }
+        values.put(MessageContract.MessageEntry.COLUMN_NAME_IS_VIDEO, message.isVideo() ? 1 : 0);
 
         database.insert(MessageContract.MessageEntry.TABLE_NAME, null, values);
         close();
@@ -108,10 +109,11 @@ public class MessageRepository {
         close();
     }
 
-    public void updateImage(UUID id, Uri uri) {
+    public void updateMedia(UUID id, Uri uri, boolean isVideo) {
         open();
         ContentValues values = new ContentValues();
-        values.put(MessageContract.MessageEntry.COLUMN_NAME_IMAGE_URI, uri.toString());
+        values.put(MessageContract.MessageEntry.COLUMN_NAME_MEDIA_URI, uri.toString());
+        values.put(MessageContract.MessageEntry.COLUMN_NAME_IS_VIDEO, isVideo ? 1 : 0);
 
         String selection = MessageContract.MessageEntry.COLUMN_NAME_ID + " = ?";
         String[] selectionArgs = {id.toString()};
@@ -167,7 +169,8 @@ public class MessageRepository {
         int editTimestampIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_TIMESTAMP_EDIT);
         int deletedIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_DELETED);
         int chatGroupIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_CHAT_GROUP);
-        int imageUriIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_IMAGE_URI);
+        int mediaUriIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_MEDIA_URI);
+        int isVideoUriIndex = cursor.getColumnIndex(MessageContract.MessageEntry.COLUMN_NAME_IS_VIDEO);
 
         if (idIndex == -1 || partnerIndex == -1 || incomingIndex == -1 || messageIndex == -1 ||
                 timestampIndex == -1 || editTimestampIndex == -1 || deletedIndex == -1 ||
@@ -184,9 +187,11 @@ public class MessageRepository {
         boolean isDeleted = cursor.getInt(deletedIndex) == 1;
         State state = isDeleted ? State.DELETED : (editTimestamp > 0 ? State.EDITED : State.UNMODIFIED);
         String chatGroup = cursor.getString(chatGroupIndex);
-        String mediaUri = cursor.getString(imageUriIndex);
+        String mediaUri = cursor.getString(mediaUriIndex);
+        boolean isVideo = cursor.getInt(isVideoUriIndex) == 1;
 
         Message msg = new Message(text, partnerName, isIncoming, timestamp, id, state, editTimestamp);
+        msg.setIsVideo(isVideo);
         if (chatGroup != null) msg.setChatGroup(chatGroup);
         if (mediaUri != null) {
             msg.setMediaUri(Uri.parse(mediaUri));
