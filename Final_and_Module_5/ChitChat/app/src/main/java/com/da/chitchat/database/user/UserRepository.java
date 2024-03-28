@@ -1,3 +1,4 @@
+// Sven Schickentanz - fdai7287
 package com.da.chitchat.database.user;
 
 import android.content.ContentValues;
@@ -9,17 +10,31 @@ import com.da.chitchat.models.User;
 
 import java.util.UUID;
 
+/**
+ * The UserRepository class is responsible for handling the database operations for the User table.
+ * It provides methods to save and retrieve user data from the database.
+ * It is used to save user data to identify the current user of the application.
+ */
 public class UserRepository {
     private final UserDbHelper dbHelper;
 
+    /**
+     * Constructor for the UserRepository class.
+     * 
+     * @param context The context of the application.
+     */
     public UserRepository(Context context) {
         dbHelper = new UserDbHelper(context);
     }
 
+    /**
+     * Saves the user data to the database.
+     * 
+     * @param id The unique identifier of the user.
+     * @param name The username of the user.
+     */
     public void saveUser(UUID id, String name) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        //db.delete(UserContract.UserEntry.TABLE_NAME, null, null);
 
         ContentValues values = new ContentValues();
         values.put(UserContract.UserEntry.COLUMN_NAME_ID, id.toString());
@@ -29,6 +44,11 @@ public class UserRepository {
         db.close();
     }
 
+    /**
+     * Retrieves the user data from the database.
+     * 
+     * @return The user object containing the user data.
+     */
     public User getUser() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(

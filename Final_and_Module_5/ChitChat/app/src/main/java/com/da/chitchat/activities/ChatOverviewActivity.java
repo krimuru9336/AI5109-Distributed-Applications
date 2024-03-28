@@ -1,8 +1,8 @@
+// Sven Schickentanz - fdai7287
 package com.da.chitchat.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,29 +26,32 @@ import com.da.chitchat.database.messages.MessageRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+/**
+ * Represents the activity that displays the chat overview / user selection screen.
+ */
 public class ChatOverviewActivity extends AppCompatActivity {
 
     private WebSocketManager webSocketManager;
-    private TextView userNameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
-        userNameTextView = findViewById(R.id.ownNameTextView);
+        TextView userNameTextView = findViewById(R.id.ownNameTextView);
 
         AppContextSingleton.getInstance().initialize(getApplicationContext());
 
         MessageRepository messageDB = new MessageRepository(this);
 
+        // Initialize the user list and group list adapters for the RecyclerViews
         List<String> userList = new ArrayList<>();
         UserAdapter userAdapter = new UserAdapter(userList);
 
         List<String> groups = new ArrayList<>();
         GroupAdapter groupAdapter = new GroupAdapter(groups);
 
+        // Set up the RecyclerViews
         RecyclerView recyclerViewGroups = findViewById(R.id.groupRecyclerView);
         recyclerViewGroups.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewGroups.setAdapter(groupAdapter);
@@ -61,8 +64,9 @@ public class ChatOverviewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String username = intent.getStringExtra("USERNAME");
         String uuid = intent.getStringExtra("USERID");
-        userNameTextView.setText("Hello " + username + "!");
+        userNameTextView.setText(getString(R.string.hello_user, username));
 
+        // Load all messages from the database and add them to the UserMessageStore
         List<Message> messages = messageDB.getAllMessages();
         for (Message msg : messages) {
             if (msg.getChatGroup() != null) {
@@ -72,12 +76,13 @@ public class ChatOverviewActivity extends AppCompatActivity {
             }
         }
 
+        // Initialize and connect to the WebSocketManager
         webSocketManager = WebSocketManagerSingleton.getInstance(getApplicationContext());
 
         // Register the user with the entered username
         webSocketManager.registerUser(username, uuid);
 
-        // Set up a listener to receive user list updates
+        // Set up the listeners for the WebSocketManager
         webSocketManager.setUserListListener(new UserListListener(userAdapter));
 
         webSocketManager.setGroupListener(new GroupListListener(groupAdapter), this);
@@ -87,17 +92,34 @@ public class ChatOverviewActivity extends AppCompatActivity {
         webSocketManager.getGroups(username);
     }
 
+    /**
+     * Method to create a dialog for the user to enter a group name.
+     *
+     * @param view The current view
+     */
     public void createGroupDialog(View view) {
         DialogHelper.showInputDialog(this, null, getString(R.string.group_dialog_title),
                 getString(R.string.group_dialog_text), this::groupNameSelected);
     }
 
+    /**
+     * Method to handle the group name entered by the user.
+     * Send the group name to the WebSocketManager to create a new group.
+     *
+     * @param groupName The name of the group entered by the user
+     */
     private void groupNameSelected(String groupName) {
         if (!groupName.trim().equals("")) {
             webSocketManager.createChatGroup(groupName);
         }
     }
 
+    /**
+     * Methods to show a toast message when the group name entered by the user is taken.
+     *
+     * @param groupName The name of the group that was clicked
+     * @param activity The current activity
+     */
     public void showInvalidGroupName(String groupName, ChatOverviewActivity activity) {
         activity.runOnUiThread(() ->
                     Toast.makeText(activity, "Group '" + groupName + "' already taken.",

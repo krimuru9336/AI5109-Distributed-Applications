@@ -4,9 +4,9 @@
     <string name="insert">Insert</string>
     <string name="name">Name:</string>
     <string name="enter_name">Enter Name</string>
-    <string name="author">Sven Schickentanz</string>
-    <string name="appname">Module 5 - ChitChat App</string>
-    <string name="ip">http://192.168.0.84</string>
+    <string name="author">Sven Schickentanz - fdai7287</string>
+    <string name="appname">ChitChat App</string>
+    <string name="ip">http://localhost</string>
     <string name="port">8081</string>
     <string name="type_your_message">Type your message</string>
     <string name="send">Send</string>
@@ -36,4 +36,6 @@
     <string name="only_admin">Only the admin is allowed to change group members!</string>
     <string name="message_image_description">Image of message</string>
     <string name="media_pending">Waiting for media to load…</string>
+    <string name="hello_user">"Hello %1$s!"</string>
+    <string name="send_media_content">Send media to chat partner</string>
 </resources>

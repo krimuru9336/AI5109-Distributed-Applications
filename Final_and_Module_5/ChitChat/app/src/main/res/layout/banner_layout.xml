@@ -1,4 +1,4 @@
-<!-- res/layout/banner_layout.xml -->
+<!-- Sven Schickentanz - fdai7287 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/banner_layout"
     android:layout_width="match_parent"

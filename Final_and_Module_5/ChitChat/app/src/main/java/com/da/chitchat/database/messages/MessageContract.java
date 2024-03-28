@@ -1,7 +1,12 @@
+// Sven Schickentanz - fdai7287
 package com.da.chitchat.database.messages;
 
 import android.provider.BaseColumns;
 
+/**
+ * The contract class for the messages table in the database.
+ * This class defines the table name and column names for the messages table.
+ */
 public class MessageContract {
     private MessageContract() {}
 

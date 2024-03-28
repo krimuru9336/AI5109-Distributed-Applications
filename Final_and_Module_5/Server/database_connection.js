@@ -11,10 +11,16 @@ const messageDB = process.env.MESSAGE_DATABASE;
 const usersTable = process.env.USERS_TABLE;
 const groupTable = process.env.GROUP_TABLE;
 
-console.log(usersDB);
+let isInitialized = false;
 
+/**
+ * Initializes the database by establishing a connection and creating necessary tables.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the database initialization is completed successfully.
+ */
 async function initDatabase() {
     try {
+        console.log("Trying to initialize database...");
         await initDatabaseConnection();
         await createChatDatabase();
         await createUserTable();
@@ -22,10 +28,15 @@ async function initDatabase() {
         await createGroupTable();
         console.log("Database initialization completed successfully.");
     } catch (error) {
-        console.error("Database initialization failed:", error);
+        console.error("Database initialization failed. Proceeding without database connection. Offline messages will not be sent.");
     }
 }
 
+/**
+ * Initializes the database connection.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the database connection is successfully established.
+ */
 async function initDatabaseConnection() {
     return new Promise((resolve, reject) => {
         try {
@@ -44,6 +55,7 @@ async function initDatabaseConnection() {
                 }
                 console.log("Connected to database");
                 connection.release();
+                isInitialized = true;
                 resolve();
             });   
         } catch(error) {
@@ -53,6 +65,11 @@ async function initDatabaseConnection() {
     });
 };
 
+/**
+ * Creates a chat database if it doesn't already exist.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the database is created successfully.
+ */
 async function createChatDatabase() {
     return new Promise((resolve, reject) => {
         con.query(`CREATE DATABASE IF NOT EXISTS ${usersDB}`, function(err, result) {
@@ -61,12 +78,16 @@ async function createChatDatabase() {
                 reject(err);
                 return;
             }
-            console.log("Database created");
             resolve();
         });
     });
 }
 
+/**
+ * Creates a user table in the database if it doesn't already exist.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the table is created successfully.
+ */
 async function createUserTable() {
     return new Promise((resolve, reject) => {
         con.query(`CREATE TABLE IF NOT EXISTS ${usersDB}.${usersTable} (uuid VARCHAR(64) PRIMARY KEY, userName VARCHAR(255))`, function(err, result) {
@@ -75,14 +96,22 @@ async function createUserTable() {
                 reject(err);
                 return;
             }
-            console.log("Table created");
             resolve();
         });
     });
 }
 
+/**
+ * Retrieves all users from the database.
+ * 
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of user objects.
+ */
 async function getAllUsers() {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve([]);
+            return;
+        }
         con.query(`SELECT * FROM ${usersDB}.${usersTable}`, function(err, result) {
             if (err) {
                 console.log("Error getting users");
@@ -94,8 +123,19 @@ async function getAllUsers() {
     });
 }
 
+/**
+ * Adds a user to the database.
+ * 
+ * @param {string} userName - The name of the user.
+ * @param {string} uuid - The UUID of the user.
+ * @returns {Promise<any>} - A promise that resolves with the result of the database query.
+ */
 async function addUser(userName, uuid) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`INSERT INTO ${usersDB}.${usersTable} (uuid, userName) VALUES (?, ?)`, [uuid, userName], function(err, result) {
             if (err) {
                 console.log("Error adding user");
@@ -107,6 +147,11 @@ async function addUser(userName, uuid) {
     });
 }
 
+/**
+ * Creates a message database if it does not already exist.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the database is created successfully.
+ */
 async function createMessageDatabase() {
     return new Promise((resolve, reject) => {
         con.query(`CREATE DATABASE IF NOT EXISTS ${messageDB}`, function(err, result) {
@@ -116,12 +161,16 @@ async function createMessageDatabase() {
                 return;
             }
 
-            console.log("Message database created");
             resolve();
         });
     });
 }
 
+/**
+ * Creates a group table in the database if it does not already exist.
+ * 
+ * @returns {Promise<void>} A promise that resolves when the group table is created successfully.
+ */
 async function createGroupTable() {
     return new Promise((resolve, reject) => {
         con.query(`CREATE TABLE IF NOT EXISTS ${messageDB}.${groupTable} (
@@ -135,42 +184,71 @@ async function createGroupTable() {
                 reject(err);
                 return;
             }
-            console.log("Group table created");
             resolve();
         });
     });
 }
 
+/**
+ * Adds a user to a group.
+ * 
+ * @param {number} userID - The ID of the user.
+ * @param {string} groupName - The name of the group.
+ * @param {boolean} isAdmin - Indicates whether the user is an admin of the group.
+ * @returns {Promise<any>} A promise that resolves with the result of the insertion or rejects with an error.
+ */
 async function addUserToGroup(userID, groupName, isAdmin) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`INSERT INTO ${messageDB}.${groupTable} (id, groupName, isAdmin) VALUES (?, ?, ?)`, [userID, groupName, isAdmin], function(err, result) {
             if (err) {
                 console.log("Error adding user to group");
                 reject(err);
                 return;
             }
-            console.log("User added to group");
             resolve(result);
         });
     });
 }
 
+/**
+ * Removes a user from a group.
+ *
+ * @param {number} userID - The ID of the user to be removed.
+ * @param {string} groupName - The name of the group from which the user will be removed.
+ * @returns {Promise<any>} A promise that resolves with the result of the removal operation.
+ */
 async function removeUserFromGroup(userID, groupName) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`DELETE FROM ${messageDB}.${groupTable} WHERE id = ? AND groupName = ?`, [userID, groupName], function(err, result) {
             if (err) {
                 console.log("Error removing user from group");
                 reject(err);
                 return;
             }
-            console.log("User removed from group");
             resolve(result);
         });
     });
 }
 
+/**
+ * Retrieves all group entries from the database.
+ * 
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of group entries.
+ */
 async function getAllGroupEntries() {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve([]);
+            return;
+        }
         con.query(`SELECT * FROM ${messageDB}.${groupTable}`, function(err, rows) {
             if (err) {
                 console.log("Error getting groups");
@@ -182,15 +260,23 @@ async function getAllGroupEntries() {
                 groupName: row.groupName,
                 isAdmin: row.isAdmin
             }));
-            console.log(groupEntries);
-            console.log("Group Entries retrieved");
             resolve(groupEntries);
         });
     });
 }
 
+/**
+ * Creates a message table if it does not exist in the database.
+ * 
+ * @param {string} tableName - The name of the table to be created.
+ * @returns {Promise<void>} - A promise that resolves when the table is created successfully.
+ */
 async function createMessageTableIfNotExist(tableName) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`CREATE TABLE IF NOT EXISTS ${messageDB}.${tableName} (id VARCHAR(64) PRIMARY KEY, 
             partnerName VARCHAR(255), incoming BOOLEAN, messageText TEXT, timestamp BIGINT, 
             timestampEdit BIGINT DEFAULT NULL, deleted BOOLEAN DEFAULT false, chatGroup VARCHAR(255) DEFAULT NULL)`, function(err, result) {
@@ -199,14 +285,29 @@ async function createMessageTableIfNotExist(tableName) {
                 reject(err);
                 return;
             }
-            console.log("Message table created");
             resolve();
         });
     });
 }
 
+/**
+ * Adds a message to the specified table in the database.
+ * 
+ * @param {string} tableName - The name of the table to add the message to.
+ * @param {object} message - The message object containing the following properties:
+ * @param {number} message.id - The ID of the message.
+ * @param {string} message.partnerName - The name of the message partner.
+ * @param {boolean} message.incoming - Indicates if the message is incoming or outgoing.
+ * @param {string} message.messageText - The text of the message.
+ * @param {string} message.timestamp - The timestamp of the message.
+ * @returns {Promise<any>} A promise that resolves with the result of the insertion operation.
+ */
 async function addMessage(tableName, message) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`INSERT INTO ${messageDB}.${tableName} (id, partnerName, incoming, messageText, timestamp) VALUES (?, ?, ?, ?, ?)`, 
             [message.id, message.partnerName, message.incoming, message.messageText, message.timestamp], function(err, result) {
             if (err) {
@@ -214,14 +315,32 @@ async function addMessage(tableName, message) {
                 reject(err);
                 return;
             }
-            console.log("Message added");
             resolve(result);
         });
     });
 }
 
+/**
+ * Adds or edits a message in the specified table.
+ * If the message already exists in the table, it updates the message.
+ * If the message does not exist, it adds the message to the table.
+ * 
+ * @param {string} tableName - The name of the table.
+ * @param {object} message - The message object to be added or edited.
+ * @param {number} message.id - The ID of the message.
+ * @param {string} message.partnerName - The name of the message partner.
+ * @param {boolean} message.incoming - Indicates if the message is incoming or outgoing.
+ * @param {string} message.messageText - The text of the message.
+ * @param {string} message.timestamp - The timestamp of the message.
+ * @param {string} message.timestampEdit - The timestamp of the message edit.
+ * @returns {Promise<any>} - A promise that resolves with the result of the operation.
+ */
 async function addEditMessage(tableName, message) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`SELECT * FROM ${messageDB}.${tableName} WHERE id = ?`, [message.id], function(err, rows) {
             if (err) {
                 console.log("Error checking if message exists");
@@ -237,7 +356,6 @@ async function addEditMessage(tableName, message) {
                         reject(err);
                         return;
                     }
-                    console.log("Message updated");
                     resolve(result);
                 });
             } else {
@@ -248,7 +366,6 @@ async function addEditMessage(tableName, message) {
                         reject(err);
                         return;
                     }
-                    console.log("Message added");
                     resolve(result);
                 });
             }
@@ -256,8 +373,28 @@ async function addEditMessage(tableName, message) {
     });
 }
 
+
+/**
+ * Adds a deleted message to the specified table in the database.
+ * If the message already exists in the table, it will be marked as deleted.
+ * If the message does not exist, it will be added to the table with the deleted flag set to 1.
+ *
+ * @param {string} tableName - The name of the table in the database.
+ * @param {object} message - The message object to be added or deleted.
+ * @param {number} message.id - The ID of the message.
+ * @param {string} message.partnerName - The name of the message partner.
+ * @param {boolean} message.incoming - Indicates whether the message is incoming or outgoing.
+ * @param {string} message.messageText - The text of the message.
+ * @param {string} message.timestamp - The timestamp of the message.
+ * @returns {Promise<any>} A promise that resolves with the result of the database operation.
+ * @throws {Error} If there is an error checking if the message exists, deleting the message, or adding the message.
+ */
 async function addDeleteMessage(tableName, message) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`SELECT * FROM ${messageDB}.${tableName} WHERE id = ?`, [message.id], function(err, rows) {
             if (err) {
                 console.log("Error checking if message exists");
@@ -273,7 +410,6 @@ async function addDeleteMessage(tableName, message) {
                         reject(err);
                         return;
                     }
-                    console.log("Message deleted");
                     resolve(result);
                 });
             } else {
@@ -284,7 +420,6 @@ async function addDeleteMessage(tableName, message) {
                         reject(err);
                         return;
                     }
-                    console.log("Message added");
                     resolve(result);
                 });
             }
@@ -292,8 +427,19 @@ async function addDeleteMessage(tableName, message) {
     });
 }
 
+/**
+ * Adds a chat group to a message in the specified table.
+ * 
+ * @param {string} tableName - The name of the table to add the chat group to.
+ * @param {object} message - The message object containing the id and chatGroup properties.
+ * @returns {Promise} A promise that resolves with the result of the update operation.
+ */
 async function addGroupToMessage(tableName, message) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`SELECT * FROM ${messageDB}.${tableName} WHERE id = ?`, [message.id], function(err, rows) {
             if (err) {
                 console.log("Error checking if message exists");
@@ -309,7 +455,6 @@ async function addGroupToMessage(tableName, message) {
                         reject(err);
                         return;
                     }
-                    console.log("Message updated");
                     resolve(result);
                 });
             }
@@ -317,8 +462,28 @@ async function addGroupToMessage(tableName, message) {
     });
 }
 
+/**
+ * Retrieves messages from the specified table in the database.
+ * 
+ * @param {string} tableName - The name of the table to retrieve messages from.
+ * @returns {Promise<Array<Object>>} - A promise that resolves to an array of message objects.
+ * Each message object contains the following properties:
+ * - id: The ID of the message.
+ * - partnerName: The name of the message partner.
+ * - incoming: A boolean indicating whether the message is incoming or outgoing.
+ * - messageText: The text of the message.
+ * - timestamp: The timestamp of the message.
+ * - timestampEdit: The timestamp of the last edit made to the message.
+ * - deleted: A boolean indicating whether the message is deleted or not.
+ * - chatGroup: The chat group associated with the message (optional).
+ * @throws {Error} - If there is an error retrieving the messages.
+ */
 async function getMessages(tableName) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve([]);
+            return;
+        }
         try {
             con.query(`SELECT * FROM ${messageDB}.${tableName} ORDER BY timestamp`, function(err, rows) {
                 if (err) {
@@ -337,9 +502,6 @@ async function getMessages(tableName) {
                     deleted: row.deleted,
                     ...(row.chatGroup != null && { chatGroup: row.chatGroup })
                 }));
-                console.log(messages);
-
-                console.log("Messages retrieved");
                 resolve(messages);
             });
         } catch (error) {
@@ -349,20 +511,30 @@ async function getMessages(tableName) {
     });
 }
 
+/**
+ * Clears the specified table in the database.
+ * 
+ * @param {string} tableName - The name of the table to be cleared.
+ * @returns {Promise<any>} - A promise that resolves with the result of the table clearing operation.
+ */
 async function clearTable(tableName) {
     return new Promise((resolve, reject) => {
+        if (!isInitialized) {
+            resolve();
+            return;
+        }
         con.query(`DELETE FROM ${messageDB}.${tableName}`, function(err, result) {
             if (err) {
                 console.log("Error clearing table");
                 reject(err);
                 return;
             }
-            console.log("Table cleared");
             resolve(result);
         });
     });
 }
 
+// Export the functions
 module.exports = {
     init: initDatabase,
     getAllUsers,

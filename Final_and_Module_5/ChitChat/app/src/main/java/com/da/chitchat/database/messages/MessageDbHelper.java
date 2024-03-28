@@ -1,9 +1,13 @@
+// Sven Schickentanz - fdai7287
 package com.da.chitchat.database.messages;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Helper class for managing the SQLite database for storing messages.
+ */
 public class MessageDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Messages.db";

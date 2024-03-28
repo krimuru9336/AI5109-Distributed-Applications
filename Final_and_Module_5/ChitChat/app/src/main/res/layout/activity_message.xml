@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Sven Schickentanz - fdai7287 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -51,6 +53,7 @@
 
     <Button
         android:id="@+id/mediaButton"
+        android:contentDescription="@string/send_media_content"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/messageEditText"
@@ -61,7 +64,8 @@
         android:gravity="center_vertical|center_horizontal"
         android:onClick="mediaSelector"
         android:paddingStart="11dp"
-        android:paddingEnd="4dp" />
+        android:paddingEnd="4dp"
+        tools:ignore="RtlHardcoded" />
 
     <RelativeLayout
         android:id="@+id/chatHeader"
