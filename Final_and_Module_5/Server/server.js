@@ -81,7 +81,7 @@ async function main() {
             return users.find(user => user.id === socketID);
         }
 
-        function addMessageToDatabase(sender, messageObject) {
+        async function addMessageToDatabase(sender, messageObject) {
             try {
                 if (!messageObject.partnerName || !sender)
                     return;
@@ -89,13 +89,19 @@ async function main() {
                 const user = findUserByName(messageObject.partnerName);
                 messageObject.partnerName = sender.userName;
                 if (messageObject.timestampEdit) {
-                    db.addEditMessage(user.uuid, messageObject);
+                    await db.addEditMessage(user.uuid, messageObject);
                     return;
                 } else if (messageObject.deleted) {
                     messageObject.messageText = "Message has been deleted.";
-                    db.addDeleteMessage(user.uuid, messageObject);
+                    await db.addDeleteMessage(user.uuid, messageObject);
                 } else {
-                    db.addMessage(user.uuid, messageObject);
+                    await db.addMessage(user.uuid, messageObject);
+                }
+
+                console.log(messageObject);
+
+                if (messageObject.chatGroup != null) {
+                    db.addGroupToMessage(user.uuid, messageObject);
                 }
             } catch (error) {
                 console.log(error);
@@ -190,55 +196,162 @@ async function main() {
                 }
             });
 
-            // Handle incoming messages
-            socket.on('message', (message) => {
+            
+            socket.on('mediaStart', async (message) => {
+                console.log("MEDIA START");
+                console.log(message);
                 try {
-                    const { targetUserId, messageId, message: messageText } = message;
-                    const senderUser = findUserBySocketID(socket.id);
-                    const senderUserId = senderUser?.userName;
-
-                    if (message.isGroup) {
-                        sendGroupMessage(targetUserId, senderUserId, messageId, messageText, socket);
-                    } else {
-                        // Find the user
-                        const targetUser = findUserByName(targetUserId);
-
-                        // If the target user is found, send the message to that user
-                        if (targetUser) {
-                            if (targetUser.id) {
-                                io.to(targetUser.id).emit('message', {
-                                    data: {
-                                        senderUserId,
-                                        message: messageText,
-                                        messageId,
-                                        timestamp: Date.now(),
-                                    },
-                                    action: 'message',
-                                });
-                            } else {
-                                addMessageToDatabase(senderUser, {
-                                    partnerName: targetUserId,
-                                    incoming: true,
-                                    messageText,
-                                    timestamp: Date.now(),
-                                    id: messageId,
-                                });
-                            }
-                        }
-                    }
-                    io.to(socket.id).emit('timestamp', {
-                        data: {
-                            messageId,
-                            timestamp: Date.now(),
-                        },
-                        action: 'timestamp',
-                    });
+                    const offlineMessage = "Looks like you were offline when media was sent. " +
+                        "It wasn't saved, but feel free to ask the sender to resend it.";
+                    sendMessage(message, socket, offlineMessage);
                 } catch (error) {
                     console.log(error);
                 }
             });
 
-            function sendGroupMessage(chatGroup, senderUserId, messageId, messageText, socket) {
+            socket.on('mediaChunk', async (message) => {
+                const { targetUserId, messageId, chunk, offset, isGroup } = message;
+                if (isGroup) {
+                    sendGroupChunk(targetUserId, messageId, chunk, offset, socket);
+                } else {
+                    const targetUser = findUserByName(targetUserId);
+
+                    if (targetUser) {
+                        if (targetUser.id) {
+                            io.to(targetUser.id).emit('mediaChunk', {
+                                data: {
+                                    messageId,
+                                    chunk,
+                                    offset,
+                                },
+                                action: 'mediaChunk',
+                            });
+                        } else {
+                            // TODO
+                            // addMessageToDatabase(senderUser, {
+                            //     partnerName: targetUserId,
+                            //     incoming: true,
+                            //     messageText,
+                            //     timestamp: Date.now(),
+                            //     id: messageId,
+                            // });
+                        }
+                    }
+                }
+            });
+
+            socket.on('mediaEnd', async (message) => {
+                const { targetUserId, messageId, isGroup, chunkCount, mimeType } = message;
+                const senderUser = findUserBySocketID(socket.id);
+                const senderUserId = senderUser?.userName;
+
+                if (isGroup) {
+                    sendGroupMediaEnd(targetUserId, senderUserId, messageId, chunkCount, mimeType, socket);
+                } else {
+                    const targetUser = findUserByName(targetUserId);
+
+                    if (targetUser) {
+                        if (targetUser.id) {
+                            io.to(targetUser.id).emit('mediaEnd', {
+                                data: {
+                                    messageId,
+                                    senderUserId,
+                                    mimeType,
+                                    chunkCount,
+                                    timestamp: Date.now(),
+                                },
+                                action: 'mediaEnd',
+                            });
+                        }
+                    }
+                }
+            });
+
+            function sendGroupChunk(chatGroup, messageId, chunk, offset, socket) {
+                socket.to(chatGroup).emit('mediaChunk', {
+                    data: {
+                        messageId,
+                        chunk,
+                        offset,
+                    },
+                    action: 'mediaChunk',
+                });
+            };
+
+            function sendGroupMediaEnd(chatGroup, senderUserId, messageId, chunkCount, mimeType, socket) {
+                socket.to(chatGroup).emit('mediaEnd', {
+                    data: {
+                        messageId,
+                        senderUserId,
+                        mimeType,
+                        chunkCount,
+                        chatGroup,
+                        timestamp: Date.now(),
+                    },
+                    action: 'mediaEnd',
+                });
+            };
+
+            // Handle incoming messages
+            socket.on('message', (message) => {
+                try {
+                    sendMessage(message, socket);
+                } catch (error) {
+                    console.log(error);
+                }
+            });
+
+            function sendMessage(message, socket, offlineReplacer = null) {
+                console.log("Message OBj");
+                console.log(message);
+                let { targetUserId, messageId, message: messageText } = message;
+                const senderUser = findUserBySocketID(socket.id);
+                const senderUserId = senderUser?.userName;
+
+                if (message.isGroup) {
+                    console.log("Send message: " + messageText);
+                    sendGroupMessage(targetUserId, senderUser, messageId, messageText, socket, offlineReplacer);
+                } else {
+                    // Find the user
+                    const targetUser = findUserByName(targetUserId);
+
+                    // If the target user is found, send the message to that user
+                    if (targetUser) {
+                        if (targetUser.id) {
+                            io.to(targetUser.id).emit('message', {
+                                data: {
+                                    senderUserId,
+                                    message: messageText,
+                                    messageId,
+                                    timestamp: Date.now(),
+                                },
+                                action: 'message',
+                            });
+                        } else {
+                            if (offlineReplacer != null) {
+                                messageText = offlineReplacer;
+                            }
+                            addMessageToDatabase(senderUser, {
+                                partnerName: targetUserId,
+                                incoming: true,
+                                messageText,
+                                timestamp: Date.now(),
+                                id: messageId,
+                            });
+                        }
+                    }
+                }
+                io.to(socket.id).emit('timestamp', {
+                    data: {
+                        messageId,
+                        timestamp: Date.now(),
+                    },
+                    action: 'timestamp',
+                });
+            }
+
+            function sendGroupMessage(chatGroup, senderUser, messageId, messageText, socket, offlineReplacer = null) {
+                const senderUserId = senderUser?.userName;
                 socket.to(chatGroup).emit('message', {
                     data: {
                         senderUserId,
@@ -249,6 +362,23 @@ async function main() {
                     },
                     action: 'message',
                 });
+                for (const user of getOfflineGroupMembers(chatGroup)) {
+                    if (offlineReplacer != null) {
+                        messageText = offlineReplacer;
+                    }
+                    addMessageToDatabase(senderUser, {
+                        partnerName: user,
+                        incoming: true,
+                        messageText,
+                        timestamp: Date.now(),
+                        id: messageId,
+                        chatGroup
+                    });
+                }
+            }
+
+            function getOfflineGroupMembers(chatGroup) {
+                return chatGroups.get(chatGroup).users.filter(user => !findUserByName(user).id);
             }
 
             socket.on('joinChatGroup', (chatGroup, userName) => {

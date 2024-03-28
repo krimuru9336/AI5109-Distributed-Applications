@@ -1,9 +1,11 @@
 package com.da.chitchat.listeners;
 
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.da.chitchat.Message;
+import com.da.chitchat.activities.MessageActivity;
 import com.da.chitchat.adapters.MessageAdapter;
 import com.da.chitchat.UserMessageStore;
 import com.da.chitchat.interfaces.MessageListener;
@@ -22,13 +24,14 @@ public class UserMessageListener implements MessageListener {
         messageDB = new MessageRepository(AppContextSingleton.getInstance().getContext());
     }
 
-    public MessageAdapter createAdapter(String partnerName, boolean isGroup, OnDataChangedListener listener) {
+    public MessageAdapter createAdapter(String partnerName, boolean isGroup,
+                                        OnDataChangedListener listener, MessageActivity ctx) {
         if (isGroup) {
             this.messageAdapter = new MessageAdapter(UserMessageStore.getGroupMessages(partnerName),
-                    partnerName, listener, true);
+                    partnerName, listener, true, ctx);
         } else {
             this.messageAdapter = new MessageAdapter(UserMessageStore.getUserMessages(partnerName),
-                    partnerName, listener, false);
+                    partnerName, listener, false, ctx);
         }
         return this.messageAdapter;
     }
@@ -81,6 +84,26 @@ public class UserMessageListener implements MessageListener {
                 } else {
                     UserMessageStore.editMessageFromUser(target, messageId, newInput, editDate);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void onMediaReceived(String target, UUID messageId, Uri mediaUri, boolean isGroup) {
+        runOnUiThread(() -> {
+            try {
+                messageDB.updateImage(messageId, mediaUri);
+                if (messageAdapter != null) {
+                    messageAdapter.addMedia(messageId, mediaUri);
+                } else {
+                    if (isGroup) {
+                        UserMessageStore.editMediaFromGroup(target, messageId, mediaUri);
+                    } else {
+                        UserMessageStore.editMediaFromUser(target, messageId, mediaUri);
+                    }
+                }
+            } catch (Exception e) {
+                // Ignore - no message for media found
             }
         });
     }

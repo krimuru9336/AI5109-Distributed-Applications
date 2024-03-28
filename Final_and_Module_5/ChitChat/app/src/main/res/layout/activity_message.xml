@@ -25,9 +25,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="16dp"
-        android:layout_toStartOf="@id/sendButton"
+        android:layout_toStartOf="@id/mediaButton"
         android:autofillHints="Message"
         android:background="@android:color/white"
         android:textColor="@color/black"
@@ -38,13 +38,30 @@
 
     <Button
         android:id="@+id/sendButton"
-        android:layout_width="wrap_content"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/messageEditText"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="0dp"
         android:onClick="sendMessage"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
         android:text="@string/send" />
+
+    <Button
+        android:id="@+id/mediaButton"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/messageEditText"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@id/sendButton"
+        android:drawableLeft="@drawable/ic_attach"
+        android:gravity="center_vertical|center_horizontal"
+        android:onClick="mediaSelector"
+        android:paddingStart="11dp"
+        android:paddingEnd="4dp" />
 
     <RelativeLayout
         android:id="@+id/chatHeader"

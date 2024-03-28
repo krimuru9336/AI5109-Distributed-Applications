@@ -1,10 +1,13 @@
 package com.da.chitchat.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -76,7 +81,7 @@ public class MessageActivity extends AppCompatActivity implements OnDataChangedL
         webSocketManager = WebSocketManagerSingleton.getInstance(getApplicationContext());
 
         UserMessageListener umListener = UserMessageListenerSingleton.getInstance();
-        messageAdapter = umListener.createAdapter(targetPartner, isGroup, this);
+        messageAdapter = umListener.createAdapter(targetPartner, isGroup, this, this);
 
         recyclerView = findViewById(R.id.messageRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -110,6 +115,43 @@ public class MessageActivity extends AppCompatActivity implements OnDataChangedL
                 // Nothing
             }
         });
+    }
+
+    private final ActivityResultLauncher<Intent> pickMediaLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                Uri uri = result.getData().getData();
+                if (uri != null) {
+                    getContentResolver().takePersistableUriPermission(uri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    sendMedia(uri);
+                }
+            }
+        }
+    );
+
+    public void mediaSelector(View view) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        String[] mimeTypes = {"image/*", "video/*"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        pickMediaLauncher.launch(intent);
+    }
+
+    public void sendMedia(Uri mediaUri) {
+        Message msg = new Message(getString(R.string.media_pending), null, false);
+        msg.setMediaUri(mediaUri);
+        String mimeType = getContentResolver().getType(mediaUri);
+        if (mimeType != null && mimeType.startsWith("video"))
+            msg.setIsVideo(true);
+        if (isGroup)
+            msg.setChatGroup(targetPartner);
+        UUID id = messageAdapter.addMessage(msg, isGroup);
+
+        messageDB.addMessage(msg, targetPartner);
+        webSocketManager.sendMedia(targetPartner, msg.getText(), mediaUri, id, mimeType, isGroup);
     }
 
     public void sendMessage(View view) {

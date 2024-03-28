@@ -1,12 +1,17 @@
 const mysql = require('mysql');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 // con is a mysql pool
 let con = null;
 
-const chatDB = "chatDB";
-const messageDB = "messageDB";
-const usersTable = "users";
-const groupTable = "chatGroups";
+const usersDB = process.env.USERS_DATABASE;
+const messageDB = process.env.MESSAGE_DATABASE;
+const usersTable = process.env.USERS_TABLE;
+const groupTable = process.env.GROUP_TABLE;
+
+console.log(usersDB);
 
 async function initDatabase() {
     try {
@@ -50,7 +55,7 @@ async function initDatabaseConnection() {
 
 async function createChatDatabase() {
     return new Promise((resolve, reject) => {
-        con.query(`CREATE DATABASE IF NOT EXISTS ${chatDB}`, function(err, result) {
+        con.query(`CREATE DATABASE IF NOT EXISTS ${usersDB}`, function(err, result) {
             if (err) {
                 console.log("Error creating database");
                 reject(err);
@@ -64,7 +69,7 @@ async function createChatDatabase() {
 
 async function createUserTable() {
     return new Promise((resolve, reject) => {
-        con.query(`CREATE TABLE IF NOT EXISTS ${chatDB}.${usersTable} (uuid VARCHAR(64) PRIMARY KEY, userName VARCHAR(255))`, function(err, result) {
+        con.query(`CREATE TABLE IF NOT EXISTS ${usersDB}.${usersTable} (uuid VARCHAR(64) PRIMARY KEY, userName VARCHAR(255))`, function(err, result) {
             if (err) {
                 console.log("Error creating table");
                 reject(err);
@@ -78,7 +83,7 @@ async function createUserTable() {
 
 async function getAllUsers() {
     return new Promise((resolve, reject) => {
-        con.query(`SELECT * FROM ${chatDB}.${usersTable}`, function(err, result) {
+        con.query(`SELECT * FROM ${usersDB}.${usersTable}`, function(err, result) {
             if (err) {
                 console.log("Error getting users");
                 reject(err);
@@ -91,7 +96,7 @@ async function getAllUsers() {
 
 async function addUser(userName, uuid) {
     return new Promise((resolve, reject) => {
-        con.query(`INSERT INTO ${chatDB}.${usersTable} (uuid, userName) VALUES (?, ?)`, [uuid, userName], function(err, result) {
+        con.query(`INSERT INTO ${usersDB}.${usersTable} (uuid, userName) VALUES (?, ?)`, [uuid, userName], function(err, result) {
             if (err) {
                 console.log("Error adding user");
                 reject(err);
@@ -287,6 +292,31 @@ async function addDeleteMessage(tableName, message) {
     });
 }
 
+async function addGroupToMessage(tableName, message) {
+    return new Promise((resolve, reject) => {
+        con.query(`SELECT * FROM ${messageDB}.${tableName} WHERE id = ?`, [message.id], function(err, rows) {
+            if (err) {
+                console.log("Error checking if message exists");
+                reject(err);
+                return;
+            }
+
+            if (rows && rows.length > 0) {
+                con.query(`UPDATE ${messageDB}.${tableName} SET chatGroup = ? WHERE id = ?`, 
+                    [message.chatGroup, message.id], function(err, result) {
+                    if (err) {
+                        console.log("Error updating message");
+                        reject(err);
+                        return;
+                    }
+                    console.log("Message updated");
+                    resolve(result);
+                });
+            }
+        });
+    });
+}
+
 async function getMessages(tableName) {
     return new Promise((resolve, reject) => {
         try {
@@ -304,7 +334,8 @@ async function getMessages(tableName) {
                     messageText: row.messageText,
                     timestamp: row.timestamp,
                     timestampEdit: row.timestampEdit,
-                    deleted: row.deleted
+                    deleted: row.deleted,
+                    ...(row.chatGroup != null && { chatGroup: row.chatGroup })
                 }));
                 console.log(messages);
 
@@ -344,5 +375,6 @@ module.exports = {
     clearTable,
     getAllGroupEntries,
     addUserToGroup,
-    removeUserFromGroup
+    removeUserFromGroup,
+    addGroupToMessage
 };

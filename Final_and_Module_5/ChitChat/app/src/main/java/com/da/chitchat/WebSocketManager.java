@@ -1,6 +1,8 @@
 package com.da.chitchat;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.util.Pair;
 
 import com.da.chitchat.activities.ChatOverviewActivity;
@@ -10,6 +12,8 @@ import com.da.chitchat.interfaces.GroupListener;
 import com.da.chitchat.interfaces.MessageListener;
 import com.da.chitchat.interfaces.NameListener;
 import com.da.chitchat.interfaces.UserListener;
+import com.da.chitchat.services.MediaConverter;
+import com.da.chitchat.singletons.MediaConverterSingleton;
 import com.da.chitchat.singletons.UserMessageListenerSingleton;
 import com.google.gson.JsonArray;
 
@@ -29,6 +33,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class WebSocketManager {
+    private final int CHUNKSIZE = 1024;
 
     private Socket socket;
     private UserListener<String> userListListener;
@@ -39,8 +44,12 @@ public class WebSocketManager {
     private String ownUsername;
     private String ownUUID;
     private MessageActivity curMessageActivity;
+    private final MediaConverter mc;
+    private final Context ctx;
 
     public WebSocketManager(Context ctx) {
+        this.ctx = ctx;
+        mc = MediaConverterSingleton.getInstance();
         ownUsername = "";
         activityChangeCounter = 0;
         try {
@@ -96,6 +105,55 @@ public class WebSocketManager {
         socket.emit("message", jsonMessage);
     }
 
+    public void sendMedia(String targetUserId, String message, Uri mediaUri, UUID id, String mimeType,
+                          boolean isGroup) {
+        String base64Media = mc.convertBitmapToBase64(ctx, mediaUri);
+        int chunkCount = 0;
+        JSONObject jsonMessage, jsonStartAndEndMessage;
+
+        jsonStartAndEndMessage = new JSONObject();
+
+        try {
+            jsonStartAndEndMessage.put("targetUserId", targetUserId);
+            jsonStartAndEndMessage.put("message", message);
+            jsonStartAndEndMessage.put("messageId", id);
+            jsonStartAndEndMessage.put("isGroup", isGroup);
+
+            socket.emit("mediaStart", jsonStartAndEndMessage);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        for (int offset = 0; offset < base64Media.length(); offset += CHUNKSIZE) {
+            jsonMessage = new JSONObject();
+            int end = Math.min(offset + CHUNKSIZE, base64Media.length());
+            String chunk = base64Media.substring(offset, end);
+
+            try {
+                jsonMessage.put("targetUserId", targetUserId);
+                jsonMessage.put("messageId", id);
+                jsonMessage.put("chunk", chunk);
+                jsonMessage.put("offset", offset);
+                jsonMessage.put("isGroup", isGroup);
+
+                socket.emit("mediaChunk", jsonMessage);
+                chunkCount++;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            jsonStartAndEndMessage.remove("message");
+            jsonStartAndEndMessage.put("chunkCount", chunkCount);
+            jsonStartAndEndMessage.put("mimeType", mimeType);
+
+            socket.emit("mediaEnd", jsonStartAndEndMessage);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteMessage(String targetUserId, UUID id, boolean isGroup) {
         JSONObject jsonMessage = new JSONObject();
         try {
@@ -122,10 +180,6 @@ public class WebSocketManager {
         }
 
         socket.emit("edit", jsonMessage);
-    }
-
-    public void joinGroup(String groupName) {
-        socket.emit("joinChatGroup", groupName, ownUsername);
     }
 
     public void createChatGroup(String groupName) {
@@ -180,7 +234,7 @@ public class WebSocketManager {
             });
         }
     }
-
+    
     public void setGroupListener(GroupListener listener, ChatOverviewActivity activity) {
         boolean eventListenerSet = this.groupListener != null;
         this.groupListener = listener;
@@ -366,6 +420,7 @@ public class WebSocketManager {
     public void setMessageListener(MessageListener listener) {
         boolean eventListenerSet = this.messageListener != null;
         this.messageListener = listener;
+        mc.setMessageListener(this.messageListener);
 
         if (!eventListenerSet) {
             // Receive message from user
@@ -433,10 +488,7 @@ public class WebSocketManager {
                         JSONObject jsonObject = (JSONObject) args[0];
 
                         if (jsonObject.has("data") && jsonObject.has("action")) {
-                            boolean isEditTimestamp = false;
-                            if (jsonObject.getString("action").equals("editTimestamp")) {
-                                isEditTimestamp = true;
-                            }
+                            boolean isEditTimestamp = jsonObject.getString("action").equals("editTimestamp");
                             if (jsonObject.getString("action").equals("timestamp") ||
                                     jsonObject.getString("action").equals("editTimestamp")) {
                                 JSONObject messageObj = jsonObject.getJSONObject("data");
@@ -516,6 +568,10 @@ public class WebSocketManager {
                                     Message msg = new Message(text, partnerName, isIncoming,
                                             timestamp, id, state, editTimestamp);
 
+                                    if (messageObject.has("chatGroup")) {
+                                        msg.setChatGroup(messageObject.getString("chatGroup"));
+                                    }
+
                                     if (messageListener != null) {
                                         messageListener.onMessageReceived(msg);
                                     }
@@ -523,6 +579,92 @@ public class WebSocketManager {
 
                                 if (length > 0) {
                                     socket.emit("offlineReceived", ownUsername, ownUUID);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            socket.on("mediaStart", args -> {
+                if (args.length > 0 && args[0] instanceof JSONObject) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) args[0];
+
+                        if (jsonObject.has("data") && jsonObject.has("action")) {
+                            if (jsonObject.getString("action").equals("mediaEnd")) {
+                                JSONObject messageObj = jsonObject.getJSONObject("data");
+
+                                if (messageListener != null) {
+                                    UUID messageId = UUID.fromString(messageObj.getString("messageId"));
+
+                                    Message msg = new Message(messageObj.getString("messageText"),
+                                            messageObj.getString("senderUserId"), true,
+                                            messageObj.getLong("timestamp"),
+                                            messageId);
+
+                                    if (messageObj.has("chatGroup")) {
+                                        msg.setChatGroup(messageObj.getString("chatGroup"));
+                                    }
+
+                                    messageListener.onMessageReceived(msg);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            socket.on("mediaChunk", args -> {
+                if (args.length > 0 && args[0] instanceof JSONObject) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) args[0];
+
+                        if (jsonObject.has("data") && jsonObject.has("action")) {
+                            if (jsonObject.getString("action").equals("mediaChunk")) {
+                                JSONObject messageObj = jsonObject.getJSONObject("data");
+
+                                if (messageListener != null) {
+                                    UUID messageId = UUID.fromString(messageObj.getString("messageId"));
+                                    String chunk = messageObj.getString("chunk");
+                                    int offset = messageObj.getInt("offset");
+                                    mc.addChunk(ctx, chunk, messageId, offset);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            socket.on("mediaEnd", args -> {
+                if (args.length > 0 && args[0] instanceof JSONObject) {
+                    try {
+                        JSONObject jsonObject = (JSONObject) args[0];
+
+                        if (jsonObject.has("data") && jsonObject.has("action")) {
+                            if (jsonObject.getString("action").equals("mediaEnd")) {
+                                JSONObject messageObj = jsonObject.getJSONObject("data");
+
+                                if (messageListener != null) {
+                                    UUID messageId = UUID.fromString(messageObj.getString("messageId"));
+
+                                    boolean isGroup = messageObj.has("chatGroup");
+                                    String target;
+                                    if (isGroup) {
+                                        target = messageObj.getString("chatGroup");
+                                    } else {
+                                        target = messageObj.getString("senderUserId");
+                                    }
+
+                                    String mimeType = messageObj.getString("mimeType");
+                                    int chunkCount = messageObj.getInt("chunkCount");
+                                    mc.saveMedia(ctx, target, messageId, chunkCount, mimeType, isGroup);
                                 }
                             }
                         }

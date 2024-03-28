@@ -1,5 +1,7 @@
 package com.da.chitchat;
 
+import android.net.Uri;
+
 import com.da.chitchat.singletons.AppContextSingleton;
 
 import java.util.ArrayList;
@@ -38,15 +40,16 @@ public final class UserMessageStore {
         List<Message> messages = messageMap.get(key);
 
         if (messages != null) {
-            messages.forEach(message -> {
+            for (Message message : messages) {
                 if (message.getID().equals(id)) {
                     String deleteMessageText = AppContextSingleton
                             .getInstance().getString(R.string.deleteMessageText);
                     message.setText(deleteMessageText);
                     message.setState(Message.State.DELETED);
                     message.setEditTimestamp(null);
+                    break;
                 }
-            });
+            }
         }
     }
 
@@ -55,13 +58,28 @@ public final class UserMessageStore {
         List<Message> messages = messageMap.get(key);
 
         if (messages != null) {
-            messages.forEach(message -> {
+            for (Message message : messages) {
                 if (message.getID().equals(id)) {
                     message.setText(newInput);
                     message.setState(Message.State.EDITED);
                     message.setEditTimestamp(editDate);
+                    break;
                 }
-            });
+            }
+        }
+    }
+
+    public static void editMedia(Map<String, List<Message>> messageMap, String key, UUID id,
+                                 Uri mediaUri) {
+        List<Message> messages = messageMap.get(key);
+
+        if (messages != null) {
+            for (Message message : messages) {
+                if (message.getID().equals(id)) {
+                    message.setMediaUri(mediaUri);
+                    break;
+                }
+            }
         }
     }
 
@@ -104,6 +122,14 @@ public final class UserMessageStore {
 
     public static void editMessageFromGroup(String groupName, UUID id, String newInput, Date editDate) {
         editMessage(groupMessageMap, groupName, id, newInput, editDate);
+    }
+
+    public static void editMediaFromUser(String username, UUID id, Uri mediaUri) {
+        editMedia(userMessageMap, username, id, mediaUri);
+    }
+
+    public static void editMediaFromGroup(String groupName, UUID id, Uri mediaUri) {
+        editMedia(groupMessageMap, groupName, id, mediaUri);
     }
 
     public static void clearMessagesFromUser(String username) {

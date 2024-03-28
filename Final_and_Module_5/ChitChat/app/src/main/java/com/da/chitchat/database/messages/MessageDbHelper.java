@@ -17,7 +17,8 @@ public class MessageDbHelper extends SQLiteOpenHelper {
                     MessageContract.MessageEntry.COLUMN_NAME_TIMESTAMP + " INTEGER," +
                     MessageContract.MessageEntry.COLUMN_NAME_TIMESTAMP_EDIT + " INTEGER DEFAULT NULL," +
                     MessageContract.MessageEntry.COLUMN_NAME_DELETED + " INTEGER DEFAULT 0," +
-                    MessageContract.MessageEntry.COLUMN_NAME_CHAT_GROUP + " TEXT DEFAULT NULL)";
+                    MessageContract.MessageEntry.COLUMN_NAME_CHAT_GROUP + " TEXT DEFAULT NULL," +
+                    MessageContract.MessageEntry.COLUMN_NAME_IMAGE_URI + " TEXT DEFAULT NULL)";
 
 
     private static final String SQL_DELETE_ENTRIES =

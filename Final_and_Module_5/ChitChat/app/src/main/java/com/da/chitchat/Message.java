@@ -1,5 +1,7 @@
 package com.da.chitchat;
 
+import android.net.Uri;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,6 +20,8 @@ public class Message {
     private Date editTimestamp;
     private State state;
     private String chatGroup = null;
+    private Uri mediaUri = null;
+    private boolean isVideo = false;
 
     public Message(String text, String sender, boolean isIncoming) {
         this.id = UUID.randomUUID();
@@ -118,5 +122,21 @@ public class Message {
 
     public boolean isGroup() {
         return chatGroup != null;
+    }
+
+    public void setMediaUri(Uri uri) {
+        mediaUri = uri;
+    }
+
+    public Uri getMediaUri() {
+        return mediaUri;
+    }
+
+    public void setIsVideo(boolean val) {
+        isVideo = val;
+    }
+
+    public boolean isVideo() {
+        return isVideo;
     }
 }

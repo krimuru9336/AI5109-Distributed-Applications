@@ -1,23 +1,31 @@
 package com.da.chitchat.adapters;
 
+import android.content.Context;
+import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.da.chitchat.Message;
 import com.da.chitchat.R;
 import com.da.chitchat.UserMessageStore;
+import com.da.chitchat.activities.MessageActivity;
 import com.da.chitchat.interfaces.OnDataChangedListener;
+import com.da.chitchat.services.MediaConverter;
 import com.da.chitchat.singletons.AppContextSingleton;
+import com.da.chitchat.singletons.MediaConverterSingleton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,14 +39,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private final OnDataChangedListener onDataChangedListener;
     private int position;
     private final boolean isGroup;
+    private final MediaConverter mc;
+    private final Context ctx;
 
     public MessageAdapter(List<Message> messageList, String username, OnDataChangedListener listener,
-                          boolean isGroup) {
+                          boolean isGroup, MessageActivity ctx) {
         this.onDataChangedListener = listener;
 
         MessageAdapter.messageList = messageList;
         this.username = username;
         this.isGroup = isGroup;
+        mc = MediaConverterSingleton.getInstance();
+        this.ctx = ctx;
 
         loadAllUserMessages();
     }
@@ -56,12 +68,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.resetState();
 
         Message message = messageList.get(position);
-        holder.bind(message);
+        holder.bind(message, mc, ctx);
 
         holder.itemView.setOnLongClickListener(v -> {
             setPosition(holder.getAdapterPosition());
             return false;
         });
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull MessageViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.unbind();
     }
 
     @Override
@@ -120,6 +138,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
     }
 
+    public void addMedia(UUID id, Uri mediaUri) {
+        Message foundMessage = findMessageById(id);
+        if (foundMessage != null) {
+            foundMessage.setMediaUri(mediaUri);
+            notifyItemChanged(messageList.indexOf(foundMessage));
+        }
+    }
+
     public void editMessage(UUID id, String userInput, Date editDate) {
         Message foundMessage = findMessageById(id);
         if (foundMessage != null) {
@@ -133,7 +159,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             message.setText(userInput);
             message.setState(Message.State.EDITED);
             notifyItemChanged(messageList.indexOf(message));
-            updateScrollPosition();
         }
     }
 
@@ -150,7 +175,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         message.setText(deleteMessageText);
         message.setState(Message.State.DELETED);
         notifyItemChanged(messageList.indexOf(message));
-        updateScrollPosition();
     }
 
     private Message findMessageById(UUID messageId) {
@@ -180,10 +204,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         private final TextView usernameTextView;
         private final TextView timestampTextView;
         private final TextView editTimestampTextView;
+        private final ImageView messageImageView;
+        private final PlayerView messageVideoView;
         private final LinearLayout backgroundContainer;
         private final LinearLayout messageContainer;
         private final LinearLayout editInfoContainer;
         private final int standardTextColor;
+        private ExoPlayer exoPlayer;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -195,20 +222,43 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageContainer = itemView.findViewById(R.id.messageContainer);
             editInfoContainer = itemView.findViewById(R.id.editInfoContainer);
             editTimestampTextView = itemView.findViewById(R.id.editTimestampTextView);
+            messageImageView = itemView.findViewById(R.id.messageImageView);
+            messageVideoView = itemView.findViewById(R.id.messageVideoView);
             standardTextColor = messageTextView.getCurrentTextColor();
 
             itemView.setOnCreateContextMenuListener(this);
         }
 
-        public void bind(Message message) {
+        public void bind(Message message, MediaConverter mc, Context ctx) {
             String username = message.isIncoming() ? message.getSender() : "You";
+            Uri mediaUri = message.getMediaUri();
             usernameTextView.setText(username);
 
             ViewGroup.LayoutParams layoutParams = usernameTextView.getLayoutParams();
             layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             usernameTextView.setLayoutParams(layoutParams);
 
-            messageTextView.setText(message.getText());
+            if (mediaUri != null && message.getState() == Message.State.UNMODIFIED) {
+                messageTextView.setVisibility(View.GONE);
+                if (message.isVideo()) {
+                    if (exoPlayer == null) {
+                        exoPlayer = new ExoPlayer.Builder(ctx).build();
+                        messageVideoView.setPlayer(exoPlayer);
+                    }
+                    messageImageView.setVisibility(View.GONE);
+                    messageVideoView.setVisibility(View.VISIBLE);
+                    mc.showVideo(mediaUri, exoPlayer);
+                } else {
+                    messageImageView.setVisibility(View.VISIBLE);
+                    messageVideoView.setVisibility(View.GONE);
+                    mc.showImage(ctx, mediaUri, messageImageView);
+                }
+            } else {
+                messageTextView.setText(message.getText());
+                messageImageView.setVisibility(View.GONE);
+                messageVideoView.setVisibility(View.GONE);
+                messageTextView.setVisibility(View.VISIBLE);
+            }
 
             // Format the timestamp and set it to the timestampTextView
             timestampTextView.setText(dateFormat.format(message.getTimestamp()));
@@ -233,7 +283,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            int position = getAdapterPosition();
+            int position = getBindingAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 Message selectedMessage = messageList.get(position);
 
@@ -246,6 +296,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     MenuItem deleteItem = menu.add(0, R.id.menu_delete, 1, "Delete");
                     deleteItem.setEnabled(!isDeleted);
                 }
+            }
+        }
+
+        public void unbind() {
+            if (exoPlayer != null) {
+                exoPlayer.release();
+                exoPlayer = null;
             }
         }
 

@@ -34,4 +34,6 @@
     <string name="add_to_group">Add users to group</string>
     <string name="unauthorized">Unauthorized</string>
     <string name="only_admin">Only the admin is allowed to change group members!</string>
+    <string name="message_image_description">Image of message</string>
+    <string name="media_pending">Waiting for media to load…</string>
 </resources>

@@ -19,6 +19,7 @@ import com.da.chitchat.adapters.UserAdapter;
 import com.da.chitchat.listeners.GroupListListener;
 import com.da.chitchat.listeners.UserListListener;
 import com.da.chitchat.WebSocketManager;
+import com.da.chitchat.singletons.AppContextSingleton;
 import com.da.chitchat.singletons.WebSocketManagerSingleton;
 import com.da.chitchat.database.messages.MessageRepository;
 
@@ -35,6 +36,8 @@ public class ChatOverviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+
+        AppContextSingleton.getInstance().initialize(getApplicationContext());
 
         MessageRepository messageDB = new MessageRepository(this);
 
