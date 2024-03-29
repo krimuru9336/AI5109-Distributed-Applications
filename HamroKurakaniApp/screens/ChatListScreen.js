@@ -2,12 +2,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { API_URL } from "@env"
 import AuthContext from '../context/AuthContext'
-import { VirtualizedList, Box, HStack, VStack, Text } from '@gluestack-ui/themed';
+import { VirtualizedList, Box, HStack, VStack, Text, Button, ButtonText } from '@gluestack-ui/themed';
 import { TouchableOpacity } from 'react-native';
+import CreateGroupModal from '../components/CreateGroupModal';
 
 export default function ChatListScreen({ navigation }) {
     const { accessToken } = useContext(AuthContext);
     const [chats, setChats] = useState([]);
+    const [showCreateGroupModal, setShowCreateGroupModal] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -18,7 +20,7 @@ export default function ChatListScreen({ navigation }) {
                     }
                 });
                 setChats(res.data.chats)
-            } catch(err) {
+            } catch (err) {
                 console.log(err)
             }
         })()
@@ -34,6 +36,19 @@ export default function ChatListScreen({ navigation }) {
 
     return (
         <Box>
+            <Box display='flex' alignItems='flex-end' paddingTop={10} paddingRight={10}>
+                <Button
+                    size="xs"
+                    variant="solid"
+                    action="primary"
+                    width={100}
+                    onPress={() => { setShowCreateGroupModal(true) }}
+                >
+                    <ButtonText>
+                        Create Group
+                    </ButtonText>
+                </Button>
+            </Box>
             {
                 (chats.length > 0) ?
                     <VirtualizedList
@@ -83,6 +98,8 @@ export default function ChatListScreen({ navigation }) {
                         )}
                     /> : <></>
             }
+
+            <CreateGroupModal showModal={showCreateGroupModal} setShowModal={setShowCreateGroupModal} />
         </Box>
     )
 }

@@ -63,22 +63,34 @@ except mysql.connector.Error as err:
 dbCur = dbCnx.cursor()
 
 # DB QUERIES
+
+# USERS
 insert_new_user = (
 "INSERT INTO users (id, username, password)"
 "VALUES (%s, %s, %s)")
+select_user_by_username = "SELECT * from users WHERE username=%s"
+select_user_by_usernames = "SELECT * from users WHERE username IN ({})"
+select_user_by_id = "SELECT * from users WHERE id=%s"
+select_every_users_expect_own = "SELECT id, username FROM users WHERE id!=%s"
+
+# MESSAGES
 insert_new_message = (
 "INSERT INTO messages (id, sender_id, sender_username, receiver_user_id, receiver_group_id, content, content_type)"
 "VALUES (%s, %s, %s, %s, %s, %s, %s)")
-
-select_user_by_username = "SELECT * from users WHERE username=%s"
-select_user_by_id = "SELECT * from users WHERE id=%s"
-select_every_users_expect_own = "SELECT id, username FROM users WHERE id!=%s"
 select_message_by_id = "SELECT * FROM messages WHERE id=%s"
 select_messages_by_sender_receiver_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_user_id = %s) OR (receiver_user_id = %s AND sender_id = %s)"
-
 update_message_by_id = "UPDATE messages SET content=%s, is_edited=True WHERE id=%s"
-
 delete_message_by_id = "DELETE FROM messages WHERE id=%s"
+
+# GROUPS
+create_new_group = "INSERT INTO chatgroups (id, name) VALUES (%s, %s)"
+select_chatgroups_by_ids = "SELECT * from chatgroups WHERE id IN ({})"
+
+# USER GROUPS
+add_group_members = (
+"INSERT INTO usergroups (id, userid, chatgroupid)"
+"VALUES (%s, %s, %s)") 
+select_usergroups_by_userid = "SELECT * from usergroups WHERE userid=%s"
 
 # these two are vise versa of each other
 userIdToSid = {}
@@ -249,13 +261,26 @@ def register():
 def chats():
     current_userid = get_jwt_identity()
     try:
+        # fetching individual users that the current user can chat with
         dbCur.execute(select_every_users_expect_own, (current_userid, ))
-        # getting columns name
         columns = [column[0] for column in dbCur.description]
-        rows = dbCur.fetchall()
-        # converting users as list of list to list of key value pairs 
-        users = [dict(zip(columns, row)) for row in rows]
-        return jsonify({"chats": users}), 201
+        userRows = dbCur.fetchall()
+        users = [dict(zip(columns, row)) for row in userRows]
+
+        # fetching group ids of every group that the current user is a member of
+        dbCur.execute(select_usergroups_by_userid, (current_userid, ))
+        usergroupRows = dbCur.fetchall()
+        chatgroupid = [row[2] for row in usergroupRows]
+
+        groups = []
+        if(len(chatgroupid) > 0):
+            # finally fetching group data
+            query = select_chatgroups_by_ids.format(','.join(['%s']*len(chatgroupid)))
+            dbCur.execute(query, chatgroupid)
+            chatGroups = dbCur.fetchall()
+            groups = [dict(zip(columns, row)) for row in chatGroups]
+
+        return jsonify({"chats": users, "groups": groups}), 201
     except Exception as ex:
         if ex.errno == 1062:
             return "Username already taken.", 400
@@ -273,6 +298,41 @@ def chat_history():
         rows = dbCur.fetchall()
         chats = [dict(zip(columns, row)) for row in rows]
         return jsonify({"chats": chats}), 201
+    except Exception as ex:
+        if ex.errno == 1062:
+            return "Username already taken.", 400
+        else:
+            return f"Unexpected {ex=}, {type(ex)=}", 400
+            
+@app.route("/groups", methods=['POST'])
+@jwt_required()
+def create_group():
+    current_userid = get_jwt_identity()
+
+    data = request.json
+    group_name = data.get("group_name")
+    member_names = data.get("member_names")
+
+    try:
+        # fetching user ids based on their usernames
+        query = select_user_by_usernames.format(','.join(['%s']*len(member_names)))
+        dbCur.execute(query, member_names)
+        rows = dbCur.fetchall()
+        member_ids = [row[0] for row in rows]
+
+        if current_userid not in member_ids:
+            member_ids.append(current_userid)
+        
+        group_id = getUniqueId()
+        # creating new group
+        dbCur.execute(create_new_group, (group_id, group_name))
+        dbCnx.commit()
+        for member_id in member_ids:
+            group_member_id = getUniqueId()
+            dbCur.execute(add_group_members, (group_member_id, member_id, group_id))
+            dbCnx.commit()
+
+        return "done", 200
     except Exception as ex:
         if ex.errno == 1062:
             return "Username already taken.", 400
