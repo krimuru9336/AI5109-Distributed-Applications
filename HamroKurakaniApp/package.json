@@ -25,6 +25,7 @@
     "react-native-safe-area-context": "^4.8.2",
     "react-native-screens": "^3.29.0",
     "react-native-svg": "^15.1.0",
+    "react-native-video": "^5.2.1",
     "socket.io-client": "^4.7.4"
   },
   "devDependencies": {

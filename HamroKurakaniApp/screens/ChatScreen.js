@@ -1,13 +1,15 @@
-import { useEffect, useState, useCallback, useContext } from 'react';
+import { useEffect, useState, useCallback, useContext, useRef } from 'react';
 import io from "socket.io-client";
 import axios from 'axios';
-import { TextInput, View, Text } from 'react-native';
+import { Image, View, Text, TouchableOpacity } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import SocketContext from '../context/SocketContext';
 import { Input, InputField, Button, ButtonText } from '@gluestack-ui/themed';
 import AuthContext from '../context/AuthContext';
 import { API_URL } from "@env";
 import { launchImageLibrary } from 'react-native-image-picker';
+import Gif from '@lowkey/react-native-gif';
+import Video, { VideoRef } from 'react-native-video';
 
 const FILE_TYPES = {
     text: "text",
@@ -28,6 +30,7 @@ function App({ route }) {
     const { socket } = useContext(SocketContext);
     const { accessToken } = useContext(AuthContext);
     const recipientId = route.params.receipientId;
+    const videoRef = useRef(null);
 
     useEffect(() => {
         (async () => {
@@ -130,35 +133,72 @@ function App({ route }) {
         <View className="ChatScreen" style={{ height: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10 }}>
             <View style={{ display: 'flex', gap: 10 }}>
                 {
-                    allMessages.map((m, idx) =>
-                        <View key={`${m.message}-${idx}`} style={{ backgroundColor: "pink", color: "black", display: 'flex', flexDirection: "row", justifyContent: "space-between" }}>
-                            <View>
-                                <Text>MESSAGE: {m.content}</Text>
-                                <Text>SENT BY: {m.sender_username}</Text>
-                                <Text>TIMESTAMP: {m.sent_at}</Text>
-                            </View>
-                            <View>
-                                <Button
-                                    size="xs"
-                                    variant="solid"
-                                    action="secondary"
-                                    onPress={() => {
-                                        setMode(modes.EDIT);
-                                        setEditMessageId(m.id);
-                                    }}
-                                >
-                                    <ButtonText>Edit</ButtonText>
-                                </Button>
-                                <Button
-                                    size="xs"
-                                    variant="solid"
-                                    action="negative"
-                                    onPress={() => deleteMessage(m.id)}
-                                >
-                                    <ButtonText>Delete</ButtonText>
-                                </Button>
-                            </View>
-                        </View>)
+                    allMessages.map((m, idx) => (
+                        <View key={`${m.content}-${idx}`}>
+                            {(m.content_type == FILE_TYPES.text) &&
+                                <View style={{ backgroundColor: "pink", color: "black", display: 'flex', flexDirection: "row", justifyContent: "space-between" }}>
+                                    <View>
+                                        <Text>MESSAGE: {m.content}</Text>
+                                        <Text>SENT BY: {m.sender_username}</Text>
+                                        <Text>TIMESTAMP: {m.sent_at}</Text>
+                                    </View>
+                                    <View>
+                                        <Button
+                                            size="xs"
+                                            variant="solid"
+                                            action="secondary"
+                                            onPress={() => {
+                                                setMode(modes.EDIT);
+                                                setEditMessageId(m.id);
+                                            }}
+                                        >
+                                            <ButtonText>Edit</ButtonText>
+                                        </Button>
+                                        <Button
+                                            size="xs"
+                                            variant="solid"
+                                            action="negative"
+                                            onPress={() => deleteMessage(m.id)}
+                                        >
+                                            <ButtonText>Delete</ButtonText>
+                                        </Button>
+                                    </View>
+                                </View>
+                            }
+                            {
+                                (m.content_type == FILE_TYPES.image) &&
+                                <View>
+                                    <Image
+                                        style={{ width: 200, height: 200 }}
+                                        source={{ uri: `${API_URL + m.content}` }}
+                                    />
+                                </View>
+                            }
+                            {
+                                (m.content_type == FILE_TYPES.video) &&
+                                <View>
+                                    <TouchableOpacity>
+                                        <View style={{ width: "100%", height: 200, position: 'relative' }}>
+                                            <Video
+                                                source={{ uri: "http://localhost:5000/static/video/20240328_230115_77cc98d9c659419b954891bd01b9263c.mp4" }}
+                                                ref={videoRef}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    bottom: 0,
+                                                    right: 0,
+                                                    height: "100%",
+                                                    width: "100%"
+                                                }}
+                                                resizeMode="contain"
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            }
+                        </View>
+                    ))
                 }
             </View>
             <View style={{ display: 'flex', gap: 5, marginTop: 10 }}>
