@@ -18,6 +18,8 @@ public class ChatMessage implements Parcelable {
 
     private MessageType messageType;
 
+    private String senderName;
+
 
     public ChatMessage() {
     }
@@ -91,6 +93,14 @@ public class ChatMessage implements Parcelable {
         this.messageType = messageType;
     }
 
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -100,6 +110,7 @@ public class ChatMessage implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(message);
         dest.writeString(senderId);
+        dest.writeString(senderName);
         dest.writeParcelable(timestamp, flags);
         dest.writeString(id);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -124,6 +135,7 @@ public class ChatMessage implements Parcelable {
     protected ChatMessage(Parcel in) {
         message = in.readString();
         senderId = in.readString();
+        senderName = in.readString();
         timestamp = in.readParcelable(Timestamp.class.getClassLoader());
         id = in.readString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
