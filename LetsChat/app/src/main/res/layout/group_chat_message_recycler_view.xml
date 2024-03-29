@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
+
     <LinearLayout
         android:id="@+id/left_chat_layout"
         android:layout_width="wrap_content"
@@ -11,7 +12,16 @@
         android:background="@drawable/input"
         android:backgroundTint="@color/chat_sender_clr"
         android:padding="8dp"
-        android:layout_marginEnd="80dp">
+        android:layout_marginEnd="80dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/left_chat_username_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/off_white"
+            android:textSize="11sp" />
+
         <VideoView
             android:id="@+id/left_chat_video_view"
             android:layout_width="100dp"
@@ -39,6 +49,8 @@
             android:textSize="11sp" />
     </LinearLayout>
 
+
+
     <LinearLayout
         android:id="@+id/right_chat_layout"
         android:layout_width="wrap_content"
@@ -47,7 +59,8 @@
         android:backgroundTint="@color/chat_receiver_clr"
         android:layout_alignParentEnd="true"
         android:padding="8dp"
-        android:layout_marginStart="80dp">
+        android:layout_marginStart="80dp"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/right_chat_image_view"
@@ -72,7 +85,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/off_white"
             android:layout_marginTop="5dp"
-            android:textSize="11sp"/>
+            android:textSize="11sp"
+            android:textAlignment="textEnd"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -21,6 +21,17 @@
                 android:layout_marginStart="10dp"
                 android:layout_centerVertical="true"/>
             <ImageButton
+                android:id="@+id/plus_btn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/icon_new_group"
+                android:layout_toLeftOf="@id/search_btn"
+                app:tint="@color/white"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
+            <ImageButton
                 android:id="@+id/search_btn"
                 android:layout_width="32dp"
                 android:layout_height="32dp"

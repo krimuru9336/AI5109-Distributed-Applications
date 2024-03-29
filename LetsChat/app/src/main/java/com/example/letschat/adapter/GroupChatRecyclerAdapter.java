@@ -22,9 +22,7 @@ import com.example.letschat.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.util.logging.Logger;
-
-public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, ChatRecyclerAdapter.ChatModelViewHolder> {
+public class GroupChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, GroupChatRecyclerAdapter.ChatModelViewHolder> {
     Context context;
 
     private OnChatItemClickListener listener;
@@ -38,16 +36,15 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
         this.listener = listener;
     }
 
-    public ChatRecyclerAdapter(@NonNull FirestoreRecyclerOptions<ChatMessage> options, Context context) {
+    public GroupChatRecyclerAdapter(@NonNull FirestoreRecyclerOptions<ChatMessage> options, Context context) {
         super(options);
         this.context = context;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ChatRecyclerAdapter.ChatModelViewHolder holder, int position, @NonNull ChatMessage model) {
+    protected void onBindViewHolder(@NonNull GroupChatRecyclerAdapter.ChatModelViewHolder holder, int position, @NonNull ChatMessage model) {
         boolean isCurrentUserId = model.getSenderId().equals(FirebaseUtil.currentUserId());
         boolean isDeletedMessage = model.isDeleted();
-        Log.d("Message Incoming", model.getMessage().toString());
 
         if (isCurrentUserId) {
             holder.leftChatLayout.setVisibility(View.GONE);
@@ -57,6 +54,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
                 case IMAGE:
                     holder.rightChatImageView.setVisibility(View.VISIBLE);
                     holder.rightChatTextView.setVisibility(View.GONE);
+                    holder.rightVideoView.setVisibility(View.GONE);
                     Glide.with(holder.itemView.getContext()).load(model.getMessage()).into(holder.rightChatImageView);
                     break;
 
@@ -76,11 +74,13 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
                 case GIF:
                     holder.rightChatImageView.setVisibility(View.VISIBLE);
                     holder.rightChatTextView.setVisibility(View.GONE);
+                    holder.rightVideoView.setVisibility(View.GONE);
                     Glide.with(holder.itemView.getContext()).asGif().load(model.getMessage()).into(holder.rightChatImageView);
                     break;
 
                 default:
                     holder.rightChatImageView.setVisibility(View.GONE);
+                    holder.rightVideoView.setVisibility(View.GONE);
                     holder.rightChatTextView.setVisibility(View.VISIBLE);
                     String messageText = isDeletedMessage ? "You deleted this message." : model.getMessage();
                     holder.rightChatTextView.setText(messageText);
@@ -96,6 +96,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
                 case IMAGE:
                     holder.leftChatImageView.setVisibility(View.VISIBLE);
                     holder.leftChatTextView.setVisibility(View.GONE);
+                    holder.leftVideoView.setVisibility(View.GONE);
                     Glide.with(holder.itemView.getContext()).load(model.getMessage()).into(holder.leftChatImageView);
                     break;
 
@@ -115,33 +116,38 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
                 case GIF:
                     holder.leftChatImageView.setVisibility(View.VISIBLE);
                     holder.leftChatTextView.setVisibility(View.GONE);
+                    holder.leftVideoView.setVisibility(View.GONE);
                     Glide.with(holder.itemView.getContext()).asGif().load(model.getMessage()).into(holder.leftChatImageView);
                     break;
 
                 default:
                     holder.leftChatImageView.setVisibility(View.GONE);
                     holder.leftChatTextView.setVisibility(View.VISIBLE);
+                    holder.leftVideoView.setVisibility(View.GONE);
                     String messageText = isDeletedMessage ? "This message was deleted." : model.getMessage();
                     holder.leftChatTextView.setText(messageText);
                     break;
             }
 
             holder.leftChatTimestamp.setText(FirebaseUtil.timestampToString(model.getTimestamp()));
+            holder.leftChatUserNameView.setText(model.getSenderName());
+
         }
     }
 
 
     @NonNull
     @Override
-    public ChatRecyclerAdapter.ChatModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.chat_message_recycler_view, parent, false);
-        return new ChatRecyclerAdapter.ChatModelViewHolder(view);
+    public GroupChatRecyclerAdapter.ChatModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.group_chat_message_recycler_view, parent, false);
+        return new GroupChatRecyclerAdapter.ChatModelViewHolder(view);
     }
 
     class ChatModelViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout leftChatLayout, rightChatLayout;
         TextView leftChatTextView, rightChatTextView, leftChatTimestamp, rightChatTimestamp;
+        TextView leftChatUserNameView;
         ImageView leftChatImageView, rightChatImageView;
 
         VideoView  leftVideoView, rightVideoView;
@@ -158,6 +164,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, C
             rightChatImageView = itemView.findViewById(R.id.right_chat_image_view);
             leftVideoView = itemView.findViewById(R.id.left_chat_video_view);
             rightVideoView = itemView.findViewById(R.id.right_chat_video_view);
+            leftChatUserNameView = itemView.findViewById(R.id.left_chat_username_view);
 
             rightChatLayout.setOnLongClickListener(v->{
                 Log.d("Click", "Long Clicked message");

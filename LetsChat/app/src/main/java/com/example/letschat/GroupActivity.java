@@ -5,49 +5,42 @@ import static com.example.letschat.util.FirebaseUtil.getCurrentUserName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.letschat.adapter.ChatRecyclerAdapter;
+import com.example.letschat.adapter.GroupChatRecyclerAdapter;
+import com.example.letschat.model.ChatGroup;
 import com.example.letschat.model.ChatMessage;
-import com.example.letschat.model.ChatRoom;
-import com.example.letschat.model.User;
-import com.example.letschat.util.AndroidUtil;
 import com.example.letschat.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
 
-import java.util.Arrays;
-
-public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapter.OnChatItemClickListener {
-
-    User otherUser;
+public class GroupActivity extends AppCompatActivity implements GroupChatRecyclerAdapter.OnChatItemClickListener {
     EditText messageInput;
     ImageButton sendMsgBtn;
     ImageButton backBtn;
-    TextView otherUserView;
+    TextView groupView;
     RecyclerView recyclerView;
-    String chatRoomId;
-    ChatRoom chatRoom;
-
-    ImageView profilePic;
+    String groupId;
+    ChatGroup chatGroup;
     ImageButton addImageBtn;
 
-    ChatRecyclerAdapter chatRecyclerAdapter;
+    GroupChatRecyclerAdapter groupChatRecyclerAdapter;
 
     private static final int REQUEST_MEDIA_PICK = 1;
 
@@ -56,26 +49,17 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.group_activity);
 
-        //getUser
-        otherUser = AndroidUtil.getUserFromIntent(getIntent());
-        chatRoomId = FirebaseUtil.getChatRoomId(FirebaseUtil.currentUserId(), otherUser.getUserId());
+        String groupName = getIntent().getStringExtra("groupName");
+        assert groupName != null;
+        groupId = FirebaseUtil.getGroupChatId(groupName);
         messageInput = findViewById(R.id.chat_msg_input);
         sendMsgBtn = findViewById(R.id.send_message_btn);
         backBtn = findViewById(R.id.back_btn);
-        otherUserView = findViewById(R.id.other_username);
+        groupView = findViewById(R.id.group_chat_name);
         recyclerView = findViewById(R.id.chat_recycler_view);
-        profilePic = findViewById(R.id.profile_pic_img_view);
         addImageBtn = findViewById(R.id.send_image_btn);
-
-        FirebaseUtil.getCurrentProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
-                .addOnCompleteListener(task1 -> {
-                    if(task1.isSuccessful()){
-                        Uri uri = task1.getResult();
-                        AndroidUtil.setProfilePic(this, uri, profilePic);
-                    }
-                });
 
         backBtn.setOnClickListener((v) -> {
             onBackPressed();
@@ -91,7 +75,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
             startActivityForResult(intent,REQUEST_MEDIA_PICK);
         });
 
-        otherUserView.setText(otherUser.getUsername());
+        groupView.setText(groupName);
 
 
         sendMsgBtn.setOnClickListener(v -> {
@@ -101,12 +85,11 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                 if (message.isEmpty()) {
                     return;
                 }
-//                sendMessageToUser(message, ChatMessage.MessageType.TEXT);
                 getUserName(new UserNameCallback() {
                     @Override
                     public void onUserNameReceived(String username) {
                         // Call sendMessageToGroup() with the sender name retrieved asynchronously
-                        sendMessageToUser(message, ChatMessage.MessageType.TEXT, username);
+                        sendMessageToGroup(message, ChatMessage.MessageType.TEXT, username);
                     }
                 });
             } catch (Exception e) {
@@ -114,40 +97,32 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
             }
 
         });
-        getOrCreateChatRoom();
+        getOrCreateGroupChat();
         setUpChatRecyclerView();
 
     }
 
-    void getOrCreateChatRoom() {
-        FirebaseUtil.getChatRoomReference(chatRoomId).get().addOnCompleteListener(task -> {
+    void getOrCreateGroupChat() {
+        FirebaseUtil.getGroupChatsReference(groupId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                chatRoom = task.getResult().toObject(ChatRoom.class);
-                if (chatRoom == null) {
-                    //first time chatting
-                    chatRoom = new ChatRoom(
-                            chatRoomId,
-                            Arrays.asList(FirebaseUtil.currentUserId(), otherUser.getUserId()),
-                            Timestamp.now(),
-                            ""
-                    );
-                    FirebaseUtil.getChatRoomReference(chatRoomId).set(chatRoom);
-                }
+                chatGroup = task.getResult().toObject(ChatGroup.class);
+            }else{
+                Log.d("ERROR", "NO Group");
             }
         });
     }
 
-    void sendMessageToUser(String message, ChatMessage.MessageType type, String senderName) {
+    void sendMessageToGroup(String message, ChatMessage.MessageType type, String sendername) {
 
         ChatMessage chatMessage = new ChatMessage(message, FirebaseUtil.currentUserId(), Timestamp.now(), FirebaseUtil.createMessageId(), false);
         chatMessage.setMessageType(type);
-        chatMessage.setSenderName(senderName);
-        chatRoom.setLastMsgSenderId(FirebaseUtil.currentUserId());
-        chatRoom.setLastMsg(chatMessage);
+        chatMessage.setSenderName(sendername);
+        chatGroup.setLastMsgSenderId(FirebaseUtil.currentUserId());
+        chatGroup.setLastMsg(chatMessage);
 
-        FirebaseUtil.getChatRoomReference(chatRoomId).set(chatRoom);
+        FirebaseUtil.getGroupChatsReference(groupId).set(chatGroup);
 
-        FirebaseUtil.getChatMessageReference(chatRoomId).add(chatMessage)
+        FirebaseUtil.getGroupChatMessageReference(groupId).add(chatMessage)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
@@ -161,31 +136,27 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     }
 
     void setUpChatRecyclerView() {
-        Query query = FirebaseUtil.getChatMessageReference(chatRoomId)
+        Query query = FirebaseUtil.getGroupChatMessageReference(groupId)
                 .orderBy("timestamp", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<ChatMessage> options = new FirestoreRecyclerOptions.Builder<ChatMessage>()
                 .setQuery(query, ChatMessage.class).build();
 
 
-        chatRecyclerAdapter = new ChatRecyclerAdapter(options, getApplicationContext());
+        groupChatRecyclerAdapter = new GroupChatRecyclerAdapter(options, getApplicationContext());
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);
-        chatRecyclerAdapter.setOnChatItemClickListener(this);
-        recyclerView.setAdapter(chatRecyclerAdapter);
-        chatRecyclerAdapter.startListening();
+        groupChatRecyclerAdapter.setOnChatItemClickListener(this);
+        recyclerView.setAdapter(groupChatRecyclerAdapter);
+        groupChatRecyclerAdapter.startListening();
 
     }
 
-    @Override
-    public void onLongPress(int position, ChatMessage chatMessage) {
-        showBottomSheet(chatMessage);
-    }
 
     private void showBottomSheet(ChatMessage chatMessage) {
         if (!chatMessage.isDeleted()) {
-            MessageOptionsBottomSheet bottomSheet = MessageOptionsBottomSheet.newInstance(chatMessage, chatRoom);
+            GroupMessageOptionsBottomSheet bottomSheet = GroupMessageOptionsBottomSheet.newInstance(chatMessage, chatGroup);
             bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
         }
 
@@ -208,12 +179,12 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             @Override
                             public void onGifUploadSuccess(Uri gifUrl) {
                                 // GIF upload successful, send a message with the GIF URL to the chat room
-//                                sendMessageToUser(gifUrl.toString(), ChatMessage.MessageType.GIF);
+//                                sendMessageToGroup(gifUrl.toString(), ChatMessage.MessageType.GIF);
                                 getUserName(new UserNameCallback() {
                                     @Override
                                     public void onUserNameReceived(String username) {
                                         // Call sendMessageToGroup() with the sender name retrieved asynchronously
-                                        sendMessageToUser(gifUrl.toString(), ChatMessage.MessageType.GIF, username);
+                                        sendMessageToGroup(gifUrl.toString(), ChatMessage.MessageType.GIF, username);
                                     }
                                 });
                             }
@@ -221,7 +192,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             @Override
                             public void onGifUploadFailure(Exception e) {
                                 // GIF upload failed, show an error message
-                                AndroidUtil.showToast(ChatActivity.this, "Failed to upload GIF");
+                                Toast.makeText(GroupActivity.this, "Failed to upload GIF", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else if (mimeType.startsWith("image/")) {
@@ -230,12 +201,12 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             @Override
                             public void onImageUploadSuccess(Uri imageUrl) {
                                 // Image upload successful, send a message with the image URL to the chat room
-//                                sendMessageToUser(imageUrl.toString(), ChatMessage.MessageType.IMAGE);
+//                                sendMessageToGroup(imageUrl.toString(), ChatMessage.MessageType.IMAGE);
                                 getUserName(new UserNameCallback() {
                                     @Override
                                     public void onUserNameReceived(String username) {
                                         // Call sendMessageToGroup() with the sender name retrieved asynchronously
-                                        sendMessageToUser(imageUrl.toString(), ChatMessage.MessageType.IMAGE, username);
+                                        sendMessageToGroup(imageUrl.toString(), ChatMessage.MessageType.IMAGE, username);
                                     }
                                 });
                             }
@@ -243,7 +214,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             @Override
                             public void onImageUploadFailure(Exception e) {
                                 // Image upload failed, show an error message
-                                AndroidUtil.showToast(ChatActivity.this, "Failed to upload image");
+                                Toast.makeText(GroupActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else if (mimeType.startsWith("video/")) {
@@ -253,22 +224,21 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             public void onVideoUploadSuccess(Uri videoUrl) {
                                 Log.d("Success", "video uploaded successfully :" + videoUrl);
                                 // Video upload successful, send a message with the video URL to the chat room
-//                                sendMessageToUser(videoUrl.toString(), ChatMessage.MessageType.VIDEO);
+//                                sendMessageToGroup(videoUrl.toString(), ChatMessage.MessageType.VIDEO);
                                 getUserName(new UserNameCallback() {
                                     @Override
                                     public void onUserNameReceived(String username) {
                                         // Call sendMessageToGroup() with the sender name retrieved asynchronously
-                                        sendMessageToUser(videoUrl.toString(), ChatMessage.MessageType.VIDEO, username);
+                                        sendMessageToGroup(videoUrl.toString(), ChatMessage.MessageType.VIDEO, username);
                                     }
                                 });
-
                             }
 
                             @Override
                             public void onVideoUploadFailure(Exception e) {
                                 Log.d("Failure", "video upload failed " + e);
                                 // Video upload failed, show an error message
-                                AndroidUtil.showToast(ChatActivity.this, "Failed to upload video");
+                                Toast.makeText(GroupActivity.this, "Failed to upload video", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -292,6 +262,8 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         void onUserNameReceived(String username);
     }
 
-
-
+    @Override
+    public void onLongPress(int position, ChatMessage chatMessage) {
+        showBottomSheet(chatMessage);
+    }
 }

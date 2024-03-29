@@ -3,6 +3,9 @@
     <item android:title="@string/chats_item"
         android:icon="@drawable/chat_icon"
         android:id="@+id/chat_menu"/>
+    <item android:title="@string/group_chats"
+        android:icon="@drawable/icon_groups"
+        android:id="@+id/group_menu"/>
     <item android:title="@string/profile_item"
         android:icon="@drawable/user_icon"
         android:id="@+id/profile_menu"/>

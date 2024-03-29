@@ -10,29 +10,29 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.example.letschat.model.ChatGroup;
 import com.example.letschat.model.ChatMessage;
-import com.example.letschat.model.ChatRoom;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-public class MessageOptionsBottomSheet extends BottomSheetDialogFragment {
+public class GroupMessageOptionsBottomSheet extends BottomSheetDialogFragment {
     static final String ARG_MESSAGE = "arg_message";
     static final String ARG_ROOM = "arg_room";
     ChatMessage selectedMessage;
-    ChatRoom chatRoom;
+    ChatGroup groupChat;
     TextView editBtn, deleteBtn;
     LinearLayout mainOptionsLayout;
 
     View view;
 
-    public MessageOptionsBottomSheet() {
+    public GroupMessageOptionsBottomSheet() {
         // Required empty public constructor
     }
 
-    public static MessageOptionsBottomSheet newInstance(ChatMessage selectedMessage, ChatRoom room) {
+    public static GroupMessageOptionsBottomSheet newInstance(ChatMessage selectedMessage, ChatGroup chatGroup) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_MESSAGE,  selectedMessage);
-        args.putParcelable(ARG_ROOM, room);
-        MessageOptionsBottomSheet fragment = new MessageOptionsBottomSheet();
+        args.putParcelable(ARG_ROOM, chatGroup);
+        GroupMessageOptionsBottomSheet fragment = new GroupMessageOptionsBottomSheet();
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,21 +50,21 @@ public class MessageOptionsBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void onEditClicked() {
-        if (selectedMessage != null && chatRoom != null) {
+        if (selectedMessage != null && groupChat != null) {
             Log.d("Click Edit", selectedMessage.getMessage());
             view.setVisibility(View.GONE);
             // Show the edit dialog, passing the original message
-            EditMessageDialog editMessageDialog = new EditMessageDialog(selectedMessage, chatRoom);
+            EditGroupMessageDialog editMessageDialog = new EditGroupMessageDialog(selectedMessage, groupChat);
             editMessageDialog.show(getChildFragmentManager(), "EditMessageDialog");
         }
 
     }
 
     private void onDeleteClicked() {
-        if (selectedMessage != null && chatRoom != null) {
+        if (selectedMessage != null && groupChat != null) {
             Log.d("Click Deletion", selectedMessage.getMessage());
             view.setVisibility(View.GONE);
-            DeleteMessageDialog deleteMessageDialog = new DeleteMessageDialog(selectedMessage, chatRoom);
+            DeleteGroupMessageDialog deleteMessageDialog = new DeleteGroupMessageDialog(selectedMessage, groupChat);
             deleteMessageDialog.show(getChildFragmentManager(), "DeleteMessageDialog");
 
         }
@@ -76,7 +76,7 @@ public class MessageOptionsBottomSheet extends BottomSheetDialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             selectedMessage = getArguments().getParcelable(ARG_MESSAGE);
-            chatRoom= getArguments().getParcelable(ARG_ROOM);
+            groupChat = getArguments().getParcelable(ARG_ROOM);
         }
     }
 
