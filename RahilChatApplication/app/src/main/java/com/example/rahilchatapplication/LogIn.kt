@@ -22,7 +22,6 @@ class LogIn : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
-        supportActionBar?.hide()
         edtEmail = findViewById(R.id.edt_email)
         edtPassword = findViewById(R.id.edt_password)
         btnLogin = findViewById(R.id.btnLogin)

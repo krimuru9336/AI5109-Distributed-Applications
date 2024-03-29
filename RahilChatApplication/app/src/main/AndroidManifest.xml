@@ -32,8 +32,7 @@
             android:exported="true" />
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".CreateGroup"
-            android:label="Create Group" />
+            android:name=".CreateGroup" />
     </application>
 
 </manifest>
