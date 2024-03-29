@@ -13,7 +13,7 @@ This Android application was created as a submission for the Distributed Applica
 - Group chat
 - Editing and deleting message 
 
-<img src="https://github.com/krimuru9336/AI5109-Distributed-Applications/blob/fdai7673/Distrbuted%20Application%20Submissions/Snap_one.png" alt="splash screen" width="500" height="700">
+<img src="https://github.com/krimuru9336/AI5109-Distributed-Applications/blob/fdai7673/Distrbuted%20Application%20Submissions/Snap_one.png" alt="splash screen" width="200" height="500">
 
 ## Getting Started
 
