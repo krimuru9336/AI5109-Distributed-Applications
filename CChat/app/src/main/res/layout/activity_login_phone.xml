@@ -77,7 +77,7 @@
         android:layout_gravity="center_vertical"
         android:letterSpacing="0.08"
         android:textStyle="bold"
-        android:textColor="@color/light_gray"
+        android:textColor="@color/black"
         android:textSize="25sp"
         android:layout_weight="5"/>
 
@@ -123,6 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded_corner"
+            android:textColor="@color/white"
             android:text="Send otp"
             android:id="@+id/send_otp_btn"/>
         <ProgressBar

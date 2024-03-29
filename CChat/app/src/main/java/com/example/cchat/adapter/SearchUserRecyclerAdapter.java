@@ -38,6 +38,7 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
 
             holder.usernameText.setText(model.getUsername());
             holder.phoneText.setText(model.getPhone());
+            holder.groupIcon.setVisibility(View.GONE);
             if (model.getUserId().equals(FirebaseUtil.currentUserId())) {
                 holder.usernameText.setText(model.getUsername() + " (YOU)");
             }
@@ -71,12 +72,14 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
         TextView usernameText;
         TextView phoneText;
         ImageView profilePicture;
+        ImageView groupIcon;
 
         public UserModelViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameText = itemView.findViewById(R.id.username_text);
             phoneText = itemView.findViewById(R.id.phone_text);
             profilePicture = itemView.findViewById(R.id.profile_image_view);
+            groupIcon = itemView.findViewById(R.id.group_image_view);
         }
     }
 }

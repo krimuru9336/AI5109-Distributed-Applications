@@ -220,7 +220,7 @@ public class GroupChatActivity extends AppCompatActivity implements GroupChatRec
     }
 
     void openImagePicker() {
-        ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512, 512)
+        ImagePicker.with(this).galleryMimeTypes(new String[]{"image/*"}).compress(512).maxResultSize(512, 512)
                 .createIntent(new Function1<Intent, Unit>() {
                     @Override
                     public Unit invoke(Intent intent) {

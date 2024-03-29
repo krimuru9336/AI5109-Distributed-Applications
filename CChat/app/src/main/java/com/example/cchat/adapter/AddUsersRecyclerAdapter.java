@@ -50,6 +50,7 @@ public class AddUsersRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoomMo
                         holder.usernameText.setText(otherUserModel.getUsername());
                         holder.phoneNumberText.setText(otherUserModel.getPhone());
                         holder.userId = otherUserModel.getUserId();
+                        holder.groupIcon.setVisibility(View.GONE);
                         holder.itemView.setOnClickListener(v -> {
                             //Select users
                             if(clickListener != null)
@@ -81,12 +82,15 @@ public class AddUsersRecyclerAdapter extends FirestoreRecyclerAdapter<ChatRoomMo
         TextView usernameText;
         TextView phoneNumberText;
         ImageView profilePicture;
+
+        ImageView groupIcon;
         String userId;
         public AddUsersModelViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameText = itemView.findViewById(R.id.username_text);
             phoneNumberText = itemView.findViewById(R.id.phone_text);
             profilePicture = itemView.findViewById(R.id.profile_image_view);
+            groupIcon = itemView.findViewById(R.id.group_image_view);
             userId = "";
         }
     }

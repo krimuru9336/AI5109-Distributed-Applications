@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -74,6 +75,8 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     TextView username;
     RecyclerView recyclerView;
     ImageView imageView;
+
+    ImageView groupIcon;
     String msgType;
     ActivityResultLauncher<Intent> imagePickerLauncher;
     Uri selectedImageUri;
@@ -101,7 +104,8 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         username = findViewById(R.id.other_username);
         recyclerView = findViewById(R.id.chat_recycler_view);
         imageView = findViewById(R.id.profile_image_view);
-
+        groupIcon = findViewById(R.id.group_image_view);
+        groupIcon.setVisibility(View.GONE);
         FirebaseUtil.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
                 .addOnCompleteListener(task1 -> {
                     if(task1.isSuccessful()) {
@@ -151,6 +155,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     void setupListeners() {
         messageInput.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -189,7 +194,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
     }
 
     void openImagePicker() {
-        ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512, 512)
+        ImagePicker.with(this).galleryMimeTypes(new String[]{"image/*"}).compress(1024).maxResultSize(1080, 1080)
                 .createIntent(new Function1<Intent, Unit>() {
                     @Override
                     public Unit invoke(Intent intent) {
@@ -364,14 +369,21 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
 
     private void showOptionsDialog(ChatMessageModel chatMessage, String messageId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        CharSequence[] items = new CharSequence[]{"Delete"};
+        if(chatMessage.getMsgType().equals("text"))
+            items = new CharSequence[]{"Edit", "Delete"};
         builder.setTitle("Options")
-                .setItems(new CharSequence[]{"Edit", "Delete"}, new DialogInterface.OnClickListener() {
+                .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
                                 // Edit action
                                 // Implement logic to allow the user to edit the message
-                                showEditDialog(chatMessage, messageId);
+                                if(chatMessage.getMsgType().equals("text")) {
+                                    showEditDialog(chatMessage, messageId);
+                                } else {
+                                    showDeleteConfirmationDialog(chatMessage, messageId);
+                                }
                                 break;
                             case 1:
                                 // Delete action

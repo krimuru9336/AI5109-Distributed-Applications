@@ -57,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded_corner"
+            android:textColor="@color/white"
             android:text="Update Profile"
             android:id="@+id/profile_update_btn"/>
         <ProgressBar

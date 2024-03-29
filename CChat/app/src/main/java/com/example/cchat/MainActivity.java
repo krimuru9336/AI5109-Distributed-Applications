@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
+import com.example.cchat.utils.AndroidUtil;
 import com.example.cchat.utils.FirebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,12 +24,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     BottomNavigationView bottomNavigationView;
     ImageButton searchBtn;
 
     ImageButton menuBtn;
+
+    PopupMenu menu;
     ChatFragment chatFragment;
     ProfileFragment profileFragment;
 
@@ -47,7 +51,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         menuBtn.setOnClickListener((v) -> {
-            startActivity(new Intent(MainActivity.this, SelectUsersActivity.class));
+//            startActivity(new Intent(MainActivity.this, SelectUsersActivity.class));
+            menu = new PopupMenu(MainActivity.this, v);
+            menu.setOnMenuItemClickListener(MainActivity.this);
+            menu.inflate(R.menu.group_menu);
+            menu.show();
+
         });
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -67,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
 
         askForNotificationPermission();
         getFCMToken();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        startActivity(new Intent(MainActivity.this, SelectUsersActivity.class));
+        return true;
     }
 
     private void askForNotificationPermission() {

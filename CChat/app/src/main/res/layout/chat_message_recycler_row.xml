@@ -25,6 +25,7 @@
         <ImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:scaleType="centerCrop"
             android:id="@+id/received_media_view"/>
 
         <TextView
@@ -59,6 +60,7 @@
         <ImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:scaleType="centerCrop"
             android:id="@+id/sent_media_view"/>
 
         <TextView
