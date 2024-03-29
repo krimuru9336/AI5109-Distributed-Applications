@@ -51,6 +51,11 @@
 * you can delete outgoing (your) messages for yourself, for all and also delete them
 * the timestamp of editing/deleting will be shown
 * deleted messages cannot be edited, deleted or restored anymore
+* you can also send and display videos, gifs and images!
+
+* ### Groupchats
+* the addition of chat rooms
+* all users get the messages of a chat room
 
 # Node Server
 * node server is used for user discovery via websockets and for sending messages between users
