@@ -13,10 +13,12 @@ This Android application was created as a submission for the Distributed Applica
 - Group chat
 - Editing and deleting message 
 
-<img src="https://github.com/krimuru9336/AI5109-Distributed-Applications/blob/fdai7673/Distrbuted%20Application%20Submissions/Snap_one.png" alt="Splash screen" width="200" height="400">
+## Snaps of Application
 
-<img src="https://github.com/krimuru9336/AI5109-Distributed-Applications/blob/fdai7673/Distrbuted%20Application%20Submissions/snap_two.png" alt="Signup screen" width="200" height="400">
-
+<div style="display:flex;">
+    <img src="https://github.com/krimuru9336/AI5109-Distributed-Applications/blob/fdai7673/Distrbuted%20Application%20Submissions/Snap_one.png" alt="Splash screen" width="200" height="400" style="margin-right: 20px;">
+    <img src="https://github.com/krimuru9336/AI5109-Distributed-Applications/blob/fdai7673/Distrbuted%20Application%20Submissions/snap_two.png" alt="Signup screen" width="200" height="400">
+</div>
 
 ## Getting Started
 
