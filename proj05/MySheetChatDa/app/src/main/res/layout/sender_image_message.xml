@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <!-- Sender Image -->
+    <ImageView
+        android:id="@+id/senderImage"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
+        android:background="@color/colorChatBlue1"
+        android:padding="12dp"
+        android:src="@drawable/ic_incoming_arrow" />
+
+</RelativeLayout>
