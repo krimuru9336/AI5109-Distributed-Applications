@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cat Facts</title>
+</head>
+<body>
+<h1>Cat Facts</h1>
+
+<!-- Form for submitting the amount of facts -->
+<form th:action="@{/cat-facts}" method="get">
+    <label for="amountInput">Amount of Facts:</label>
+    <input type="number" id="amountInput" name="amount" value="1">
+    <button type="submit">Fetch Cat Facts</button>
+</form>
+
+<!--
+<ul th:if="${catFacts}">
+    <li th:each="fact : ${catFacts}">
+        <p th:text="${fact.text}"></p>
+    </li>
+</ul>
+-->
+
+<ul th:if="${catFacts != null}">
+    <li th:each="fact : ${catFacts}">
+        <p th:text="${fact.text}"></p>
+    </li>
+</ul>
+
+<!--
+<ul>
+    <li th:each="fact : ${catFacts}" th:text="${fact.text}"></li>
+</ul>
+-->
+
+</body>
+</html>
