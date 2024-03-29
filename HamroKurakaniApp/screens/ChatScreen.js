@@ -8,7 +8,6 @@ import { Input, InputField, Button, ButtonText } from '@gluestack-ui/themed';
 import AuthContext from '../context/AuthContext';
 import { API_URL } from "@env";
 import { launchImageLibrary } from 'react-native-image-picker';
-import Gif from '@lowkey/react-native-gif';
 import Video, { VideoRef } from 'react-native-video';
 
 const FILE_TYPES = {
