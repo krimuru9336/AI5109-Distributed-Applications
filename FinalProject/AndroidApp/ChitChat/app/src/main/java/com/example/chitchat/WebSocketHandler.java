@@ -1,7 +1,15 @@
 package com.example.chitchat;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
+
+import androidx.core.content.FileProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,6 +17,13 @@ import org.json.JSONObject;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +39,8 @@ public class WebSocketHandler {
     private boolean messageListenerSet;
     private boolean nameListenerSet;
     private int activityChangeCounter;
+
+    private final Context context;
     private String myUsername;
     private static WebSocketHandler wsh;
     public static synchronized WebSocketHandler getInstance(Context context){
@@ -38,6 +55,7 @@ public class WebSocketHandler {
         this.userListenerSet = false;
         this.messageListenerSet = false;
         this.nameListenerSet = false;
+        this.context=context;
         try {
             String COMMUNICATIONSERVER_URL = context.getString(R.string.ip) + ":" + context.getString(R.string.port);
             this.socket = IO.socket(COMMUNICATIONSERVER_URL);
@@ -84,7 +102,20 @@ public class WebSocketHandler {
         }
         this.socket.emit("message",jsonMsg);
     }
-
+    public void sendMedia(String usernameDest, String messageContent, long timestamp, UUID msgID, String base64data, String type){
+        JSONObject jsonMsg = new JSONObject();
+        try{
+            jsonMsg.put("usernameDest",usernameDest);
+            jsonMsg.put("messageContent",messageContent);
+            jsonMsg.put("timestamp",timestamp);
+            jsonMsg.put("msgID",msgID);
+            jsonMsg.put("file", base64data);
+            jsonMsg.put("type",type);
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
+        this.socket.emit("media",jsonMsg);
+    }
     public void deleteMsg(String usernameDest, UUID msgID,long timestamp) {
         JSONObject jsonMessage = new JSONObject();
         try {
@@ -177,6 +208,52 @@ public class WebSocketHandler {
 
         this.messageListener = ml;
         if(!this.messageListenerSet){
+            socket.on("groupMedia",args -> {
+                if(args.length > 0 && args[0] instanceof JSONObject){
+                    try{
+                        JSONObject json = (JSONObject) args[0];
+                        if(json.has("data") && json.has("action")){
+                            JSONObject jsonMsg = json.getJSONObject(("data"));
+                            String type = jsonMsg.getString("type");
+                            String base64data = jsonMsg.getString("file");
+                            Message msg = new Message(jsonMsg.getString("message"),
+                                    jsonMsg.getString("usernameSource"),jsonMsg.getString("displayname"),true,jsonMsg.getLong("timestamp"), UUID.fromString(jsonMsg.getString("msgID")));
+                            msg.setType(type);
+                            msg.setBase64data(base64data);
+                            messageListener.onMessageReceived(msg);
+                        }
+                    }catch(JSONException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+            socket.on("media", args -> {
+                if (args.length > 0 && args[0] instanceof JSONObject) {
+                    try {
+                        JSONObject json = (JSONObject) args[0];
+                        if (json.has("data") && json.has("action")) {
+                            if (json.getString("action").equals("media")) {
+                                JSONObject jsonMsg = json.getJSONObject("data");
+                                String type = jsonMsg.getString("type");
+                                String base64data = jsonMsg.getString("file");
+                                Message msg = new Message(
+                                        jsonMsg.getString("message"),
+                                        jsonMsg.getString("usernameSource"),
+                                        true,
+                                        jsonMsg.getLong("timestamp"),
+                                        UUID.fromString(jsonMsg.getString("msgID"))
+                                );
+                                msg.setType(type);
+                                msg.setBase64data(base64data);
+                                messageListener.onMessageReceived(msg);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
             socket.on("groupMessage",args -> {
                 if(args.length > 0 && args[0] instanceof JSONObject){
                     try{

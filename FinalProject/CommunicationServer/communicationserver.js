@@ -3,12 +3,12 @@ const csconfig = require('./csconfig');
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
+const fs = require("fs");
 const app = express();
 const server = http.createServer(app);
 const port = csconfig.port;
 
-const sio = socketio(server);
-
+const sio = socketio(server,{maxHttpBufferSize:1e8});
 const currentUsers = [];
 // Arrays of positive adjectives and animal names
 const adjectives = csconfig.adjectives;
@@ -55,6 +55,7 @@ sio.on('connection',(socket) => {
 	
 	socket.on('registerUser',(username) => {
 		try {
+			console.log("\n------------------------------\n");
 			const usernameList = currentUsers.map(currentUser => currentUser.user_name);
 			sio.to(socket.id).emit('registerUser',{
 				data: usernameList,
@@ -76,6 +77,7 @@ sio.on('connection',(socket) => {
 	
 	socket.on('disconnect',() => {
 		try {
+			console.log("\n------------------------------\n");
 			const indexDC = currentUsers.findIndex(currentUser => currentUser.socket_id ===socket.id);
 			if(indexDC !== -1){
 				const usernameDC = currentUsers[indexDC].user_name;
@@ -95,12 +97,16 @@ sio.on('connection',(socket) => {
 	
 	socket.on('message',(message) => {
 		try {
+			console.log("\n------------------------------\n");
+			console.log("Message received ...");
 			const usernameDest = message.usernameDest;
 			const messageContent = message.messageContent;
 			const timestamp = message.timestamp;
 			const msgID = message.msgID;
-			console.log(usernameDest);
-			console.log(messageContent);
+			console.log("Destination: ",usernameDest);
+			console.log("Content: ",messageContent);
+			console.log("Time: ",timestamp);
+			console.log("ID: ",msgID);
 			const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;
 			
 			if(usernameDest.includes("Chatroom")){
@@ -138,10 +144,14 @@ sio.on('connection',(socket) => {
 	
     socket.on('delete',(message) => {
 		try {
-			console.log("Delete");
+			console.log("\n------------------------------\n");
+			console.log("Delete ...");
 			const usernameDest = message.usernameDest;
 			const msgID = message.msgID;
 			const timestamp = message.timestamp;
+			console.log("Destination: ",usernameDest);
+			console.log("Time: ",timestamp);
+			console.log("ID: ",msgID);
 			if(usernameDest.includes("Chatroom")){
 				socket.broadcast.emit('delete',{
 					data: {
@@ -175,11 +185,16 @@ sio.on('connection',(socket) => {
 	
 	socket.on('edit',(message) => {
 		try {
-			console.log("Edit");
+			console.log("\n------------------------------\n");
+			console.log("Edit ...");
 			const usernameDest = message.usernameDest;
 			const msgID = message.msgID;
 			const messageContent = message.messageContent;
 			const timestamp = message.timestamp;
+			console.log("Destination: ",usernameDest);
+			console.log("Content: ",messageContent);
+			console.log("Time: ",timestamp);
+			console.log("ID: ",msgID);
 			if(usernameDest.includes("Chatroom")){
 				socket.broadcast.emit('edit',{
 					data: {
@@ -210,6 +225,61 @@ sio.on('connection',(socket) => {
 		}
 		catch(error){
 			console.log("Edit error.");
+			console.log(error);
+		}
+	});
+	
+	socket.on('media',(message) => {
+		try {
+			console.log("\n------------------------------\n");
+			console.log("Media received ...");
+			
+			const usernameDest = message.usernameDest;
+			const messageContent = message.messageContent;
+			const timestamp = message.timestamp;
+			const msgID = message.msgID;
+			const file = message.file;
+			const type = message.type;
+			console.log("Destination: ",usernameDest);
+			console.log("Content: ",messageContent);
+			console.log("Time: ",timestamp);
+			console.log("ID: ",msgID);
+			console.log("Type: ",type);
+			
+			const usernameSource = currentUsers.find(currentUser => currentUser.socket_id === socket.id)?.user_name;		
+			if(usernameDest.includes("Chatroom")){
+				socket.broadcast.emit('groupMedia',{
+				data: {
+						usernameSource: usernameDest,
+						displayname: usernameSource,
+						message: messageContent,
+						timestamp: timestamp,
+						msgID: msgID,
+						file: file,
+						type:type
+					},
+					action:'media',
+				});	
+			}
+			else{
+				const socketidDest = currentUsers.find(currentUser => currentUser.user_name === usernameDest)?.socket_id;
+				if(socketidDest){
+					sio.to(socketidDest).emit('media',{
+						data: {
+							usernameSource: usernameSource,
+							message: messageContent,
+							timestamp: timestamp,
+							msgID: msgID,
+							file: file,
+							type:type
+						},
+						action:'media',
+					});
+				}
+			}	
+		}
+		catch(error){
+			console.log("Message error.");
 			console.log(error);
 		}
 	});

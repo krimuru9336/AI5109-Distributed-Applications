@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ChitChat</string>
     <string name="type">Type …</string>
-    <string name="header">Module 4 - Simon Keller (fdai5676) 1165562</string>
+    <string name="header">Module 5 - Simon Keller (fdai5676) 1165562</string>
     <string name="enter_username">Enter your username</string>
     <string name="connect">Connect</string>
     <string name="users_online">Users online</string>
@@ -20,4 +20,5 @@
     <string name="edited_on">Edited on </string>
     <string name="deleted_on">Deleted on </string>
     <string name="changed_on">Changed on </string>
+    <string name="media">media_placeholder </string>
 </resources>

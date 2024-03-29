@@ -19,8 +19,8 @@ public class MessageListener {
         return ml;
     }
 
-    public ChatAdapter createChatAdapter(String username, DataChangedListener dcl){
-        this.chatAdapter = new ChatAdapter(MessageStore.getMessages(username),username,dcl);
+    public ChatAdapter createChatAdapter(String username, DataChangedListener dcl,ChatActivity context){
+        this.chatAdapter = new ChatAdapter(MessageStore.getMessages(username),username,dcl,context);
         return this.chatAdapter;
     }
     public void onMessageReceived(Message msg){

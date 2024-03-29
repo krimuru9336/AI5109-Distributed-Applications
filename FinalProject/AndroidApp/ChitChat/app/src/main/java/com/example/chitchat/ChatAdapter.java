@@ -1,18 +1,29 @@
 package com.example.chitchat;
 
+import android.content.Context;
+import android.net.Uri;
+import android.util.Base64;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.media3.common.MediaItem;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -27,13 +38,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     private final DataChangedListener dataChangedListener;
     private int pos;
 
-    public ChatAdapter(List<Message> messageList,String username, DataChangedListener dcl){
+    private final Context context;
+
+    public ChatAdapter(List<Message> messageList,String username, DataChangedListener dcl,ChatActivity context){
         this.dataChangedListener = dcl;
         if(messagesOfUser==null){
             messagesOfUser = new HashMap<>();
         }
         ChatAdapter.messageList = messageList;
         this.username = username;
+        this.context = context;
         loadUserMessages();
     }
     @NonNull
@@ -47,7 +61,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public void onBindViewHolder(@NonNull ChatViewHolder cvh,int pos){
         cvh.reset();
         Message msg = messageList.get(pos);
-        cvh.bind(msg);
+        cvh.bind(msg,context);
         cvh.itemView.setOnLongClickListener(v -> {
             setPosition(cvh.getAdapterPosition());
             return false;
@@ -119,6 +133,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     public void deleteMsg(Message msg,long newTimestamp) {
         String deleteMessageText = "Deleted";
+        msg.setType("");
+        msg.setBase64data("");
         msg.setContent(deleteMessageText);
         msg.setState(Message.State.DELETED);
         msg.setChangedTimestamp(newTimestamp);
@@ -149,7 +165,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
         private final LinearLayout editContextContainer;
 
+        private final ImageView imageView;
+
         private boolean isIncoming;
+
+        private ExoPlayer exoPlayer;
+
+        private final PlayerView exoPlayerView;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -163,10 +185,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             this.spacerLine = itemView.findViewById(R.id.spacerLine);
             this.changedTimestampTextView = itemView.findViewById(R.id.changedTimestampTextView);
             this.changedLabelTextView = itemView.findViewById(R.id.changedLabelTextView);
+            this.imageView = itemView.findViewById(R.id.imageView);
+            this.exoPlayerView = itemView.findViewById(R.id.exoPlayerView);
 
             itemView.setOnCreateContextMenuListener(this);
         }
-        public void bind(Message msg){
+        public void bind(Message msg,Context context) {
             this.msgTextView.setText(msg.getContent());
             String displayName = msg.getIsIncoming() ? msg.getDisplayname() : "You";
             this.usernameTextView.setText(displayName);
@@ -176,6 +200,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             int gravity = msg.getIsIncoming()? Gravity.START : Gravity.END;
             this.isIncoming = msg.getIsIncoming();
             this.chatContainer.setGravity(gravity);
+            this.imageView.setVisibility(View.GONE);
+            this.exoPlayerView.setVisibility(View.GONE);
+            this.editContextContainer.setVisibility(View.GONE);
+            this.spacerLine.setVisibility(View.GONE);
 
             Message.State messageState = msg.getState();
             if(messageState == Message.State.DELETED || messageState == Message.State.EDITED){
@@ -188,6 +216,37 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
                 }
                 else{
                     this.changedLabelTextView.setText(R.string.edited_on);
+                }
+            }
+            if(messageState != Message.State.DELETED){
+                if(msg.getBase64data()!=null&&!msg.getBase64data().equals("")){
+                    if(msg.getType().contains("gif")){
+                        Glide.with(context).asGif().load(Base64.decode(msg.getBase64data(),Base64.DEFAULT)).into(this.imageView);
+                        this.imageView.setVisibility(View.VISIBLE);
+                    }
+                    else if(msg.getType().contains("video")){
+                        if (exoPlayer == null) {
+                            exoPlayer = new ExoPlayer.Builder(context).build();
+                            this.exoPlayerView.setPlayer(exoPlayer);
+                        }
+                        try{
+                            byte[] videoData = Base64.decode(msg.getBase64data(),Base64.DEFAULT);
+                            File tempFile = File.createTempFile("video","."+msg.getType().split("/")[1]);
+                            FileOutputStream fos = new FileOutputStream(tempFile);
+                            fos.write(videoData);
+                            fos.close();
+
+                            MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(tempFile));
+                            exoPlayer.setMediaItem(mediaItem);
+                            this.exoPlayerView.setVisibility(View.VISIBLE);
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                    else if(msg.getType().contains("image")){
+                        Glide.with(context).asBitmap().load(Base64.decode(msg.getBase64data(),Base64.DEFAULT)).into(this.imageView);
+                        this.imageView.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }

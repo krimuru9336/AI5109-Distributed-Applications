@@ -1,5 +1,9 @@
 package com.example.chitchat;
 
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.result.ActivityResultLauncher;
+import android.app.Activity;
+import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import android.content.Intent;
@@ -7,12 +11,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.view.MenuItem;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
+
 
 public class ChatActivity extends AppCompatActivity implements DataChangedListener{
     private EditText messageEditText;
@@ -34,7 +44,7 @@ public class ChatActivity extends AppCompatActivity implements DataChangedListen
         }
         this.webSocketHandler = WebSocketHandler.getInstance(getApplicationContext());
         MessageListener ml = MessageListener.getInstance();
-        this.chatAdapter = ml.createChatAdapter(this.userDest,this);
+        this.chatAdapter = ml.createChatAdapter(this.userDest,this,this);
         this.recyclerView = findViewById(R.id.messageRecyclerView);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setAdapter(this.chatAdapter);
@@ -51,6 +61,58 @@ public class ChatActivity extends AppCompatActivity implements DataChangedListen
             webSocketHandler.sendMessage(this.userDest,msgContent,timestamp,msgID);
             this.chatAdapter.addMessage(msg);
             this.messageEditText.setText("");
+        }
+    }
+    private final ActivityResultLauncher<Intent> registerMediaResult =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result->{
+        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+            Uri uri = result.getData().getData();
+            if (uri != null) {
+                getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                sendMedia(uri);
+            }
+        }
+    });
+    public void selectMedia(View view){
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        String[] types =  {"image/*","video/*"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,types);
+        registerMediaResult.launch(intent);
+    }
+    public void sendMedia(Uri uri){
+        Message msg = new Message("media",userDest,false);
+        long timestamp = msg.getTimestamp().getTime();
+        UUID msgID = msg.getID();
+
+        String type = getContentResolver().getType(uri);
+        msg.setContent(type+"_"+msgID);
+
+        byte[] fileContent = readFileContent(uri);
+        String base64data = Base64.encodeToString(fileContent, Base64.DEFAULT);
+        msg.setBase64data(base64data);
+        msg.setType(type);
+
+        webSocketHandler.sendMedia(this.userDest,msg.getContent(),timestamp,msgID,base64data,type);
+        this.chatAdapter.addMessage(msg);
+        this.messageEditText.setText("");
+    }
+
+    private byte[] readFileContent(Uri uri) {
+        try {
+            InputStream inputStream = getApplicationContext().getContentResolver().openInputStream(uri);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, bytesRead);
+            }
+            inputStream.close();
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
     public void editMsg(Message msg, String newContent) {

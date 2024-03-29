@@ -1,4 +1,6 @@
 package com.example.chitchat;
+import android.net.Uri;
+
 import java.util.Date;
 import java.util.UUID;
 public class Message {
@@ -15,6 +17,8 @@ public class Message {
     private boolean isIncoming;
     private Date timestamp;
     private Date changedTimestamp;
+    private String base64data;
+    private String type;
 
     private State state;
 
@@ -49,10 +53,19 @@ public class Message {
         this.state = State.DEFAULT;
     }
 
+    public void setBase64data(String base64data) {this.base64data=base64data;}
+    public String getBase64data(){
+        return this.base64data;
+    }
+    public void setType(String type){
+        this.type=type;
+    }
     public void setContent(String content) {
         this.content = content;
     }
-
+    public String getType(){
+        return this.type;
+    }
     public String getContent(){
         return this.content;
     }
@@ -75,7 +88,6 @@ public class Message {
     public void setChangedTimestamp(long timestamp){
         this.changedTimestamp = new Date(timestamp);
     }
-
     public Date getChangedTimestamp(){
         return this.changedTimestamp;
     }
