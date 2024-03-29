@@ -1,8 +1,12 @@
 import { AddIcon, Badge, BadgeText, Box, Button, ButtonText, CloseIcon, FormControl, FormControlHelper, FormControlLabel, FormControlLabelText, HStack, Heading, Icon, Input, InputField, Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, VStack } from "@gluestack-ui/themed"
-import { useState } from "react"
+import axios from "axios";
+import { API_URL } from "@env"
+import { useContext, useState } from "react"
 import { Alert, TouchableOpacity } from "react-native";
+import AuthContext from "../context/AuthContext";
 
-export default ({ showModal, setShowModal }) => {
+export default ({ showModal, setShowModal, successCallback }) => {
+    const { accessToken } = useContext(AuthContext);
     const [groupName, setGroupName] = useState("");
     const [newMember, setNewMember] = useState("");
     const [allMembers, setAllMembers] = useState([]);
@@ -15,8 +19,18 @@ export default ({ showModal, setShowModal }) => {
         setAllMembers(prev => prev.filter(member => member !== memberToRemove))
     }
 
-    const hanldeSubmit = () => {
-
+    const hanldeSubmit = async () => {
+        try {
+            const response = await axios.post(`${API_URL}/groups`, { group_name: groupName, member_names: allMembers }, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                },
+            });
+            setShowModal(false);
+            successCallback();
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (

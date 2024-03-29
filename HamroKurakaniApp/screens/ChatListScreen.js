@@ -2,14 +2,16 @@ import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { API_URL } from "@env"
 import AuthContext from '../context/AuthContext'
-import { VirtualizedList, Box, HStack, VStack, Text, Button, ButtonText } from '@gluestack-ui/themed';
+import { VirtualizedList, Box, HStack, VStack, Text, Button, ButtonText, Heading } from '@gluestack-ui/themed';
 import { TouchableOpacity } from 'react-native';
 import CreateGroupModal from '../components/CreateGroupModal';
 
 export default function ChatListScreen({ navigation }) {
     const { accessToken } = useContext(AuthContext);
-    const [chats, setChats] = useState([]);
+    const [userChats, setUserChats] = useState([]);
+    const [groupChats, setGroupChats] = useState([]);
     const [showCreateGroupModal, setShowCreateGroupModal] = useState(false)
+    const [shouldLoadChats, setShouldLoadChats] = useState(true);
 
     useEffect(() => {
         (async () => {
@@ -19,18 +21,29 @@ export default function ChatListScreen({ navigation }) {
                         Authorization: `Bearer ${accessToken}`
                     }
                 });
-                setChats(res.data.chats)
+                console.log(res.data)
+                setUserChats(res.data.chats)
+                setGroupChats(res.data.groups)
             } catch (err) {
                 console.log(err)
             }
         })()
-    }, [])
+        setShouldLoadChats(false);
+    }, [shouldLoadChats])
 
-    function getItemCount(_data) {
-        return chats.length
+    function getUserChatItemCount(_data) {
+        return userChats.length
     }
-    function getItem(_data, index) {
-        const a = chats[index]
+    function getUserChatItem(_data, index) {
+        const a = userChats[index]
+        return a;
+    }
+
+    function getGroupChatItemCount(_data) {
+        return groupChats.length
+    }
+    function getGroupChatItem(_data, index) {
+        const a = groupChats[index]
         return a;
     }
 
@@ -49,57 +62,89 @@ export default function ChatListScreen({ navigation }) {
                     </ButtonText>
                 </Button>
             </Box>
-            {
-                (chats.length > 0) ?
-                    <VirtualizedList
-                        getItemCount={getItemCount}
-                        getItem={getItem}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity onPress={() => {
-                                navigation.navigate('ChatScreen', {
-                                    receipientId: item.id
-                                })
-                            }}>
-                                <Box
-                                    borderBottomWidth="$1"
-                                    borderColor="$trueGray800"
-                                    sx={{
-                                        _dark: {
-                                            borderColor: "$trueGray100",
-                                        },
-                                        "@base": {
-                                            pl: 0,
-                                            pr: 0,
-                                        },
-                                        "@sm": {
-                                            pl: "$4",
-                                            pr: "$5",
-                                        },
-                                    }}
-                                    py="$2"
-                                >
-                                    <HStack space="md" justifyContent="space-between">
-                                        <VStack>
-                                            <Text
-                                                color="$coolGray800"
-                                                fontWeight="$bold"
-                                                sx={{
-                                                    _dark: {
-                                                        color: "$warmGray100",
-                                                    },
-                                                }}
-                                            >
-                                                {item.username}
-                                            </Text>
-                                        </VStack>
-                                    </HStack>
-                                </Box>
-                            </TouchableOpacity>
-                        )}
-                    /> : <></>
-            }
+            <Box paddingVertical={10}>
+                <Box>
+                    <Heading color='#5F5F5F' textAlign='center' marginBottom={5}>Users</Heading>
+                    {
+                        (userChats.length > 0) ?
+                            <VirtualizedList
+                                getItemCount={getUserChatItemCount}
+                                getItem={getUserChatItem}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity onPress={() => {
+                                        navigation.navigate('ChatScreen', {
+                                            receipientId: item.id
+                                        })
+                                    }}>
+                                        <Box
+                                            borderWidth="$1"
+                                            borderColor="$trueGray800"
+                                            py="$2"
+                                        >
+                                            <HStack space="md" justifyContent="space-between">
+                                                <VStack>
+                                                    <Text
+                                                        color="$coolGray800"
+                                                        fontWeight="$bold"
+                                                        sx={{
+                                                            _dark: {
+                                                                color: "$warmGray100",
+                                                            },
+                                                        }}
+                                                    >
+                                                        {item.username}
+                                                    </Text>
+                                                </VStack>
+                                            </HStack>
+                                        </Box>
+                                    </TouchableOpacity>
+                                )}
+                            /> : <></>
+                    }
+                </Box>
 
-            <CreateGroupModal showModal={showCreateGroupModal} setShowModal={setShowCreateGroupModal} />
+                <Box>
+                    <Heading color='#5F5F5F' textAlign='center' marginBottom={5}>Groups</Heading>
+                    {
+                        (groupChats.length > 0) ?
+                            <VirtualizedList
+                                getItemCount={getGroupChatItemCount}
+                                getItem={getGroupChatItem}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity onPress={() => {
+                                        navigation.navigate('ChatScreen', {
+                                            receipientId: item.id
+                                        })
+                                    }}>
+                                        <Box
+                                            borderWidth="$1"
+                                            borderColor="$trueGray800"
+                                            py="$2"
+                                        >
+                                            <HStack space="md" justifyContent="space-between">
+                                                <VStack>
+                                                    <Text
+                                                        color="$coolGray800"
+                                                        fontWeight="$bold"
+                                                        sx={{
+                                                            _dark: {
+                                                                color: "$warmGray100",
+                                                            },
+                                                        }}
+                                                    >
+                                                        {item.name}
+                                                    </Text>
+                                                </VStack>
+                                            </HStack>
+                                        </Box>
+                                    </TouchableOpacity>
+                                )}
+                            /> : <></>
+                    }
+                </Box>
+            </Box>
+
+            <CreateGroupModal showModal={showCreateGroupModal} setShowModal={setShowCreateGroupModal} successCallback={() => setShouldLoadChats(true)} />
         </Box>
     )
 }
