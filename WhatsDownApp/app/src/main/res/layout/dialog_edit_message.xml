@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edit_message_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Edit Message"
+        android:maxLines="5"
+        android:inputType="textMultiLine"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/cancel_update_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_message_input"
+        android:layout_marginTop="28dp"
+        android:text="Cancel"
+        android:textColor="@color/green"/>
+
+    <Button
+        android:id="@+id/update_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:backgroundTint="@color/green"
+        android:layout_below="@id/edit_message_input"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"/>
+
+</RelativeLayout>
