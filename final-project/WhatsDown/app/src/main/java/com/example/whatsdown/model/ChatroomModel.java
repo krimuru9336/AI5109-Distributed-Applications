@@ -2,6 +2,7 @@ package com.example.whatsdown.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -86,6 +87,7 @@ public class ChatroomModel implements Parcelable {
     }
 
     public void setLastMessageText(String lastMessageText) {
+        Log.d("YourTag", "Message lastMessageText: " + lastMessageText);
         this.lastMessageText = lastMessageText;
     }
 

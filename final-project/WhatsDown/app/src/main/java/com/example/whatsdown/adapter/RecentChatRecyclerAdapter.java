@@ -2,6 +2,7 @@ package com.example.whatsdown.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.whatsdown.ChatActivity;
 import com.example.whatsdown.R;
+import com.example.whatsdown.model.ChatMessageModel;
 import com.example.whatsdown.model.ChatroomModel;
 import com.example.whatsdown.model.UserModel;
 import com.example.whatsdown.utils.AndroidUtil;
@@ -36,13 +38,23 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter <Chatroo
                     if (task.isSuccessful()) {
                         boolean lastMessageSentByMe = model.getLastMessageSenderId().equals(FirebaseUtil.currentUserId());
                         boolean isLastMessageDeleted = model.getLastMessage().isDeleted();
+                        ChatMessageModel.MessageType type = model.getLastMessage().getMessageType();
                         String lastMessageText = model.getLastMessage().getMessage();
 
                         UserModel otherUserModel = task.getResult().toObject(UserModel.class);
-
+                        FirebaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUserId()).getDownloadUrl()
+                                .addOnCompleteListener(t -> {
+                                    if (t.isSuccessful()) {
+                                        Uri uri = t.getResult();
+                                        AndroidUtil.setProfilePic(context, uri, holder.profilePic);
+                                    }
+                                });
                         holder.usernameText.setText(otherUserModel.getUsername());
                         if (isLastMessageDeleted) {
                             lastMessageText = "This message was deleted.";
+                        }
+                        if (type != ChatMessageModel.MessageType.TEXT) {
+                            lastMessageText = "📷 Attachment";
                         }
 
                         if (lastMessageSentByMe)

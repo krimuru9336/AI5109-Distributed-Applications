@@ -3,6 +3,7 @@ package com.example.whatsdown.model;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +15,7 @@ public class ChatMessageModel implements Parcelable{
     private String senderId;
     private Timestamp timestamp;
     private boolean isDeleted;
+    private MessageType messageType;
 
     public ChatMessageModel() {
     }
@@ -74,6 +76,13 @@ public class ChatMessageModel implements Parcelable{
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
+    }
 
     public String getMessage() {
         return message;
@@ -113,5 +122,12 @@ public class ChatMessageModel implements Parcelable{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dest.writeBoolean(isDeleted);
         }
+    }
+
+    public enum MessageType {
+        TEXT,
+        IMAGE,
+        VIDEO,
+        GIF
     }
 }
