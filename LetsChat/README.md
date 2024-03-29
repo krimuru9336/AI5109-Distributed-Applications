@@ -8,14 +8,18 @@ Lets Chat App is a mobile application that facilitates user registration through
     - Register using a phone number.
     - Receive OTP for authentication.
     - Provide a username to complete the registration process.
+    - Logout when necessary.
 
 - **Chat View:**
-    - Engage in real-time chat with other users.
+    - Engage in real-time private chat with other users.
+    - Engage in real-time public group chat with all users.
     - Enjoy a user-friendly interface for seamless communication.
+    - Ability to chat with text, images, videos, emojis and gifs.
 
 - **Profile View:**
     - Access and customize user profiles.
     - View and modify personal information.
+    - Update profile picture.
 
 - **User Search:**
     - Search for other users based on their usernames.
@@ -28,4 +32,5 @@ Lets Chat App is a mobile application that facilitates user registration through
 
 - **Firebase Firestore:**
     - Real-time database for efficient storage and retrieval of chat data.
+    - Storage of medias
 
