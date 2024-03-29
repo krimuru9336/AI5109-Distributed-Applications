@@ -13,6 +13,9 @@ This Android application was created as a submission for the Distributed Applica
 - Group chat
 - Editing and deleting message 
 
+![splash screen](https://github.com/krimuru9336/AI5109-Distributed-Applications/blob/fdai7673/Distrbuted%20Application%20Submissions/Snap_one.png)
+
+
 
 ## Getting Started
 
