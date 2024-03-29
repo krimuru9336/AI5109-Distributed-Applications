@@ -43,4 +43,6 @@ If you'd like to contribute to this project, please follow these guidelines:
 - Push your changes to your forked repository (`git push origin feature/your-feature`).
 - Create a pull request with a detailed description of your changes.
 
+## Contributors
 
+- [Usama Tahir](https://github.com/Usama00004)
