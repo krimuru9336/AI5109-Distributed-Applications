@@ -21,5 +21,17 @@
     <string name="type_a_message">Type a message</string>
     <string name="back_button">back Button</string>
     <string name="edit">Edit</string>
-    <string name="delete">Delete</string>>
+    <string name="delete">Delete</string>
+    <string name="button_to_send_media">button to send Media</string>
+    <string name="image">Image</string>
+    <string name="gif">GIF</string>
+    <string name="video">Video</string>
+    <string name="image_view_for_images_within_conversation">Image View for images within conversation</string>
+    <string name="image_summary"> &#128247; Image</string>
+    <string name="video_summary"> &#127909; Video </string>
+    <string name="GIF_summary"> &#128247; GIF</string>
+    <string name="play_video">play Video\n</string>
+    <string name="button_to_add_a_group">button to add a group</string>
+    <string name="enter_group_name">Enter group name</string>
+
 </resources>

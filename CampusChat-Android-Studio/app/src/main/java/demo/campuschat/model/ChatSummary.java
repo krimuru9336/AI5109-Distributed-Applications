@@ -6,6 +6,8 @@ public class ChatSummary {
     private String lastMessage;
     private long lastMessageTimestamp;
 
+    private boolean isGroupChat;
+
 
     public ChatSummary() {}
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_send_image"
+        android:title="@string/image"
+        android:icon="@android:drawable/ic_menu_report_image"/>
+    <item android:id="@+id/action_send_gif"
+        android:title="@string/gif"/>
+    <item android:id="@+id/action_send_video"
+        android:title="@string/video"/>
+</menu>

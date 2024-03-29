@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@drawable/message_bubble_receiver"
+    android:maxWidth="240dp"
+    android:layout_marginBottom="9dp">
+
+    <ImageView
+        android:id="@+id/message_image_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:clickable="true"
+        android:contentDescription="@string/image_view_for_images_within_conversation"
+        android:focusable="true" />
+
+
+</LinearLayout>

@@ -15,6 +15,7 @@
         android:background="@drawable/message_bubble_sent"
         android:orientation="vertical"
         android:maxWidth="240dp"
+        android:padding="8dp"
         tools:ignore="UselessParent"
         android:longClickable="true">
 
@@ -23,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            android:visibility="visible"
             android:text="this is a message I sent"
             android:textColor="@android:color/black"
             android:padding="5dp"/>
@@ -33,6 +35,7 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="#838383"
+            android:visibility="visible"
             android:text="xx/xx/xxxx"
             android:paddingEnd="10dp"
             android:layout_gravity="right"
