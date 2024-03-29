@@ -36,7 +36,7 @@
                         android:layout_height="@dimen/padding40"
                         android:clickable="true"
                         android:focusable="true"
-
+                        android:foreground="@drawable/circle_my_selector"
                         android:src="@drawable/profile_avatar"
                         app:civ_border_color="@color/white"
                         app:civ_border_width="@dimen/padding1"
@@ -82,12 +82,12 @@
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabMain"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="5dp"
                 android:layout_above="@+id/mainAdsView"
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/cDescription"
-                app:srcCompat="@drawable/ic_chat"
+                app:srcCompat="@color/white"
                 app:useCompatPadding="true" />
 
             <RelativeLayout

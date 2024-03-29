@@ -1,5 +1,4 @@
 package com.bytesbee.firebase.chat.activities;
-
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,42 +9,32 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bytesbee.firebase.chat.activities.constants.IConstants;
 import com.bytesbee.firebase.chat.activities.managers.Screens;
 import com.bytesbee.firebase.chat.activities.managers.SessionManager;
 import com.bytesbee.firebase.chat.activities.managers.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.util.Objects;
 
 public class SplashActivity extends AppCompatActivity {
-
-    private FirebaseUser firebaseUser; //Current User
-
+    private FirebaseUser firebaseUser; 
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         Window window = getWindow();
         window.setFormat(PixelFormat.RGBA_8888);
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.setWindow(getWindow());
         setContentView(R.layout.activity_splash);
-
         ((TextView) findViewById(R.id.txtName)).setText(String.format(getString(R.string.app_company_name), getString(R.string.app_company)));
-
         StartAnimations();
         load();
     }
-
     private Screens screens;
-
     private void load() {
         screens = new Screens(getApplicationContext());
         final Handler handler = new Handler(Looper.getMainLooper());
@@ -73,14 +62,12 @@ public class SplashActivity extends AppCompatActivity {
             }
         }, IConstants.SPLASH_DELAY);
     }
-
     private void StartAnimations() {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
         anim.reset();
         RelativeLayout l = findViewById(R.id.lin_lay);
         l.clearAnimation();
         l.startAnimation(anim);
-
         anim = AnimationUtils.loadAnimation(this, R.anim.translate);
         anim.reset();
         LinearLayout iv = findViewById(R.id.layout);

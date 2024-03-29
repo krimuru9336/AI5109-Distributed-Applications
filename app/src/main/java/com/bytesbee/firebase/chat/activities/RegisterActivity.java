@@ -19,30 +19,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
-
     private EditText mTxtEmail;
     private EditText mTxtUsername;
     private EditText mTxtPassword;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         mTxtEmail = findViewById(R.id.txtEmail);
         mTxtUsername = findViewById(R.id.txtUsername);
         mTxtPassword = findViewById(R.id.txtPassword);
         final Button mBtnRegister = findViewById(R.id.btnRegister);
         final TextView mTxtExistingUser = findViewById(R.id.txtExistingUser);
-
         Utils.setHTMLMessage(mTxtExistingUser, getString(R.string.strExistUser));
-
         mBtnRegister.setOnClickListener(this);
         mTxtExistingUser.setOnClickListener(this);
-
         auth = FirebaseAuth.getInstance();
     }
-
     @Override
     public void onClick(View v) {
         final int id = v.getId();
@@ -62,19 +55,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             finish();
         }
     }
-
     private void register(final String email, final String username, final String password) {
         showProgress();
-
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = auth.getCurrentUser();
                 assert firebaseUser != null;
                 String userId = firebaseUser.getUid();
-
                 reference = FirebaseDatabase.getInstance().getReference(REF_USERS).child(userId);
-
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put(EXTRA_ID, userId);
                 hashMap.put(EXTRA_EMAIL, email);

@@ -1,29 +1,46 @@
-# Chats App - Android Studio
 
-## Overview
+## ChatsApp - Android Studio
 
-This is a simple chat application developed in Android Studio using Java and Firebase services. The application enables two users to exchange messages in real-time. It leverages Firebase Authentication for user authentication and Firebase Firestore for storing and retrieving messages.
+This Android application was created as a submission for the Distributed Applications exam - AI5109. The project is developed by Usama Tahir, matriculation number 1453517.
+
 
 ## Features
 
-- User authentication using Firebase Authentication.
-- Real-time messaging using Firebase Firestore.
-- Simple and intuitive user interface for sending and receiving messages.
-- Firebase Cloud Functions for additional backend functionalities.
+- Authentication using Firebase Authentication
+- Google Sign-In integration
+- Real-time database functionality with Firebase Realtime Database
+- Media sharing
+- Group chat
+- Editing and deleting message 
 
-## Prerequisites
-
-Before running the application, make sure you have the following:
-
-- Android Studio installed on your development machine.
-- A Firebase project created on the [Firebase Console](https://console.firebase.google.com/).
-- Google services JSON file (`google-services.json`) added to the `app` module.
-- Firebase Authentication enabled with Email/Password sign-in method.
-- Firebase Firestore database set up and configured.
 
 ## Getting Started
 
-1. Clone the repository to your local machine:
+To get started with this project, follow these steps:
 
-   ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
+1. Clone this repository to your local machine.
+2. Open the project in Android Studio.
+3. Set up Firebase for your project:
+   - Create a Firebase project in the  Firebase Console (https://console.firebase.google.com/).
+   - Add your Android app to the Firebase project and follow the setup instructions.
+   - Download the `google-services.json` file and place it in the `app/` directory of your project.
+4. Set up authentication:
+   - Enable the desired authentication methods (e.g., email/password, Google sign-in) in the Firebase Console.
+   - Follow the Firebase Authentication setup instructions to integrate authentication into your app.
+5. Set up Realtime Database:
+   - Create a Realtime Database in the Firebase Console.
+   - Define your database rules.
+   - Follow the Firebase Realtime Database setup instructions to integrate the database into your app.
+6. Build and run the app on your Android device or emulator.
+
+## Contributing
+
+If you'd like to contribute to this project, please follow these guidelines:
+
+- Fork the repository.
+- Create a new branch (`git checkout -b feature/your-feature`).
+- Make your changes and commit them (`git commit -am 'Add new feature'`).
+- Push your changes to your forked repository (`git push origin feature/your-feature`).
+- Create a pull request with a detailed description of your changes.
+
+

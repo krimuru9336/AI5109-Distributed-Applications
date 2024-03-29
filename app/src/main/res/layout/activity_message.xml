@@ -100,8 +100,7 @@
         layout="@layout/include_attachment_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottomChatLayout"
-        android:layout_marginBottom="4dp" />
+        android:layout_above="@id/bottomChatLayout" />
 
     <LinearLayout
         android:id="@+id/btnBottom"
@@ -130,6 +129,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:animateLayoutChanges="true">
+        <!--        android:clipToPadding="true"-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -191,6 +191,20 @@
                         app:emojiSize="@dimen/emoji_icon_size" />
 
                     <ImageView
+                        android:id="@+id/imgCamera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="?android:selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:contentDescription="@string/cDescription"
+                        android:focusable="true"
+                        android:padding="@dimen/padding4"
+                        app:tint="@color/grey_500"
+                        />
+
+                    <ImageView
                         android:id="@+id/imgAddAttachment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -204,19 +218,8 @@
                         app:srcCompat="@drawable/ic_attach_file"
                         app:tint="@color/grey_500" />
 
-                    <ImageView
-                        android:id="@+id/imgCamera"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:background="?android:selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:contentDescription="@string/cDescription"
-                        android:focusable="true"
-                        android:padding="@dimen/padding4"
-                        app:srcCompat="@drawable/ic_attach_camera"
-                        app:tint="@color/grey_500" />
+
+
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -231,7 +234,7 @@
                 app:slide_to_cancel_bounds="@dimen/padding10"
                 app:slide_to_cancel_margin_right="@dimen/padding85"
                 app:slide_to_cancel_text="@string/strSlideToCancel" />
-                
+            <!--            app:slide_to_cancel_margin_right="@dimen/padding85"-->
 
             <com.devlomi.record_view.RecordButton
                 android:id="@+id/recordButton"
@@ -243,7 +246,7 @@
                 android:background="@drawable/recv_bg_mic"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:scaleType="centerInside"
-                app:mic_icon="@drawable/recv_ic_mic_white" />
+                app:mic_icon="@drawable/recv_ic_arrow"/>
         </RelativeLayout>
 
         <RelativeLayout

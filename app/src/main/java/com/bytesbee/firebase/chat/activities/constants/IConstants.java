@@ -3,19 +3,17 @@ package com.bytesbee.firebase.chat.activities.constants;
 import java.io.File;
 
 public interface IConstants {
-    //ADS_SHOWN variable now moved into build.gradle file. Please look into i.
+
 
     String SDPATH = "/storage/emulated/0/";
     String IMG_FOLDER = "MyImages";
     String SLASH = File.separator;
     String SENT_FILE = "/Sent/";
-    String EXT_MP3 = ".mp3";
-    String EXT_VCF = ".vcf";
 
     String REF_USERS = "Users";
     String REF_CHATS = "Chats_v2";
     String REF_UPLOAD = "Uploads";
-    String REF_BLOCK_USERS = "BlockUsers";
+
 
     String REF_GROUP_UPLOAD = "GroupUploads";
     String REF_GROUP_PHOTO_UPLOAD = "GroupPhotos";
@@ -50,17 +48,7 @@ public interface IConstants {
     String EXTRA_ATTACH_DATA = "attachmentData";
     String EXTRA_ATTACH_DURATION = "attachmentDuration";
     String EXTRA_DATETIME = "datetime";
-    String EXTRA_SEEN = "msgseen";
-    String EXTRA_STATUS = "status";
-    String EXTRA_IS_ONLINE = "isOnline";
-    String EXTRA_SEARCH = "search";
-    String EXTRA_VERSION = "version";
-    String EXTRA_VERSION_CODE = "version_code";
-    String EXTRA_VERSION_NAME = "version_name";
-    String EXTRA_HIDE_EMAIL = "hideEmail";
-    String EXTRA_HIDE_PROFILE_PHOTO = "hideProfilePhoto";
-    String EXTRA_SIGNUP_TYPE = "signup_type";
-    String EXTRA_SOCIAL_TOKEN = "social_token";
+
 
     String EXTRA_ID = "id";
     String EXTRA_EMAIL = "email";
@@ -101,16 +89,15 @@ public interface IConstants {
     String FCM_USERNAME = "username";
     String FCM_TYPE = "type";
 
-    String FCM_URL = "https://fcm.googleapis.com/";
 
     long CLICK_DELAY_TIME = 250;
     int EXTRA_TYPING_DELAY = 800;
     int EXTRA_DELAY = 1000;
     int SPLASH_DELAY = 4000;
-    int ZERO = 0; // Don't change
-    int ONE = 1; // Don't change
-    int TWO = 2; //Don't edit this
-    int THREE = 3; //Minimum groups member
+    int ZERO = 0; 
+    int ONE = 1; 
+    int TWO = 2; 
+    int THREE = 3;
 
     int REQUEST_PARTICIPATE = 1487;
 
@@ -126,12 +113,9 @@ public interface IConstants {
 
     String TYPE_TEXT = "TEXT";
     String TYPE_IMAGE = "IMAGE";
-    String TYPE_AUDIO = "AUDIO";
     String TYPE_VIDEO = "VIDEO";
-    String TYPE_CONTACT = "CONTACT";
-    String TYPE_DOCUMENT = "DOCUMENT";
-    String TYPE_LOCATION = "LOCATION";
-    String TYPE_RECORDING = "RECORDING";
+
+
 
     String DOWNLOAD_DATA = "download_data";
     String BROADCAST_DOWNLOAD_EVENT = "com.bytesbee.firebase.chat.activities.DOWNLOAD_EVENT";

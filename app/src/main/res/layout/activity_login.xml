@@ -123,26 +123,24 @@
 
                 </com.bytesbee.firebase.chat.activities.views.MaterialRippleLayout>
 
-<!--                <TextView-->
-<!--                    android:id="@+id/lblOr"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:fontFamily="@font/roboto_regular"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="@string/lblOr"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:textColor="@color/colorBlue"-->
-<!--                    android:textStyle="normal" />-->
+                <TextView
+                    android:id="@+id/lblOr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:gravity="center"
+                    android:text="@string/lblOr"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlue"
+                    android:textStyle="normal" />
 
-<!--                <com.shobhitpuri.custombuttons.GoogleSignInButton-->
-<!--                    android:id="@+id/btnGoogleSignIn"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="@dimen/padding20"-->
-<!--                    android:text="@string/strGoogleLogin"-->
-<!--                    app:isDarkTheme="true" />-->
-
-
+                <com.shobhitpuri.custombuttons.GoogleSignInButton
+                    android:id="@+id/btnGoogleSignIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding20"
+                    android:text="@string/strGoogleLogin"
+                    app:isDarkTheme="true" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

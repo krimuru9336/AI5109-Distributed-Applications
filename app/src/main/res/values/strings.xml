@@ -6,10 +6,7 @@
     <string name="strSignUp">SIGN UP</string>
     <string name="strRegister">REGISTER</string>
     <string name="strForgetPassword">Forget Password?</string>
-    <string name="strNewSignUp"><![CDATA[<font color=#9e9e9e>Don\'t have account?</font> <b><font color=#0671da>Sign up</font></b>]]></string>
-    <string name="cDescription" />
-    <string name="strNewSignUp"><![CDATA[<font color=#9e9e9e>Don\'t have account?</font> <b><font color=#0671da>Sign up</font></b>]]></string>
-    <string name="strExistUser"><![CDATA[<font color=#9e9e9e>Already have account?</font> <b><font color=#0671da>Sign In</font></b>]]></string>
+     <string name="cDescription" />
     <string name="strInvalidEmailPassword">Invalid email or password!</string>
     <string name="strEmail">EMAIL</string>
     <string name="strUsername">USERNAME</string>
@@ -19,6 +16,4 @@
     <string name="msg_please_wait">Please wait…</string>
     <string name="press_again_to_exit">Press again to exit app</string>
     <string name="strChats">Chats</string>
-
-
 </resources>

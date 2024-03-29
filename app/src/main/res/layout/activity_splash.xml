@@ -4,7 +4,7 @@
     android:id="@+id/lin_lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@drawable/back_slide2"
     tools:ignore="SpUsage">
 
     <LinearLayout
@@ -22,8 +22,8 @@
             android:gravity="center"
             android:paddingTop="@dimen/padding10"
             android:text="@string/app_name"
-            android:textColor="@color/black"
-            android:textSize="@dimen/padding32" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/padding45" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,8 +31,8 @@
             android:fontFamily="@font/roboto_regular"
             android:gravity="center"
             android:text="@string/app_description"
-            android:textColor="@color/black"
-            android:textSize="@dimen/font_eighteen" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_twenty_two" />
 
     </LinearLayout>
 
@@ -44,8 +44,10 @@
         android:fontFamily="@font/roboto_regular"
         android:gravity="center"
         android:padding="@dimen/padding10"
+        android:singleLine="true"
+        android:text="@string/app_company_name"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="@dimen/font_fourteen" />
 
 </RelativeLayout>

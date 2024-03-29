@@ -1,32 +1,21 @@
 package com.bytesbee.firebase.chat.activities;
-
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
-import com.bytesbee.firebase.chat.activities.managers.Screens;
-import com.bytesbee.firebase.chat.activities.managers.Utils;
-import com.bytesbee.firebase.chat.activities.views.SingleClickListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
+
 
 public class BaseActivity extends AppCompatActivity {
     protected final String[] permissionsRecord = {Manifest.permission.VIBRATE, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     protected final String[] permissionsContact = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     protected final String[] permissionsStorage = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     public Activity mActivity;
-    public FirebaseAuth auth; 
+    public FirebaseAuth auth;
     public FirebaseAuth.AuthStateListener authStateListener;
-    public DatabaseReference reference; 
-    public FirebaseUser firebaseUser; 
+    public DatabaseReference reference;
+    public FirebaseUser firebaseUser;
     public Screens screens;
     public ImageView imgBack;
 

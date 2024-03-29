@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -49,32 +48,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity {
-
     private CircleImageView mImageView;
     private TextView mTxtUsername;
     private ViewPager2 mViewPager;
     private long exitTime = 0;
     private FloatingActionButton fabMain;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mImageView = findViewById(R.id.imageView);
         mTxtUsername = findViewById(R.id.txtUsername);
         final Toolbar mToolbar = findViewById(R.id.toolbar);
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setTitle("");
-
         final AdView adView = findViewById(R.id.adView);
         if (BuildConfig.ADS_SHOWN) {
             adView.setVisibility(View.VISIBLE);
@@ -103,7 +95,6 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception ignored) {
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -115,20 +106,16 @@ public class MainActivity extends BaseActivity {
                 mViewPager.setCurrentItem(2);
             }
         });
-
         final TabLayout mTabLayout = findViewById(R.id.tabLayout);
         mViewPager = findViewById(R.id.viewPager);
         fabMain = findViewById(R.id.fabMain);
-
         final ViewPageAdapter viewPageAdapter = new ViewPageAdapter(this);
         viewPageAdapter.addFragment(new ChatsFragment(), getString(R.string.strChats));
-   
+        viewPageAdapter.addFragment(new GroupsFragment(), getString(R.string.strGroups));
+        viewPageAdapter.addFragment(new ProfileFragment(), getString(R.string.strProfile));
         mViewPager.setAdapter(viewPageAdapter);
-
         new TabLayoutMediator(mTabLayout, mViewPager, (tab, position) -> tab.setText(viewPageAdapter.getTitle(position))).attach();
-
         mViewPager.setOffscreenPageLimit(viewPageAdapter.getItemCount() - 1);
-
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @SuppressLint("RestrictedApi")
             @Override
@@ -143,9 +130,7 @@ public class MainActivity extends BaseActivity {
                 } else {
                     fabMain.setVisibility(View.GONE);
                 }
-
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
             }
@@ -168,7 +153,6 @@ public class MainActivity extends BaseActivity {
         });
 
     }
-
     public void rotateFabForward() {
         ViewCompat.animate(fabMain)
                 .rotation(5.0F)
@@ -177,10 +161,9 @@ public class MainActivity extends BaseActivity {
                 .setInterpolator(new OvershootInterpolator(10.0F))
                 .start();
         final Handler handler = new Handler(Looper.getMainLooper());
-        //Write whatever to want to do after delay specified (1 sec)
+
         handler.postDelayed(this::rotateFabBackward, 200);
     }
-
     public void rotateFabBackward() {
 
         ViewCompat.animate(fabMain)
@@ -196,7 +179,6 @@ public class MainActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
-
     static class ViewPageAdapter extends FragmentStateAdapter {
 
         public final ArrayList<Fragment> fragments;
@@ -207,14 +189,10 @@ public class MainActivity extends BaseActivity {
             fragments = new ArrayList<>();
             titles = new ArrayList<>();
         }
-
-        @NonNull
-        @NotNull
         @Override
         public Fragment createFragment(int position) {
             return fragments.get(position);
         }
-
         @Override
         public int getItemCount() {
             return fragments.size();
@@ -229,26 +207,22 @@ public class MainActivity extends BaseActivity {
             return titles.get(index);
         }
     }
-
     public static void applyFontToMenu(Menu m, Context mContext) {
         for (int i = 0; i < m.size(); i++) {
             applyFontToMenuItem(m.getItem(i), mContext);
         }
     }
-
     public static void applyFontToMenuItem(MenuItem mi, Context mContext) {
         final SpannableString mNewTitle = new SpannableString(mi.getTitle());
         mNewTitle.setSpan(new CustomTypefaceSpan("", Utils.getRegularFont(mContext)), ZERO, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mi.setTitle(mNewTitle);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         applyFontToMenu(menu, this);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final int itemId = item.getItemId();
@@ -261,12 +235,10 @@ public class MainActivity extends BaseActivity {
         }
         return true;
     }
-
     @Override
     public void onBackPressed() {
         exitApp();
     }
-
     private void exitApp() {
         try {
             if (mViewPager.getCurrentItem() == ZERO) {
@@ -294,18 +266,15 @@ public class MainActivity extends BaseActivity {
             Utils.getErrors(e);
         }
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         Utils.readStatus(STATUS_ONLINE);
     }
-
     @Override
     protected void onPause() {
         super.onPause();
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
