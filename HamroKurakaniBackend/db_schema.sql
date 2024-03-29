@@ -33,5 +33,5 @@ CREATE TABLE messages (
     PRIMARY KEY(id),
     FOREIGN KEY (sender_id) REFERENCES users(id),
     FOREIGN KEY (receiver_user_id) REFERENCES users(id),
-    FOREIGN KEY (receiver_group_id) REFERENCES usergroups(id)
+    FOREIGN KEY (receiver_group_id) REFERENCES chatgroups(id)
 );

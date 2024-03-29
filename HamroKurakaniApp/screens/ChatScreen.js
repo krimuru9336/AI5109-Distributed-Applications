@@ -29,6 +29,7 @@ function App({ route }) {
     const { socket } = useContext(SocketContext);
     const { accessToken } = useContext(AuthContext);
     const recipientId = route.params.receipientId;
+    const recipientType = route.params.recipientType;
     const videoRef = useRef(null);
 
     useEffect(() => {
@@ -76,11 +77,12 @@ function App({ route }) {
     const sendMessage = useCallback((message, type) => {
         socket.emit("new_message", {
             recipient_id: recipientId,
+            recipient_type: recipientType,
             content: message,
             message_type: type
         })
         setNewMessage("")
-    }, [socket, recipientId])
+    }, [socket, recipientId, recipientType])
 
     const editMessage = useCallback(() => {
         socket.emit("edit", {

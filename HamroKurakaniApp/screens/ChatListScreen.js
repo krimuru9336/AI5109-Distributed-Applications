@@ -73,7 +73,8 @@ export default function ChatListScreen({ navigation }) {
                                 renderItem={({ item }) => (
                                     <TouchableOpacity onPress={() => {
                                         navigation.navigate('ChatScreen', {
-                                            receipientId: item.id
+                                            receipientId: item.id,
+                                            recipientType: "user"
                                         })
                                     }}>
                                         <Box
@@ -113,7 +114,8 @@ export default function ChatListScreen({ navigation }) {
                                 renderItem={({ item }) => (
                                     <TouchableOpacity onPress={() => {
                                         navigation.navigate('ChatScreen', {
-                                            receipientId: item.id
+                                            receipientId: item.id,
+                                            recipientType: "group"
                                         })
                                     }}>
                                         <Box

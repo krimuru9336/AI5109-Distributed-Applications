@@ -118,15 +118,22 @@ def connected():
 @socketio.on('new_message')
 def handle_new_message(data):
     userSid = request.sid
-    recipient_id = data.get('recipient_id')
+    recipient_id_client = data.get('recipient_id')
+    recipient_type = data.get('recipient_type')
     message_type = data.get('message_type')
     content = data.get("content")
 
-    recipientConnected = recipient_id in userIdToSid
-    if(recipientConnected):
-        recipientSid = userIdToSid[recipient_id]
-    else:
-        recipientSid = None
+    if not recipient_id_client:
+        return "You need to send recipient id", 400
+
+    recipient_id = None
+    recipient_group_id = None
+    
+    if recipient_type == "user":
+        recipient_id = recipient_id_client
+    elif recipient_type == "group":
+        recipient_group_id = recipient_id_client
+
     senderId = sidToUserId[userSid]
 
     if senderId:
@@ -142,24 +149,29 @@ def handle_new_message(data):
             messageId = getUniqueId()
 
             # Storing the message
-            dbCur.execute(insert_new_message, (messageId, senderId, senderUsername, recipient_id, None, content, message_type))
+            dbCur.execute(insert_new_message, (messageId, senderId, senderUsername, recipient_id, recipient_group_id, content, message_type))
             dbCnx.commit()
 
             # retreiving a stored
             dbCur.execute(select_message_by_id, (messageId,))
-            # messages = dbCur.fetchall()
 
             rows = dbCur.fetchall()
             columns = [column[0] for column in dbCur.description]
             messages = [dict(zip(columns, row)) for row in rows]
             newMessage = messages[0]
 
-            if recipientConnected:
+            roomName = recipient_id
+            if recipient_type == "user" and recipient_id in userIdToSid:
+                recipientSid = userIdToSid[recipient_id]
                 roomName = recipientSid
                 join_room(roomName)
-                print(f"Sending message: '{messageId}' to room: '{roomName}'")
+            elif recipient_type == "group":
+                roomName = recipient_group_id
+                join_room(roomName)
 
-                emit("new_message", {"content":newMessage["content"], "content_type": newMessage["content_type"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=recipientSid)
+            print(f"Sending message: '{messageId}' to room: '{roomName}'")
+            emit("new_message", {"content":newMessage["content"], "content_type": newMessage["content_type"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=roomName)
+
         except Exception:
             traceback.print_exc()
             return False; 
