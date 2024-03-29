@@ -2,9 +2,10 @@ const express = require('express');
 const http = require('http');
 const config = require('./config');
 const { send } = require('process');
+const { group } = require('console');
 const app = express();
 const server = http.createServer(app);
-const io = require('socket.io')(server, { allowEIO3: true });
+const io = require('socket.io')(server, { allowEIO3: true, maxHttpBufferSize: 1e8 /*100MB*/});
 
 
 const PORT = config.port;
@@ -72,29 +73,42 @@ io.on('connection', (socket) => {
 
     // Handle incoming messages
     socket.on('message', (message) => {
+        console.log("Message rcvd");
         try {
-            const { targetUserId: receiverId, message: messageText, id, type, action } = message;
-            console.log(message);
-            const senderUserId = connectedUsers.find(user => user.socketId === socket.id)?.userId;
+            const { receiver, message: messageText, id, type, action, groupId, mediaUri, fileType } = message;
+            const sender = connectedUsers.find(user => user.socketId === socket.id)?.userId;
 
             // Find the socket ID of the target user
-            const targetSocketId = connectedUsers.find(({ userId }) => userId === receiverId);
-            
+            const targetSocketId = connectedUsers.find(({ userId }) => userId === receiver);
 
-            console.log("Action " + action + " from " + senderUserId);
+            let data = {
+                sender: sender,
+                receiver: receiver,
+                message: messageText,
+                id: id,
+                type: type,
+                groupId: groupId,
+                mediaUri: mediaUri,
+                fileType: fileType
+            }
+
+            console.log("Action " + action + " from " + sender);
             // If the target user is found, send the message to that user
-            if (targetSocketId) {
+            if (groupId != -1) {
+                console.log("Group:  " + groupId + " from " + sender);
+                socket.broadcast.emit('message', {
+                    data: data,
+                    action: action,
+                });
+
+            }
+            else if (targetSocketId) {
                 io.to(targetSocketId.socketId).emit('message', {
-                    data: {
-                        senderUserId,
-                        receiverUserId: targetSocketId,
-                        message: messageText,
-                        id: id,
-                        type: type,
-                    },
+                    data: data,
                     action: action,
                 });
             }
+
         } catch (error) {
             console.log(error);
         }

@@ -13,7 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import io.socket.client.Socket;
@@ -23,6 +25,7 @@ public class ChatOverviewActivity extends AppCompatActivity {
 
     private SocketHelper socketHelper;
     private UserHelper userHelper;
+    private GroupHelper groupHelper;
     private MessageHelper messageHelper;
     private Socket socket;
 
@@ -32,14 +35,28 @@ public class ChatOverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
 
         List<String> userList = new ArrayList<>();
+        Map<Integer, String> groupMap = new HashMap<>();
         userHelper = UserHelper.getInstance();
+        groupHelper = GroupHelper.getInstance();
         UserAdapter userAdapter = userHelper.createAdapter(userList);
+        GroupAdapter groupAdapter = groupHelper.createAdapter(groupMap);
 
         messageHelper = MessageHelper.getInstance();
 
+        //User Chats
         RecyclerView recyclerView = findViewById(R.id.userListRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(userAdapter);
+
+        //Group Chats
+        RecyclerView groupRecyclerView = findViewById(R.id.groupListRecyclerView);
+        groupRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        groupRecyclerView.setAdapter(groupAdapter);
+
+        //Statically add Group Channels
+        groupAdapter.addGroup(0,"GroupChat0");
+        groupAdapter.addGroup(1,"GroupChat1");
+        groupAdapter.addGroup(2,"GroupChat2");
 
         // Retrieve the username passed from the previous activity
         Intent intent = getIntent();
@@ -111,12 +128,7 @@ public class ChatOverviewActivity extends AppCompatActivity {
                         Log.d("onMessage", messageObj.toString());
 
                         if (this.messageHelper != null) {
-                            Message msg = new Message(messageObj.getString("message"),
-                                    UUID.fromString(messageObj.getString("id")),
-                                    messageObj.getString("senderUserId"),
-                                    messageObj.getString("receiverUserId"),
-                                    true,
-                                    MessageType.TEXT);
+                            Message msg = Message.fromJSON(messageObj);
                             this.messageHelper.onMessageReceived(msg, jsonObject.getString("action"));
                         }
                     }

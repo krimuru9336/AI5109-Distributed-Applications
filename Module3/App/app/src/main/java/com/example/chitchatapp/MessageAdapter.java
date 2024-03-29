@@ -1,37 +1,51 @@
 package com.example.chitchatapp;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Build;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
-    private static List<Message> messageList;
+    static List<Message> messageList;
     private final String username;
     private final OnDataChangedListener onDataChangedListener;
     private int position;
 
-    public MessageAdapter(List<Message> messageList, String username, OnDataChangedListener listener) {
+    private final Context ctx;
+
+    public MessageAdapter(List<Message> messageList, String username, OnDataChangedListener listener, MessageActivity ctx) {
         this.onDataChangedListener = listener;
 
         MessageAdapter.messageList = messageList;
         this.username = username;
+        this.ctx = ctx;
 
         loadAllUserMessages();
     }
@@ -45,10 +59,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return new MessageViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messageList.get(position);
-        holder.bind(message);
+        holder.bind(message, ctx);
 
         holder.itemView.setOnLongClickListener(v -> {
             setPosition(holder.getAdapterPosition());
@@ -73,6 +88,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public void addMessage(Message message) {
         MessageStore.addMessageToUser(username, message);
+        showNewMessage();
+    }
+
+    public void addGroupMessage(Message message) {
+        MessageStore.addMessageToGroup(message.getGroupId(), message);
         showNewMessage();
     }
 
@@ -148,9 +168,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         private final TextView usernameTextView;
         private final TextView timestampTextView;
         private final TextView editTimestampTextView;
+        private final ImageView imageView;
+        private final PlayerView playerView;
         private final LinearLayout backgroundContainer;
         private final LinearLayout messageContainer;
         private final LinearLayout editInfoContainer;
+        private ExoPlayer player;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -162,15 +185,66 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageContainer = itemView.findViewById(R.id.messageContainer);
             editInfoContainer = itemView.findViewById(R.id.editInfoContainer);
             editTimestampTextView = itemView.findViewById(R.id.editTimestampTextView);
+            imageView = itemView.findViewById((R.id.messageImageView));
+            playerView = itemView.findViewById((R.id.messageVideoView));
 
             itemView.setOnCreateContextMenuListener(this);
         }
 
-        public void bind(Message message) {
-            messageTextView.setText(message.getMessage());
+        @OptIn(markerClass = UnstableApi.class) @RequiresApi(api = Build.VERSION_CODES.O)
+        public void bind(Message message, Context ctx) {
+            //Reset Views
+            messageTextView.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
+            playerView.setVisibility(View.GONE);
+            editInfoContainer.setVisibility(View.GONE);
 
             String username = message.isIncoming() ? message.getSender() : "You";
             usernameTextView.setText(username);
+
+            Uri uri = message.getMediaUri();
+
+            if(uri != null && message.getMessageState() == MessageState.UNMODIFIED){
+                messageTextView.setVisibility(View.GONE);
+                File file = Base64Converter.base64ToFile(ctx, message.getMessage(), message.getId() + "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(message.getMimeType()));
+
+                if(message.getType() == MessageType.IMAGE){
+                    imageView.setVisibility(View.VISIBLE);
+                    playerView.setVisibility(View.GONE);
+//                    imageView.setImageURI(Uri.fromFile(file));
+
+
+                    //Display gif if FileType is "gif"
+                    if (message.getMimeType().contains("gif")) {
+                        Glide.with(ctx)
+                                .asGif()
+                                .load(Uri.fromFile(file))
+                                .into(imageView);
+                    } else {
+                        Glide.with(ctx)
+                                .asBitmap()
+                                .load(Uri.fromFile(file))
+                                .into(imageView);
+                    }
+                }
+                else if(message.getType() == MessageType.VIDEO) {
+                    if (player == null) {
+                        player = new ExoPlayer.Builder(ctx).build();
+                        playerView.setPlayer(player);
+                    }
+                    imageView.setVisibility(View.GONE);
+                    playerView.setVisibility(View.VISIBLE);
+
+                    MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(file));
+                    player.setMediaItem(mediaItem);
+                }
+            }
+            else {
+                messageTextView.setText(message.getMessage());
+                imageView.setVisibility(View.GONE);
+                playerView.setVisibility(View.GONE);
+                messageTextView.setVisibility(View.VISIBLE);
+            }
 
             // Format the timestamp and set it to the timestampTextView
             timestampTextView.setText(dateFormat.format(message.getTimestamp()));

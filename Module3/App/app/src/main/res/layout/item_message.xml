@@ -54,6 +54,21 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
 
+        <ImageView
+            android:id="@+id/messageImageView"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            android:contentDescription="@string/img_description" />
+
+        <androidx.media3.ui.PlayerView
+            android:id="@+id/messageVideoView"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
         <!-- Horizontal layout for edit label, edit timestamp, and optional space -->
         <LinearLayout
             android:id="@+id/editInfoContainer"

@@ -19,7 +19,10 @@ public class SocketHelper {
 
     private static SocketHelper instance;
 
+    private final Context ctx;
+
     private SocketHelper(Context ctx) {
+        this.ctx = ctx;
         username = "";
         activityChangeCounter = 0;
         try {
@@ -67,6 +70,21 @@ public class SocketHelper {
     }
 
     public void sendMessage(Message message, MessageAction action) {
+        try {
+            JSONObject jsonMessage = message.toJSON();
+            jsonMessage.put("action", action.toString());
+
+            socket.emit("message", jsonMessage);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMedia(Message message, MessageAction action) {
+        String base64Media = Base64Converter.fileToBase64(ctx, message.getMediaUri());
+
+        message.setMessage(base64Media);
+
         try {
             JSONObject jsonMessage = message.toJSON();
             jsonMessage.put("action", action.toString());

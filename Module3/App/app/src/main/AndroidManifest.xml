@@ -27,5 +27,6 @@
         </activity>
         <activity android:name=".ChatOverviewActivity" />
         <activity android:name=".MessageActivity" />
+        <activity android:name=".GroupMessageActivity" />
     </application>
 </manifest>
