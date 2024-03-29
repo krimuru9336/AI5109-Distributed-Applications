@@ -2,6 +2,7 @@ package com.example.whatsdownapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,14 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<UserMode
         if(model.getUserId().equals(FirebaseUtil.currentUserId())){
             holder.usernameText.setText(model.getUsername()+" (Me)");
         }
+
+        FirebaseUtil.getCurrentProfilePicStorageRef(model.getUserId()).getDownloadUrl()
+                .addOnCompleteListener(task1 -> {
+                    if(task1.isSuccessful()){
+                        Uri uri = task1.getResult();
+                        AndroidUtil.setProfilePic(context, uri, holder.profilePic );
+                    }
+                });
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChatActivity.class);
