@@ -9,12 +9,7 @@
         android:background="@drawable/circular_bg"
         android:src="@drawable/user_icon"
         android:backgroundTint="@color/off_white"
-        app:tint="@color/black"
         android:layout_centerInParent="true"
         android:padding="4dp"
         android:id="@+id/profile_pic_img_view"/>
-
-
-
-
 </RelativeLayout>
