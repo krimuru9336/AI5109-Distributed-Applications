@@ -263,9 +263,9 @@ def chats():
     try:
         # fetching individual users that the current user can chat with
         dbCur.execute(select_every_users_expect_own, (current_userid, ))
-        columns = [column[0] for column in dbCur.description]
+        userCols = [column[0] for column in dbCur.description]
         userRows = dbCur.fetchall()
-        users = [dict(zip(columns, row)) for row in userRows]
+        users = [dict(zip(userCols, row)) for row in userRows]
 
         # fetching group ids of every group that the current user is a member of
         dbCur.execute(select_usergroups_by_userid, (current_userid, ))
@@ -277,8 +277,9 @@ def chats():
             # finally fetching group data
             query = select_chatgroups_by_ids.format(','.join(['%s']*len(chatgroupid)))
             dbCur.execute(query, chatgroupid)
+            groupCols = [column[0] for column in dbCur.description]
             chatGroups = dbCur.fetchall()
-            groups = [dict(zip(columns, row)) for row in chatGroups]
+            groups = [dict(zip(groupCols, row)) for row in chatGroups]
 
         return jsonify({"chats": users, "groups": groups}), 201
     except Exception as ex:
