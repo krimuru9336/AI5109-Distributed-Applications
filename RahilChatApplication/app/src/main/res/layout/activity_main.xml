@@ -16,6 +16,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/txtUsersHeading"
+        android:background="@color/purple_200" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userRecyclerView"
         android:layout_width="match_parent"

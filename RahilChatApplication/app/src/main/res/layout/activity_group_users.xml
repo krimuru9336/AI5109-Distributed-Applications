@@ -6,12 +6,20 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/groupusers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GROUP USERS"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/groupusers"
+        android:background="@color/purple_200" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewGroupUsers"

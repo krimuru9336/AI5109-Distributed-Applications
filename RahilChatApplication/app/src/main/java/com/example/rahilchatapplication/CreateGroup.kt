@@ -73,13 +73,7 @@ class CreateGroup : AppCompatActivity(){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.logout){
-            mAuth.signOut()
-            val intent = Intent(this, LogIn::class.java)
-            finish()
-            startActivity(intent)
-            return true;
-        }else if(item.itemId == R.id.create_group) {
+        if(item.itemId == R.id.create_group) {
             val intent = Intent(this, CreateGroup::class.java)
             finish()
             startActivity(intent)

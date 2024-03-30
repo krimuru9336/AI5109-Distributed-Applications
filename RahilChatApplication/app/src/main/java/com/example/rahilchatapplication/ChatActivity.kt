@@ -1,9 +1,12 @@
 package com.example.rahilchatapplication
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
@@ -25,6 +28,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
+    private lateinit var mAuth: FirebaseAuth
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -96,5 +100,36 @@ class ChatActivity : AppCompatActivity() {
             messageBox.setText("")
 
         }
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.chat_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.logout){
+            mAuth.signOut()
+            val intent = Intent(this, LogIn::class.java)
+            finish()
+            startActivity(intent)
+            return true;
+        }else if(item.itemId == R.id.create_group) {
+            val intent = Intent(this, CreateGroup::class.java)
+            finish()
+            startActivity(intent)
+            return true;
+        } else if(item.itemId == R.id.list_groups) {
+            val intent = Intent(this, GroupList::class.java)
+            finish()
+            startActivity(intent)
+            return true;
+        }else if(item.itemId == R.id.chat_list) {
+            val intent = Intent(this, MainActivity::class.java)
+            finish()
+            startActivity(intent)
+            return true;
+        }
+
+        return true;
     }
 }

@@ -45,7 +45,7 @@ class LogIn : AppCompatActivity() {
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, CreateGroup::class.java)
                     finish()
                     startActivity(intent)
                     Toast.makeText(this@LogIn, "Login successful", Toast.LENGTH_SHORT).show()
