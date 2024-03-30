@@ -13,7 +13,7 @@
 
 ## Introduction 
 
-This Android app allows users to chat in real-time using Google Firebase Authentication and Realtime Database. In this phase it supports only text messages and timestamps.
+This Android app allows users to chat in real-time using Google Firebase Authentication and Realtime Database. This chat application supports sending text messages, edit or delete messages, sending image/video/GIF and making a group chat.
 
 
 ## Requirements 
@@ -86,6 +86,34 @@ To use the Real-Time Chat App, follow these steps:
 4. **Receive Messages:**
     - New messages from other users will appear in real-time in the chat window.
     - Tap a message to view the sender, timestamp, and content.
+
+5. **Edit Messages:**
+	- Select the "Edit" icon which is next to the messages.
+	- Modify the message content in the text box that appears.
+	- Tap the "Ok" button to confirm the changes or "Cancel" to discard it.
+
+6. **Delete Messages:**
+	- Select the "Delete" icon which is next to the messages.
+	
+7. **Sending Images:**
+	- Tap the attachment icon (paperclip icon) in the chat interface.
+	- Choose the option to select an image from your device's gallery.
+	- Select the desired image and tap "Send" to upload and share it in the chat.
+
+8. **Sending Videos:**
+	- Follow the same steps as sending images but choose a video file instead.
+	- Select the desired video and tap "Send" to upload and share it in the chat.
+	- You can also use the video controllers to play/pause the video.
+	
+9. **Sending GIFs:**
+	- Follow the same steps as sending images but choose a GIF file instead.
+	- Select the desired GIF and tap "Send" to upload and share it in the chat.
+	
+10. **Sending Messages in Groups:**
+	- If more than 2 members join the app they can chat as a group.
+	- Type your message in the text box at the bottom of the screen.
+	- Follow the same steps as before to send Image/Video/GIF.
+
 
 
 ## Project Structure <a name="project-structure"></a>
