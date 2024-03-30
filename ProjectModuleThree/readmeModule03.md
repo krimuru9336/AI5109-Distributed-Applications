@@ -25,7 +25,7 @@ The authentication and storing of real time data is accomplished by connecting F
 
 The signup  screen shows a logo and the  3 fields (username, email, password) required to sign up for an account.  
 
-<img src="C:\Users\blackwater8071\Desktop\2024-01-21 10_33_47-.png" alt="2024-01-21 10_33_47-" style="zoom:50%;" />
+<img src="pictures/2024-01-21 10_33_47-.png" alt="Signup Screen" style="zoom:50%;" />
 
 After entering the fields and clicking in sign up, the Chat Screen will be shown to the user. 
 
@@ -33,7 +33,7 @@ After entering the fields and clicking in sign up, the Chat Screen will be shown
 
 When entering a correct email and a password  and after clicking on sign up, the credentials are validates with the stored credentials in the firebase database and the user will be upon successful login taken to the chat overview screen. 
 
-<img src="C:\Users\blackwater8071\Desktop\2024-01-21 10_43_00-.png" alt="2024-01-21 10_43_00-" style="zoom:50%;" />
+<img src="pictures/2024-01-21 10_43_00-.png" alt="Sign-in Screen" style="zoom:50%;" />
 
 ### <u>**Logout**</u>
 
@@ -41,7 +41,7 @@ When closing and reopening the app a user will be retaken to the chat overview s
 
 To change the account for example, there is a menu, which has a menu entry to log the user out of the chat app. The user will then be taken to the Sign-in Screen again. 
 
-<img src="C:\Users\blackwater8071\Desktop\2024-01-21 10_45_22-.png" alt="2024-01-21 10_45_22-" style="zoom:50%;" />
+<img src="pictures/2024-01-21 10_45_22-.png" alt="Logout Screen" style="zoom:50%;" />
 
 ### <u>Chat overview Screen</u>
 
@@ -49,7 +49,7 @@ The different accounts, who have registered trough the sign up process are shown
 
 By clicking on a user, the chat between the signed in person and selected user will be opened. 
 
-<img src="C:\Users\blackwater8071\Desktop\2024-01-21 10_51_39-.png" alt="2024-01-21 10_51_39-" style="zoom:50%;" />
+<img src="pictures/2024-01-21 10_51_39-.png" alt="Chat Overview Screen" style="zoom:50%;" />
 
 ### <u>**Chat Detail Screen**</u>
 
@@ -61,10 +61,8 @@ In between the top and the bot is place for the the chat. Sent chat messages are
 
 Every chat message has a timestamp under the message in the format HH:MM. 
 
+<img src="pictures/2024-01-21 10_58_44-.png" alt="Chat Detail Screen 1" style="zoom:50%;" />
 
+<img src="pictures/2024-01-21 10_59_57-.png" alt="Chat Detail Screen 2" style="zoom:50%;" />
 
-![2024-01-21 10_58_44-](C:\Users\blackwater8071\Desktop\2024-01-21 10_58_44-.png)
-
-![2024-01-21 10_59_57-](C:\Users\blackwater8071\Desktop\2024-01-21 10_59_57-.png)
-
-![2024-01-21 11_01_28-](C:\Users\blackwater8071\Desktop\2024-01-21 11_01_28-.png)
+<img src="pictures/2024-01-21 11_01_28-.png" alt="Chat Detail Screen 3" style="zoom:50%;" />
