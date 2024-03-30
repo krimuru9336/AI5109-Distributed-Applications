@@ -1,6 +1,7 @@
 package com.example.chatstnr.models;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,7 +10,17 @@ public class GroupModel {
     public Timestamp createdTimestamp;
     private String groupId;
     private String groupName;
+    @PropertyName("users")
     private List<UserModel> users;
+    private List<String> userIds;
+
+    public List<String> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
+    }
 
     Timestamp lastMessageTimestamp;
     String lastMessageSenderId;
@@ -18,7 +29,7 @@ public class GroupModel {
     public GroupModel(){
 
     }
-    public GroupModel(Timestamp createdTimestamp, String groupId, String groupName, List<UserModel> users, Timestamp lastMessageTimestamp, String lastMessageSenderId, String lastMessage) {
+    public GroupModel(Timestamp createdTimestamp, String groupId, String groupName, List<UserModel> users, Timestamp lastMessageTimestamp, String lastMessageSenderId, String lastMessage, List<String> userIds) {
         this.createdTimestamp = createdTimestamp;
         this.groupId = groupId;
         this.groupName = groupName;
@@ -26,6 +37,7 @@ public class GroupModel {
         this.lastMessageTimestamp = lastMessageTimestamp;
         this.lastMessageSenderId = lastMessageSenderId;
         this.lastMessage = lastMessage;
+        this.userIds = userIds;
     }
 
     public Timestamp getCreatedTimestamp() {

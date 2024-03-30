@@ -2,12 +2,14 @@ package com.example.chatstnr.utils;
 
 import android.net.Uri;
 
+import com.example.chatstnr.models.UserModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -30,6 +32,10 @@ public class FirebaseUtil {
     }
     public static DocumentReference currentUserDetails(){
         return FirebaseFirestore.getInstance().collection("users").document(currentUserid());
+    }
+
+    public static DocumentReference getUserDetails(String userId){
+        return FirebaseFirestore.getInstance().collection("users").document(userId);
     }
 
     public static CollectionReference allUserCollectionReference(){
@@ -108,4 +114,14 @@ public class FirebaseUtil {
                 .child(groupId).child(messageId);
     }
 
+    public static CollectionReference allGroupsCollectionReference() {
+        return FirebaseFirestore.getInstance().collection("groups");
+    }
+
+    // This method fetches all groups where the given userId is a member
+    public static Query getGroupsOfUser(String userId) {
+        // Assuming you have a field in each group document called "members" which is an array
+        // containing the IDs of all members
+        return allGroupsCollectionReference().whereArrayContains("userIds", userId);
+    }
 }

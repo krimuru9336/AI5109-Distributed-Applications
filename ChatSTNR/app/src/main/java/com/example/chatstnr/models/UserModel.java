@@ -1,12 +1,15 @@
 package com.example.chatstnr.models;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.Objects;
 
 public class UserModel {
     private String phone;
     private String username;
     public Timestamp createdTimestamp;
+    @PropertyName("userId")
     private String userId;
 
     public UserModel(){

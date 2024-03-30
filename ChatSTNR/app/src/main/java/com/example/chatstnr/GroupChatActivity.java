@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -29,11 +30,13 @@ import com.example.chatstnr.models.GroupModel;
 import com.example.chatstnr.models.UserModel;
 import com.example.chatstnr.utils.AndroidUtil;
 import com.example.chatstnr.utils.FirebaseUtil;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Arrays;
@@ -41,7 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class GroupChatActivity extends AppCompatActivity {
+public class GroupChatActivity extends AppCompatActivity implements ChatRecyclerAdapter.OnEditDeleteClickListener {
 
     ProgressBar progressBar;
     GroupModel groupModel;
@@ -131,9 +134,6 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
 
-        getOrCreateGroupChatroomModel();
-
-
         sendMessageBtn.setOnClickListener((v -> {
             String message = messageInput.getText().toString().trim();
             if (message.isEmpty() && Objects.equals(messageType, "text")) {
@@ -172,6 +172,9 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
+
+        getOrCreateGroupChatroomModel();
+        setupChatRecyclerView();
 
     }
 
@@ -217,6 +220,10 @@ public class GroupChatActivity extends AppCompatActivity {
         if (Objects.equals(messageType, "text")) {
             if (!isEdited) {
 
+                groupModel.setLastMessage(message);
+                groupModel.setLastMessageTimestamp(Timestamp.now());
+                groupModel.setLastMessageSenderId(FirebaseUtil.currentUserid());
+                FirebaseUtil.getGroupReference(groupId).set(groupModel);
 
                 ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserid(), Timestamp.now());
                 FirebaseUtil.getGroupChatroomReference(groupId).add(chatMessageModel)
@@ -290,6 +297,72 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         }
+        else if (Objects.equals(messageType, "image")) {
+
+            if (!isEdited) {
+
+                ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserid(), Timestamp.now());
+
+                chatMessageModel.setMessage("Sending");
+
+                FirebaseUtil.getGroupChatroomReference(groupId).add(chatMessageModel)
+                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                if (task.isSuccessful()) {
+                                    messageInput.setText("");
+                                    String documentID = task.getResult().getId();
+
+                                    chatMessageModel.setMessageID(documentID);
+                                    chatMessageModel.setMessageType(messageType);
+
+                                    FirebaseUtil.getGroupChatroomReference(groupId)
+                                            .document(documentID)
+                                            .set(chatMessageModel);
+//                            sendNotification(message);
+
+                                    //Add Media to storage
+                                    FirebaseUtil.getCurrentGroupChatStorageRef(groupId, chatMessageModel.getMessageID())
+                                            .putFile(selectedImageUri)
+                                            .addOnSuccessListener(taskSnapshot -> {
+                                                // Get the download URL of the uploaded file
+                                                StorageReference storageRef = FirebaseUtil.getCurrentGroupChatStorageRef(groupId, chatMessageModel.getMessageID());
+                                                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                                    // Handle the download URL (e.g., store it in Firestore)
+                                                    String downloadUrl = uri.toString();
+                                                    // Now you can save this URL in Firestore along with other message details
+                                                    chatMessageModel.setMessageUrl(downloadUrl); // Set the media URL in your ChatMessageModel
+
+                                                    //TO check DELETEEEE
+                                                    chatMessageModel.setMessage(downloadUrl);
+                                                    // Save the ChatMessageModel in Firestore
+                                                    // For example:
+                                                    FirebaseUtil.getGroupChatroomReference(groupId).document(chatMessageModel.getMessageID()).set(chatMessageModel);
+
+                                                    messageType = "text";
+                                                    mediaImageView.setVisibility(View.GONE);
+                                                    mediaVideoView.setVisibility(View.GONE);
+                                                    messageInput.setVisibility(View.VISIBLE);
+                                                    setInProgress(false);
+                                                    AndroidUtil.showToast(getApplicationContext(), "Sent");
+
+                                                }).addOnFailureListener(exception -> {
+                                                    // Handle any errors getting the download URL
+                                                });
+                                            })
+                                            .addOnFailureListener(exception -> {
+                                                // Handle unsuccessful uploads
+                                            });
+
+                                }
+                            }
+                        });
+
+            }
+
+            AndroidUtil.showToast(getApplicationContext(), "Sending");
+
+        }
         else {
 
             if (!isEdited) {
@@ -356,6 +429,7 @@ public class GroupChatActivity extends AppCompatActivity {
             AndroidUtil.showToast(getApplicationContext(), "Sending");
 
         }
+
     }
 
     void setInProgress(boolean inProgress) {
@@ -370,11 +444,35 @@ public class GroupChatActivity extends AppCompatActivity {
         }
     }
 
-    /*
+    void setupChatRecyclerView() {
+        Query query = FirebaseUtil.getGroupChatroomReference(groupId)
+                .orderBy("timestamp", Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<ChatMessageModel> options = new FirestoreRecyclerOptions.Builder<ChatMessageModel>()
+                .setQuery(query, ChatMessageModel.class).build();
+
+        adapter = new ChatRecyclerAdapter(options, getApplicationContext());
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setReverseLayout(true);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                recyclerView.smoothScrollToPosition(0);
+            }
+        });
+
+        adapter.setOnEditDeleteClickListener(this);
+    }
+
+
     @Override
     public void OnEditDeleteClick(ChatMessageModel chatMessage) {
 
-        Log.d("ChatActivity", "OnEditDeleteClick: ");
+        Log.d("GroupChatActivity", "OnEditDeleteClick: ");
 
         mediaImageView.setVisibility(View.GONE);
         mediaVideoView.setVisibility(View.GONE);
@@ -417,7 +515,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     mediaImageView.setVisibility(View.VISIBLE);
                     mediaVideoView.setVisibility(View.GONE);
                     messageInput.setVisibility(View.GONE);
-                    Glide.with(ChatActivity.this).load(chatMessage.getMessageUrl()).into(mediaImageView);
+                    Glide.with(GroupChatActivity.this).load(chatMessage.getMessageUrl()).into(mediaImageView);
 
                 } else if (Objects.equals(chatMessage.getMessageType(), "video")) {
 
@@ -443,7 +541,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
 
             } else {
-                AndroidUtil.showToast(ChatActivity.this, "This message is deleted");
+                AndroidUtil.showToast(GroupChatActivity.this, "This message is deleted");
                 messageInput.setText("");
                 cancelMessageBtn.setVisibility(View.GONE);
                 deleteMessageBtn.setVisibility(View.GONE);
@@ -451,7 +549,7 @@ public class GroupChatActivity extends AppCompatActivity {
         }
 
     }
-*/
+
     public void onDelete(){
 
         String documentID = chatMessageModel.getMessageID(); // Assuming getMessageID() returns the document ID

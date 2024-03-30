@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.chatstnr.R;
 import com.example.chatstnr.models.ChatMessageModel;
+import com.example.chatstnr.models.UserModel;
 import com.example.chatstnr.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -32,6 +33,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
     //    private OnItemClickListener OnItemClickListener;
     private OnEditDeleteClickListener editDeleteClickListener;
     private int selectedItemPosition = RecyclerView.NO_POSITION;
+    private static UserModel sender;
     private static final int MESSAGE_TYPE_NORMAL = 0;
     private static final int MESSAGE_TYPE_DELETED = 1;
 
@@ -180,10 +182,10 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
                 } else if (Objects.equals(model.getMessageType(), "video")) {
                     rightChatVideoview.setVideoURI(Uri.parse(model.getMessageUrl()));
                     rightChatImageview.setImageResource(R.drawable.play_arrow_icon);
-                    rightChatVideoview.setVisibility(View.GONE);
-                    rightChatImageview.setVisibility(View.VISIBLE);
+                    rightChatVideoview.setVisibility(View.VISIBLE);
+                    rightChatImageview.setVisibility(View.GONE);
                     rightChatTextview.setVisibility(View.GONE);
-                    rightChatTextview.setText(model.getMessageUrl());
+                    rightChatTextview.setText(model.getMessage());
 
 //                    rightChatVideoview.start();
 
@@ -213,6 +215,16 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
                 }
                 rightChatTimeview.setText(FirebaseUtil.timestampToString(model.getTimestamp()));
             } else {
+
+                FirebaseUtil.getUserDetails(model.getSenderId()).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        sender = task.getResult().toObject(UserModel.class);
+                        leftUsername.setText(sender.getUsername());
+                        leftPno.setText(sender.getPhone());
+
+                    }
+                });
+
                 rightChatLayout.setVisibility(View.GONE);
                 leftChatLayout.setVisibility(View.VISIBLE);
                 if (Objects.equals(model.getMessageType(), "text")) {
@@ -226,15 +238,36 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessageMod
                     leftChatImageview.setVisibility(View.VISIBLE);
                     leftChatTextview.setVisibility(View.GONE);
                 } else if (Objects.equals(model.getMessageType(), "video")) {
-//                    leftChatVideoview.setVideoURI(Uri.parse(model.getMessageUrl()));
-                    leftChatVideoview.setVisibility(View.GONE);
+                    leftChatVideoview.setVideoURI(Uri.parse(model.getMessageUrl()));
+                    leftChatVideoview.setVisibility(View.VISIBLE);
                     leftChatImageview.setVisibility(View.GONE);
-                    leftChatTextview.setVisibility(View.VISIBLE);
-                    leftChatTextview.setText(model.getMessageUrl());
+                    leftChatTextview.setVisibility(View.GONE);
+                    leftChatTextview.setText(model.getMessage());
                 }
 
-                leftUsername.setText(model.getMessageType());
-                leftPno.setText(model.getMessageType());
+                leftChatImageview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        leftChatVideoview.setVisibility(View.VISIBLE);
+                        leftChatImageview.setVisibility(View.GONE);
+                        leftChatVideoview.start();
+
+                    }
+                });
+                leftChatVideoview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (leftChatVideoview.isPlaying()) {
+                            // If the video is currently playing, pause it
+                            leftChatVideoview.pause();
+                        } else {
+                            // If the video is paused or stopped, start playing it
+                            leftChatVideoview.start();
+                        }
+                    }
+                });
+
+
                 leftChatTimeview.setText(FirebaseUtil.timestampToString(model.getTimestamp()));
             }
         }

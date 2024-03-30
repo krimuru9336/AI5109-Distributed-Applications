@@ -50,6 +50,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     UserModel current;
     List<UserModel> selectedUsers = new ArrayList<>();
     List<UserModel> searchUsers = new ArrayList<>();
+    List<String> userIds = new ArrayList<>();
 
     public void addSelectedUser(UserModel user) {
         selectedUsers.add(user);
@@ -124,6 +125,9 @@ public class CreateGroupActivity extends AppCompatActivity {
             return;
         }
 
+        for(UserModel model: selectedUsers){
+            userIds.add(model.getUserId());
+        }
         GroupModel newGroup = new GroupModel(
                 Timestamp.now(), // Assuming you want to timestamp the group creation
                 null, // Group ID will be generated automatically by Firestore
@@ -131,7 +135,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                 selectedUsers, // List of selected users for the group,
                 null,
                 null,
-                null
+                null,
+                userIds
         );
 
         CollectionReference groupsCollection = FirebaseUtil.getAllGroupDetails();

@@ -7,13 +7,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.chatstnr.adapter.RecentChatRecyclerAdapter;
-import com.example.chatstnr.models.ChatroomModel;
+import com.example.chatstnr.adapter.RecentGroupChatRecyclerAdapter;
+import com.example.chatstnr.models.GroupModel;
 import com.example.chatstnr.utils.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
@@ -22,7 +24,7 @@ public class GroupFragment extends Fragment {
 
     ImageButton newGroup;
     RecyclerView recyclerView;
-    RecentChatRecyclerAdapter adapter;
+    RecentGroupChatRecyclerAdapter adapter;
 
     public GroupFragment() {
         // Required empty public constructor
@@ -50,20 +52,20 @@ public class GroupFragment extends Fragment {
         return view;
     }
 
-    void setupRecyclerView(){
+    void setupRecyclerView() {
+        String userId = FirebaseUtil.currentUserid(); // Assuming you have a way to get the current user's ID
 
-        Query query = FirebaseUtil.allChatroomCollectionReference()
-                .whereArrayContains("userIds",FirebaseUtil.currentUserid())
-                .orderBy("lastMessageTimestamp",Query.Direction.DESCENDING);
+        Query query = FirebaseUtil.allGroupsCollectionReference()
+                .whereArrayContains("userIds", userId);
 
-        FirestoreRecyclerOptions<ChatroomModel> options = new FirestoreRecyclerOptions.Builder<ChatroomModel>()
-                .setQuery(query,ChatroomModel.class).build();
+        FirestoreRecyclerOptions<GroupModel> options = new FirestoreRecyclerOptions.Builder<GroupModel>()
+                .setQuery(query, GroupModel.class)
+                .build();
 
-        adapter = new RecentChatRecyclerAdapter(options,getContext());
+        adapter = new RecentGroupChatRecyclerAdapter(options, getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.startListening();
-
     }
 
     @Override

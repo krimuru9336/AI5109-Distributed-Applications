@@ -109,6 +109,7 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         mediaImageView = findViewById(R.id.media_image_view);
         mediaVideoView = findViewById(R.id.media_video_view);
 
+
         imagePickLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
@@ -280,7 +281,8 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             }
                         });
 
-            } else if (!Objects.equals(message, "DELETED")) {
+            }
+            else if (!Objects.equals(message, "DELETED")) {
                 String documentID = chatMessageModel.getMessageID(); // Assuming getMessageID() returns the document ID
 
                 Map<String, Object> updateData = new HashMap<>();
@@ -304,7 +306,8 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                         });
 
                 chatMessageModel.setEditable(false);
-            } else {
+            }
+            else {
 
                 String documentID = chatMessageModel.getMessageID(); // Assuming getMessageID() returns the document ID
 
@@ -329,7 +332,8 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                 chatMessageModel.setEditable(false);
 
             }
-        } else {
+        }
+        else if (Objects.equals(messageType, "image")) {
 
             if (!isEdited) {
 
@@ -357,6 +361,79 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                                             .document(documentID)
                                             .set(chatMessageModel);
 //                            sendNotification(message);
+
+                                    //Add Media to storage
+                                    FirebaseUtil.getCurrentChatRoomStorageRef(chatroomId, chatMessageModel.getMessageID())
+                                            .putFile(selectedImageUri)
+                                            .addOnSuccessListener(taskSnapshot -> {
+                                                // Get the download URL of the uploaded file
+                                                StorageReference storageRef = FirebaseUtil.getCurrentChatRoomStorageRef(chatroomId, chatMessageModel.getMessageID());
+                                                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                                    // Handle the download URL (e.g., store it in Firestore)
+                                                    String downloadUrl = uri.toString();
+                                                    // Now you can save this URL in Firestore along with other message details
+                                                    chatMessageModel.setMessageUrl(downloadUrl); // Set the media URL in your ChatMessageModel
+
+                                                    //TO check DELETEEEE
+                                                    chatMessageModel.setMessage(downloadUrl);
+                                                    // Save the ChatMessageModel in Firestore
+                                                    // For example:
+                                                    FirebaseUtil.getChatroomMessageReference(chatroomId).document(chatMessageModel.getMessageID()).set(chatMessageModel);
+
+                                                    messageType = "text";
+                                                    mediaImageView.setVisibility(View.GONE);
+                                                    mediaVideoView.setVisibility(View.GONE);
+                                                    messageInput.setVisibility(View.VISIBLE);
+                                                    setInProgress(false);
+                                                    AndroidUtil.showToast(getApplicationContext(), "Sent");
+
+                                                }).addOnFailureListener(exception -> {
+                                                    // Handle any errors getting the download URL
+                                                });
+                                            })
+                                            .addOnFailureListener(exception -> {
+                                                // Handle unsuccessful uploads
+                                            });
+
+                                }
+                            }
+                        });
+
+            }
+
+            AndroidUtil.showToast(getApplicationContext(), "Sending");
+
+        }
+
+        else  {
+
+            if (!isEdited) {
+
+                chatroomModel.setLastMessageTimestamp(Timestamp.now());
+                chatroomModel.setLastMessageSenderId(FirebaseUtil.currentUserid());
+                chatroomModel.setLastMessage(messageType);
+                FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
+
+                ChatMessageModel chatMessageModel = new ChatMessageModel(message, FirebaseUtil.currentUserid(), Timestamp.now());
+
+                chatMessageModel.setMessage("Sending");
+
+                FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)
+                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                if (task.isSuccessful()) {
+                                    messageInput.setText("");
+                                    String documentID = task.getResult().getId();
+
+                                    chatMessageModel.setMessageID(documentID);
+                                    chatMessageModel.setMessageType(messageType);
+
+                                    FirebaseUtil.getChatroomMessageReference(chatroomId)
+                                            .document(documentID)
+                                            .set(chatMessageModel);
+//                            sendNotification(message);
+                                    Log.d("FirebaseUtil.getChatroomMessageReference(chatroomId).add(chatMessageModel)", " onComplete");
 
                                     //Add Media to storage
                                     FirebaseUtil.getCurrentChatRoomStorageRef(chatroomId, chatMessageModel.getMessageID())
