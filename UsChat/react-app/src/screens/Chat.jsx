@@ -7,17 +7,36 @@ import {
   Alert,
   View,
   ToastAndroid,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
-import {Avatar, Bubble, GiftedChat} from 'react-native-gifted-chat';
+import {
+  Avatar,
+  Bubble,
+  GiftedChat,
+  Composer,
+  LeftAction,
+  InputToolbar,
+  SendButton,
+  Send,
+} from 'react-native-gifted-chat';
 import useGlobalStore from '../core/global';
-import {getMessagesByRoomId, editMessage, deleteMessage} from '../core/api';
+import {
+  getMessagesByRoomId,
+  editMessage,
+  deleteMessage,
+  sendMessageWithMedia,
+  uploadMedia,
+  baseURL,
+} from '../core/api';
 import {Keyboard} from 'react-native';
 import Title from '../common/Title';
 import {Header, Icon} from 'react-native-elements';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {Avatar as Avatar2} from 'react-native-elements';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {List, Divider, Portal, Dialog, Button} from 'react-native-paper';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const ChatScreen = ({route, navigation}) => {
   const [messages, setMessages] = useState([]);
@@ -25,7 +44,7 @@ const ChatScreen = ({route, navigation}) => {
   const [editingMessage, setEditingMessage] = useState(null); // Track the message being edited
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editedMessageText, setEditedMessageText] = useState('');
-
+  const [uploading, setUploading] = useState(false);
   const user = useGlobalStore(state => state.user);
   const {chat} = route.params;
   const chatRoomId = chat.chat_room_id;
@@ -40,12 +59,15 @@ const ChatScreen = ({route, navigation}) => {
   useEffect(() => {
     // Connect to the WebSocket server
     const newSocket = new WebSocket(
-      'ws://10.0.2.2:8000/websocket/ws/' + chatRoomId,
+      `ws://18cb-2405-201-1004-1aeb-9869-b419-899e-4b66.ngrok-free.app/websocket/ws/${chatRoomId}`,
     ); // replace with your actual URL
 
-    newSocket.onmessage = event => {
+    newSocket.onmessage = async event => {
       const newMessage = JSON.parse(event.data);
-      if (newMessage.user._id != user.user_id) {
+      console.log('New Message ', newMessage);
+      if (newMessage?.isUpdate) {
+        await fetchPreviousMessages();
+      } else if (newMessage.user._id != user.user_id) {
         setMessages(prevMessages =>
           GiftedChat.append(prevMessages, newMessage),
         );
@@ -81,7 +103,8 @@ const ChatScreen = ({route, navigation}) => {
         chatRef.current.scrollToBottom();
       }
     } catch (error) {
-      console.error('Error fetching previous messages:', error);
+      console.error('Error fetching previous messages:');
+      console.log(error.response.data);
     }
   };
 
@@ -148,7 +171,7 @@ const ChatScreen = ({route, navigation}) => {
       if (editingMessage) {
         await editMessage(editingMessage._id, editedMessageText);
         setEditModalVisible(false);
-        fetchPreviousMessages();
+        await fetchPreviousMessages();
       }
     } catch (e) {
       console.log('Error editing message', e);
@@ -174,7 +197,7 @@ const ChatScreen = ({route, navigation}) => {
         // Call your API function to delete the message
         await deleteMessage(message._id);
         // Fetch updated messages and update the state
-        fetchPreviousMessages();
+        await fetchPreviousMessages();
       }
     } catch (e) {
       console.log('Exception while Deleting ', e);
@@ -194,73 +217,97 @@ const ChatScreen = ({route, navigation}) => {
     });
   };
 
-  const renderBubble = props => {
-    console.log(props.currentMessage);
-    let username = props.currentMessage.user.name;
-    let color = getColor(username);
+  const handleImageUpload = async () => {
+    try {
+      const options = {
+        title: 'Select Image',
+        mediaType: 'photo',
+        maxWidth: 1000,
+        maxHeight: 1000,
+      };
 
-    return (
-      <Bubble
-        {...props}
-        textStyle={{
-          right: {
-            color: 'white',
-          },
-        }}
-        timeTextStyle={{
-          right: {color: 'white'},
-          left: {color: 'black'},
-        }}
-        wrapperStyle={{
-          left: {
-            backgroundColor: color,
-          },
-          right: {
-            backgroundColor: '#9893DA',
-          },
-        }}
-      />
-    );
-  };
+      launchImageLibrary(options, async result => {
+        console.log(result);
+        if (result?.assets?.length && result?.assets?.[0] && !result.canceled) {
+          let mediaItem = result.assets[0];
 
-  const renderAvatar = props => {
-    console.log(props.currentMessage);
-    let username = props.currentMessage.user.name;
-    let color = getColor(username);
-
-    return (
-      <Avatar
-        {...props}
-        textStyle={{
-          color: 'black',
-        }}
-        imageStyle={{
-          left: {
-            backgroundColor: color,
-          },
-          right: {
-            backgroundColor: '#9893DA',
-          },
-        }}
-      />
-    );
-  };
-
-  const getColor = username => {
-    let sumChars = 0;
-    for (let i = 0; i < username.length; i++) {
-      sumChars += username.charCodeAt(i);
+          uploadAndSendMediaMessage(mediaItem, true);
+        }
+      });
+    } catch (e) {
+      console.log(e);
     }
+  };
 
-    const colors = [
-      '#F1F7B5', // pastel yellow
-      '#A8D1D1', // pastel green
-      '#FD8A8A', // pastel red
-      '#FFCBCB', // pastel pink
-      '#DFEBEB', // pastel grey
-    ];
-    console.log(colors[sumChars % colors.length]);
-    return colors[sumChars % colors.length];
+  const uploadAndSendMediaMessage = async (mediaItem, isImage) => {
+    setUploading(true);
+    try {
+      // Upload image to server
+      console.log(mediaItem);
+      let media = mediaItem;
+      if (!isImage) {
+        let name = mediaItem.uri.split('/').slice(-1)[0];
+        media = {
+          uri: mediaItem.linkUri,
+          fileName: name,
+          type: mediaItem.mime,
+        };
+      }
+      const uploadResponse = await uploadMedia(media);
+      console.log(uploadResponse.data);
+      if (
+        uploadResponse &&
+        uploadResponse.data &&
+        uploadResponse.data.filename &&
+        uploadResponse.data.message_type
+      ) {
+        let filename = uploadResponse.data.filename;
+        let response = await sendMessageWithMedia(
+          chatRoomId,
+          user.user_id,
+          filename,
+          uploadResponse.data.message_type,
+        );
+
+        if (response) {
+          await fetchPreviousMessages();
+        }
+      }
+    } catch (error) {
+      if (error && error.response && error.response.data) {
+        console.log(error.response.data);
+      }
+      console.log(error.response);
+      console.error('Error uploading image:', error.request);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const scrollToBottomComponent = () => {
+    return <FontAwesomeIcon icon="angle-double-down" size={22} color="#333" />;
+  };
+
+  const renderComposer = props => (
+    <Composer {...props} textInputProps={{onImageChange}} />
+  );
+
+  const renderSend = props => {
+    return (
+      <Send {...props}>
+        <View style={{marginRight: 10, marginBottom: 10}}>
+          <FontAwesomeIcon icon="paper-plane" size={25} color="#BBBDF6" />
+        </View>
+      </Send>
+    );
+  };
+
+  const onImageChange = ({nativeEvent}) => {
+    try {
+      uploadAndSendMediaMessage(nativeEvent, false);
+    } catch (e) {
+      console.log('error in gif upload', gif);
+    }
   };
 
   return (
@@ -269,41 +316,66 @@ const ChatScreen = ({route, navigation}) => {
         <Title text="UsChat" fontSize={26} />
         {/*  */}
 
-        <Text
+        <View
           style={{
             color: 'white',
             backgroundColor: '#9893DA',
             paddingLeft: 10,
             paddingBottom: 10,
             paddingTop: 10,
-            fontSize: 20,
             textTransform: 'capitalize',
+            display: 'flex',
+            flexDirection: 'row',
           }}>
-          <FontAwesomeIcon icon="chevron-left" style={{color: 'white'}} />{' '}
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <FontAwesomeIcon
+              icon="chevron-left"
+              size={30}
+              style={{color: 'white'}}
+            />
+          </TouchableOpacity>
           <Avatar2
             rounded
             size={30}
             title={
               chat.type == 1
-                ? chat?.username.charAt(0).toUpperCase()
-                : chat?.chat_room_name.charAt(0).toUpperCase()
+                ? chat?.username?.charAt(0).toUpperCase()
+                : chat?.chat_room_name?.charAt(0).toUpperCase()
             }
             source={{
               uri: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fprofile_9706583&psig=AOvVaw1njRIqcJgzRVPDhfGwwEcd&ust=1705938836582000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCMi578Xr7oMDFQAAAAAdAAAAABAI',
             }}
-          />{' '}
-          {chat.username}
-        </Text>
+          />
+          <Text style={{fontSize: 20}}>
+            {' '}
+            {chat.type == 2 ? chat.chat_room_name : chat.username}
+          </Text>
+        </View>
 
         <GiftedChat
           // showUserAvatar
           messages={messages}
-          // renderBubble={renderBubble}
+          renderSend={renderSend}
+          alwaysShowSend
           onLongPress={(context, message) => onLongPress(context, message)}
           onSend={onSend}
-          renderAvatar={null}
           user={{_id: user.user_id, name: user.username}}
           ref={chatRef}
+          renderComposer={renderComposer}
+          renderActions={() => (
+            <TouchableOpacity style={{padding: 10}} onPress={handleImageUpload}>
+              <FontAwesomeIcon icon="photo-film" size={28} color="grey" />
+            </TouchableOpacity>
+          )}
+          renderMessageImage={props => (
+            <Image
+              source={{uri: props.currentMessage.image}}
+              style={{width: 200, height: 200, borderRadius: 8}}
+            />
+          )}
+          textInputStyle={{color: 'black'}}
+          scrollToBottom
+          scrollToBottomComponent={scrollToBottomComponent}
         />
       </View>
 
@@ -323,6 +395,21 @@ const ChatScreen = ({route, navigation}) => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
+      {uploading && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      )}
     </>
   );
 };

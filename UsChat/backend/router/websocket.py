@@ -61,3 +61,9 @@ async def insert_message_into_db(db: databases.Database, room_id: str, message_d
         (chat_rooms.c.chat_room_id == room_id)
     ).values(last_message_id=message_data["_id"])
     await db.execute(query)
+
+
+async def send_update_to_websocket(room_id):
+    for connection in websocket_connections.get(room_id, []):
+        print(connection)
+        await connection.send_json({'isUpdate':True})

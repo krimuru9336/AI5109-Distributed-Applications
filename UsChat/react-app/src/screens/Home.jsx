@@ -19,35 +19,7 @@ function HomeScreen({navigation}) {
   return (
     <>
       <Title text="UsChat" fontSize={40} />
-      {/* <Tab.Navigator
-        screenOptions={({route, navigation}) => ({
-          tabBarIcon: ({focused, color, size}) => {
-            const icons = {
-              Requests: 'bell',
-              ChatList: 'inbox',
-              Profile: 'user',
-            };
-            const icon = icons[route.name];
-            return (
-              <FontAwesomeIcon
-                style={{padding: 2}}
-                icon={icon}
-                size={24}
-                color={color}
-              />
-            );
-          },
-          tabBarActiveTintColor: 'orange',
-          tabBarInactiveTintColor: '#bababa',
-          tabBarShowLabel: false,
-          tabBarAndroidRipple: {borderless: false},
-          tabBarIndicator: null,
-          tabBarIndicatorStyle: null,
-        })}>
-        <Tab.Screen name="Requests" component={RequestScreen} /> */}
       <ChatListScreen />
-      {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
-      {/* </Tab.Navigator> */}
     </>
   );
 }

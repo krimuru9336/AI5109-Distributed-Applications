@@ -7,8 +7,8 @@ import Input from '../common/Input';
 import {loginUser} from '../core/api';
 import useGlobalStore from '../core/global';
 function SignInScreen({navigation}) {
-  const [username, setUsername] = useState('gagana');
-  const [password, setPassword] = useState('gagana');
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
   const login = useGlobalStore(state => state.login);
   handleUsername = e => {
     e.preventDefault();
@@ -58,6 +58,16 @@ function SignInScreen({navigation}) {
         <View style={styles.cardContainer}>
           <Title text="UsChat" />
 
+          <Text
+            style={{
+              color: '#9893DA',
+              textAlign: 'center',
+              padding: 15,
+              fontSize: 20,
+              fontWeight: '200',
+            }}>
+            Login
+          </Text>
           <Input title="Username" value={username} onChangeText={setUsername} />
 
           <Input
@@ -83,6 +93,27 @@ function SignInScreen({navigation}) {
             onPress={handleSignIn}>
             <Text style={{fontSize: 20, color: '#9893DA'}}>Login</Text>
           </Pressable>
+
+          <View
+            style={{
+              padding: 10,
+              paddingTop: 20,
+              textAlign: 'center',
+            }}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: 'black',
+                textAlign: 'center',
+              }}>
+              Not a user?{' '}
+              <Text
+                style={{color: '#9893DA'}}
+                onPress={() => navigation.navigate('SignUp')}>
+                Register Here
+              </Text>
+            </Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>

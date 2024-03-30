@@ -3,7 +3,7 @@ import sqlalchemy
 import enum
 import datetime
 
-DATABASE_URL = "mysql+mysqlconnector://root:@localhost:3306/rscapp"
+DATABASE_URL = "mysql+mysqlconnector://root:@localhost:3306/uschatdb"
 database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
