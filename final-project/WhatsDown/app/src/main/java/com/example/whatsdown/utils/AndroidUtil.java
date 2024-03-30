@@ -2,13 +2,17 @@ package com.example.whatsdown.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.whatsdown.R;
 import com.example.whatsdown.model.UserModel;
+import com.google.android.material.snackbar.Snackbar;
 
 public class AndroidUtil {
     public static void showToast(Context context, String message){
@@ -34,6 +38,13 @@ public class AndroidUtil {
 
     public static void setProfilePic(Context context, Uri imageUri, ImageView imageView){
         Glide.with(context).load(imageUri).apply(RequestOptions.circleCropTransform()).into(imageView);
+
+    }
+
+    public static void showSnackBar(View v, String message, Resources resources){
+        Snackbar snackbar = Snackbar.make(v, message, Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(resources.getColor(R.color.red));
+        snackbar.show();
 
     }
 }

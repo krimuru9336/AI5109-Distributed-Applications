@@ -23,7 +23,17 @@
             android:textColor="@color/white"
             android:layout_marginStart="10dp"
             android:layout_centerVertical="true"/>
-
+        <ImageButton
+            android:id="@+id/plus_btn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/icon_new_group"
+            android:layout_toLeftOf="@id/main_search_btn"
+            app:tint="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -37,7 +47,7 @@
 
     </RelativeLayout>
 
-    s<FrameLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/main_toolbar"

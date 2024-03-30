@@ -1,5 +1,7 @@
 package com.example.whatsdown;
 
+import static com.example.whatsdown.utils.FirebaseUtil.getCurrentUserName;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -95,7 +97,14 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
             String message = messageInput.getText().toString().trim();
             if(message.isEmpty())
                 return;
-            sendMessageToUser(message, ChatMessageModel.MessageType.TEXT);
+//            sendMessageToUser(message, ChatMessageModel.MessageType.TEXT);
+            getUserName(new UserNameCallback() {
+                @Override
+                public void onUserNameReceived(String username) {
+                    // Call sendMessageToGroup() with the sender name retrieved asynchronously
+                    sendMessageToUser(message, ChatMessageModel.MessageType.TEXT, username);
+                }
+            });
         }));
 
         getOrCreateChatroomModel();
@@ -125,9 +134,10 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
         });
     }
 
-    void sendMessageToUser(String message, ChatMessageModel.MessageType type) {
+    void sendMessageToUser(String message, ChatMessageModel.MessageType type, String senderName) {
         ChatMessageModel chatMessage = new ChatMessageModel(FirebaseUtil.createMessageId(), message, FirebaseUtil.currentUserId(), Timestamp.now(),false);
         chatMessage.setMessageType(type);
+        chatMessage.setSenderName(senderName);
         chatroomModel.setLastMessage(chatMessage);
         chatroomModel.setLastMessageSenderId(FirebaseUtil.currentUserId());
         FirebaseUtil.getChatroomReference(chatroomId).set(chatroomModel);
@@ -189,13 +199,21 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             @Override
                             public void onGifUploadSuccess(Uri gifUrl) {
                                 // GIF upload successful, send a message with the GIF URL to the chat room
-                                sendMessageToUser(gifUrl.toString(), ChatMessageModel.MessageType.GIF);
+//                                sendMessageToUser(gifUrl.toString(), ChatMessageModel.MessageType.GIF);
+                                getUserName(new UserNameCallback() {
+                                    @Override
+                                    public void onUserNameReceived(String username) {
+                                        // Call sendMessageToGroup() with the sender name retrieved asynchronously
+                                        sendMessageToUser(gifUrl.toString(), ChatMessageModel.MessageType.GIF, username);
+                                    }
+                                });
                             }
 
                             @Override
                             public void onGifUploadFailure(Exception e) {
                                 // GIF upload failed, show an error message
-                                Toast.makeText(ChatActivity.this, "Failed to upload GIF", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ChatActivity.this, "Failed to upload GIF", Toast.LENGTH_SHORT).show();
+                                AndroidUtil.showToast(ChatActivity.this, "Failed to upload GIF");
                             }
                         });
                     } else if (mimeType.startsWith("image/")) {
@@ -204,13 +222,21 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             @Override
                             public void onImageUploadSuccess(Uri imageUrl) {
                                 // Image upload successful, send a message with the image URL to the chat room
-                                sendMessageToUser(imageUrl.toString(), ChatMessageModel.MessageType.IMAGE);
+//                                sendMessageToUser(imageUrl.toString(), ChatMessageModel.MessageType.IMAGE);
+                                getUserName(new UserNameCallback() {
+                                    @Override
+                                    public void onUserNameReceived(String username) {
+                                        // Call sendMessageToGroup() with the sender name retrieved asynchronously
+                                        sendMessageToUser(imageUrl.toString(), ChatMessageModel.MessageType.IMAGE, username);
+                                    }
+                                });
                             }
 
                             @Override
                             public void onImageUploadFailure(Exception e) {
                                 // Image upload failed, show an error message
-                                Toast.makeText(ChatActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ChatActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                                AndroidUtil.showToast(ChatActivity.this, "Failed to upload image");
                             }
                         });
                     } else if (mimeType.startsWith("video/")) {
@@ -220,20 +246,44 @@ public class ChatActivity extends AppCompatActivity implements ChatRecyclerAdapt
                             public void onVideoUploadSuccess(Uri videoUrl) {
                                 Log.d("Success", "video uploaded successfully :" + videoUrl);
                                 // Video upload successful, send a message with the video URL to the chat room
-                                sendMessageToUser(videoUrl.toString(), ChatMessageModel.MessageType.VIDEO);
+//                                sendMessageToUser(videoUrl.toString(), ChatMessageModel.MessageType.VIDEO);
+                                getUserName(new UserNameCallback() {
+                                    @Override
+                                    public void onUserNameReceived(String username) {
+                                        // Call sendMessageToGroup() with the sender name retrieved asynchronously
+                                        sendMessageToUser(videoUrl.toString(), ChatMessageModel.MessageType.VIDEO, username);
+                                    }
+                                });
                             }
 
                             @Override
                             public void onVideoUploadFailure(Exception e) {
                                 Log.d("Failure", "video upload failed " + e);
                                 // Video upload failed, show an error message
-                                Toast.makeText(ChatActivity.this, "Failed to upload video", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ChatActivity.this, "Failed to upload video", Toast.LENGTH_SHORT).show();
+                                AndroidUtil.showToast(ChatActivity.this, "Failed to upload video");
                             }
                         });
                     }
                 }
             }
         }
+    }
+
+    public void getUserName(UserNameCallback callback) {
+        getCurrentUserName().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String username = task.getResult();
+                callback.onUserNameReceived(username);
+            } else {
+                callback.onUserNameReceived("");
+            }
+        });
+    }
+
+    // Define a callback interface
+    public interface UserNameCallback {
+        void onUserNameReceived(String username);
     }
 
 }

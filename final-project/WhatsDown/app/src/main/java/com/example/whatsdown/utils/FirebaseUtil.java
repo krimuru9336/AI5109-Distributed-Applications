@@ -2,10 +2,12 @@ package com.example.whatsdown.utils;
 
 import android.net.Uri;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -31,6 +33,28 @@ public class FirebaseUtil {
     public static DocumentReference currentUserDetails(){
         return FirebaseFirestore.getInstance().collection("users").document(currentUserId());
     }
+
+    public static Task<String> getCurrentUserName() {
+        // Get the document reference for the current user
+        DocumentReference currentUserRef = currentUserDetails();
+
+        // Fetch the user document and extract the name field
+        return currentUserRef.get().continueWith(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // Extract the name field from the document
+                    String username = document.getString("username");
+                    return username != null ? username : "unknown";
+                } else {
+                    return  "unknown";
+                }
+            } else {
+                return "";
+            }
+        });
+    }
+
 
     public static CollectionReference allUserCollectionReference(){
         return FirebaseFirestore.getInstance().collection("users");
@@ -117,7 +141,8 @@ public class FirebaseUtil {
     }
 
     public static void uploadVideo(Uri videoUri, OnVideoUploadListener listener) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("videos").child(videoUri.getLastPathSegment());
+//        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("videos").child(videoUri.getLastPathSegment());
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("videos").child(Objects.requireNonNull(videoUri.getLastPathSegment()));
         UploadTask uploadTask = storageRef.putFile(videoUri);
         uploadTask.continueWithTask(task -> {
             if (!task.isSuccessful()) {
@@ -158,4 +183,23 @@ public class FirebaseUtil {
         });
     }
 
+    public static CollectionReference allGroupChatsCollectionReference() {
+        return FirebaseFirestore.getInstance().collection("groupChats");
+    }
+
+
+    public static DocumentReference getGroupChatsReference(String groupId) {
+        return FirebaseFirestore.getInstance().collection("groupChats").document(groupId);
+
+    }
+
+    public static CollectionReference getGroupChatMessageReference(String groupId) {
+        return getGroupChatsReference(groupId).collection("messages");
+
+    }
+
+    public static String getGroupChatId(String name) {
+        return name + '_' + name.hashCode();
+
+    }
 }

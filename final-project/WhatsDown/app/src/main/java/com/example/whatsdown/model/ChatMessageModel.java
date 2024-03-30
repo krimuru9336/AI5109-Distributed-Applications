@@ -16,6 +16,7 @@ public class ChatMessageModel implements Parcelable{
     private Timestamp timestamp;
     private boolean isDeleted;
     private MessageType messageType;
+    private String senderName;
 
     public ChatMessageModel() {
     }
@@ -43,6 +44,7 @@ public class ChatMessageModel implements Parcelable{
         id = in.readString();
         message = in.readString();
         senderId = in.readString();
+        senderName = in.readString();
         timestamp = in.readParcelable(Timestamp.class.getClassLoader());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             isDeleted = in.readBoolean();
@@ -107,7 +109,13 @@ public class ChatMessageModel implements Parcelable{
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+    public String getSenderName() {
+        return senderName;
+    }
 
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
     @Override
     public int describeContents() {
         return 0;
@@ -118,6 +126,7 @@ public class ChatMessageModel implements Parcelable{
         dest.writeString(id);
         dest.writeString(message);
         dest.writeString(senderId);
+        dest.writeString(senderName);
         dest.writeParcelable(timestamp, flags);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dest.writeBoolean(isDeleted);
