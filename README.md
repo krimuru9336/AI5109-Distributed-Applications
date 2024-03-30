@@ -11,11 +11,15 @@ This Android application is a real-time chat app developed using Android Studio 
 - **User Authentication:**
   - Users can sign up, log in, and log out securely using Firebase Authentication.
   
-- **Realtime Chat:**
+- **Realtime Chat Features:**
   - Users can send and receive messages in real-time.
   - Users can edit their message and resend it.
   - Users can delete the message they have sent.
   - Messages are stored in Firebase Realtime Database.
+  - User can create a Group
+  - User can add himself/herself in the created group
+  - All users can see all list of groups
+  - User can message a person from the group
 
 - **User List:**
   - Display a list of users.
