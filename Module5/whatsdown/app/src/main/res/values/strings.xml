@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Abbas App</string>
+    <string name="server_client_id">770406210017-mfo7phoipp9d8i8ai6j23j90beunhf5f.apps.googleusercontent.com</string>
+    <string name="chats">Chats</string>
+    <string name="groups">Groups</string>
+    <string name="profile">Profile</string>
+</resources>
