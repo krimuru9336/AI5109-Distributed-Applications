@@ -1,5 +1,20 @@
 package com.example.chatapplication.adapters;
 
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.EMPTY;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.EXTRA_SEEN;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.ONE;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.REF_CHATS;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.SLASH;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.STATUS_ONLINE;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_AUDIO;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_CONTACT;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_DOCUMENT;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_IMAGE;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_LOCATION;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_RECORDING;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_VIDEO;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.ZERO;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +26,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import com.bytesbee.firebase.chat.activities.R;
+import com.bytesbee.firebase.chat.activities.managers.Screens;
+import com.bytesbee.firebase.chat.activities.managers.Utils;
+import com.bytesbee.firebase.chat.activities.models.Chat;
+import com.bytesbee.firebase.chat.activities.models.User;
+import com.bytesbee.firebase.chat.activities.views.SingleClickListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
