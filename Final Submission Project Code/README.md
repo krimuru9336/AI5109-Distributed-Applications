@@ -32,17 +32,17 @@ Extended the application to support group chat functionality, enabling multiple 
 
 ## App Look
 
-![Screenshot 1](https://drive.google.com/file/d/1Cxq7GCif303gupB2TTI_66WA-nq8IllH/view?usp=sharing)
+![Screenshot 1](https://drive.google.com/uc?export=view&id=1Cxq7GCif303gupB2TTI_66WA-nq8IllH)
 
-![Screenshot 2](https://drive.google.com/file/d/1sQEpnLsgCUsJVFjbZYiImPpMXM7pSLBC/view?usp=sharing)
+![Screenshot 2](https://drive.google.com/uc?export=view&id=1sQEpnLsgCUsJVFjbZYiImPpMXM7pSLBC)
 
-![Screenshot 3](https://drive.google.com/file/d/1azDldKo5lPI4Qtv0BG3e-V0Ybwp4_dEs/view?usp=sharing)
+![Screenshot 3](https://drive.google.com/uc?export=view&id=1azDldKo5lPI4Qtv0BG3e-V0Ybwp4_dEs)
 
-![Screenshot 4](https://drive.google.com/file/d/1nF9rt2AYxdZkZ7r7jihPRU21j5vTgrRi/view?usp=sharing)
+![Screenshot 4](https://drive.google.com/uc?export=view&id=1nF9rt2AYxdZkZ7r7jihPRU21j5vTgrRi)
 
-![Screenshot 5](https://drive.google.com/file/d/1OJufamP-gc4BjmpVAZ9qsykXIL_UXvz6/view?usp=sharing)
+![Screenshot 5](https://drive.google.com/uc?export=view&id=1OJufamP-gc4BjmpVAZ9qsykXIL_UXvz6)
 
-![Screenshot 6](https://drive.google.com/file/d/1DSDk-bj1sMd0CUiKu0XC1z690kswbUMO/view?usp=sharing)
+![Screenshot 6](https://drive.google.com/uc?export=view&id=1DSDk-bj1sMd0CUiKu0XC1z690kswbUMO)
 
 ## Project Structure
 
