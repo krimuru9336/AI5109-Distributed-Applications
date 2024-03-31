@@ -2,15 +2,10 @@ package com.example.chatapplication;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class BaseActivity extends AppCompatActivity {
@@ -18,10 +13,10 @@ public class BaseActivity extends AppCompatActivity {
     protected final String[] permissionsContact = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     protected final String[] permissionsStorage = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     public Activity mActivity;
-    public FirebaseAuth auth; //Auth init
+    public FirebaseAuth auth;
     public FirebaseAuth.AuthStateListener authStateListener;
-    public DatabaseReference reference; //Database related
-    public FirebaseUser firebaseUser; //Current User
+    public DatabaseReference reference;
+    public FirebaseUser firebaseUser;
     public Screens screens;
     public ImageView imgBack;
 
