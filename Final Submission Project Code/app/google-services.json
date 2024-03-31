@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_number": "193869041658",
+    "firebase_url": "https://united-monument-216501.firebaseio.com",
+    "project_id": "united-monument-216501",
+    "storage_bucket": "united-monument-216501.appspot.com"
+  },
+  "client": [    
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193869041658:android:f4634635a0100196875e43",
+        "android_client_info": {
+          "package_name": "com.example.ripplechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193869041658-abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ripplechat",
+            "certificate_hash": "abcdefghijklmnopqrstuvwxyz123456"
+          }
+        },
+        {
+          "client_id": "193869041658-qrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeciR9CSrX-_7kLRuGd7mC14WMkpbsYyM"
+        },
+        {
+          "current_key": "AIzaSyC_6MvOJgb7kTxWMPnu0N5-VD-b4C5Ck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193869041658-qrstuvwxyz123456abcdefghijklmnopqrstuvwxyz123456.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,24 @@
+<resources>
+    <string name="my_app_name">RippleChat</string>
+    <string name="my_app_description">Project for Hocschule Fulda Course</string>
+    <string name="my_app_company">dev_Usama</string>
+    <string name="SignIn">SIGN IN</string>
+    <string name="SignUp_var">SIGN UP</string>
+    <string name="Register_var">REGISTER</string>
+    <string name="ForgetPassword">Forget Password?</string>
+    <string name="NewSignUp_var"><![CDATA[<font color=#9e9e9e>Don\'t have account?</font> <b><font color=#0671da>Sign up</font></b>]]></string>
+    <string name="Description" />
+    <string name="NewSignUp"><![CDATA[<font color=#9e9e9e>Don\'t have account?</font> <b><font color=#0671da>Sign up</font></b>]]></string>
+    <string name="ExistingUser"><![CDATA[<font color=#9e9e9e>Already have account?</font> <b><font color=#0671da>Sign In</font></b>]]></string>
+    <string name="InvalidEmailPassword">Invalid email or password!</string>
+    <string name="user_Email">EMAIL</string>
+    <string name="Username">USERNAME</string>
+    <string name="user_Password">PASSWORD</string>
+    <string name="Submit_buton">Submit</string>
+    <string name="AllFieldsRequired">All fields are required!</string>
+    <string name="msg_for_please_wait">Please wait…</string>
+    <string name="to_exit">Press again to exit app</string>
+    <string name="Chats">Chats</string>
+
+
+</resources>
