@@ -86,7 +86,7 @@ insert_new_message = (
 "VALUES (%s, %s, %s, %s, %s, %s, %s)")
 select_message_by_id = "SELECT * FROM messages WHERE id=%s"
 select_messages_by_sender_receiver_user_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_user_id = %s) OR (receiver_user_id = %s AND sender_id = %s) ORDER BY sent_at ASC"
-select_messages_by_sender_receiver_group_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_group_id = %s) OR (receiver_group_id = %s AND sender_id = %s) ORDER BY sent_at ASC"
+select_messages_by_sender_receiver_group_id = "SELECT * FROM messages WHERE receiver_group_id = %s ORDER BY sent_at ASC"
 update_message_by_id = "UPDATE messages SET content=%s, is_edited=True WHERE id=%s"
 delete_message_by_id = "DELETE FROM messages WHERE id=%s"
 
@@ -323,7 +323,7 @@ def chat_history():
             dbCur.execute(select_messages_by_sender_receiver_user_id, (current_userid, second_userid, current_userid, second_userid))
         elif group_id is not None:
             # fetching group chats
-            dbCur.execute(select_messages_by_sender_receiver_group_id, (current_userid, group_id, current_userid, second_userid))
+            dbCur.execute(select_messages_by_sender_receiver_group_id, (group_id, ))
         columns = [column[0] for column in dbCur.description]
         rows = dbCur.fetchall()
         chats = [dict(zip(columns, row)) for row in rows]
