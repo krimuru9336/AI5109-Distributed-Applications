@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "203000053213",
+    "firebase_url": "https://myfirebasechat-5f7a0-default-rtdb.firebaseio.com",
+    "project_id": "myfirebasechat-5f7a0",
+    "storage_bucket": "myfirebasechat-5f7a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203000053213:android:02592ae26a46d25a4f4a34",
+        "android_client_info": {
+          "package_name": "com.bytesbee.firebase.chat.activities"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "203000053213-e76a36fhlvdv1bf4i20v1qaoq1r4mhld.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bytesbee.firebase.chat.activities",
+            "certificate_hash": "fece1a2d9753509525e9e911df143f3b5ac2ffbe"
+          }
+        },
+        {
+          "client_id": "203000053213-e39kj5bdpl7psrergolgatsnumruerod.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDac5te22C7L914bdX8tFQU43tDY5xUuT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203000053213-e39kj5bdpl7psrergolgatsnumruerod.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
