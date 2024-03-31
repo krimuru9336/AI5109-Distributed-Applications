@@ -1,0 +1,54 @@
+<!-- res/layout/group_tab_layout.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:orientation="horizontal">
+    <EditText
+        android:id="@+id/editTextGroup"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter people name "/>
+
+
+    <Button
+        android:id="@+id/buttonAddGroup"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="Add"/>
+</LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewGroupinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Names :"
+        android:textSize="20dp" />
+<!--        android:text="Group members will be displayed here"-->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal">
+    <EditText
+        android:id="@+id/editTextGroupName"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter group name"/>
+
+    <Button
+        android:id="@+id/buttonSubmitGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:text="Submit"/>
+    </LinearLayout>
+</LinearLayout>

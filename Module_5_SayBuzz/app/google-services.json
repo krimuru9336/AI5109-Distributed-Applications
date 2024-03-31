@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1044296699636",
+    "firebase_url": "https://whatsdown-8a1d4-default-rtdb.firebaseio.com",
+    "project_id": "whatsdown-8a1d4",
+    "storage_bucket": "whatsdown-8a1d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1044296699636:android:905a46163276e970cb18a1",
+        "android_client_info": {
+          "package_name": "com.example.chitchat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi9mtyvXKfQYfuY5cvovtUnek1TN1V4_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1044296699636:android:8eea147ffbca6936cb18a1",
+        "android_client_info": {
+          "package_name": "com.example.whatsdown"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi9mtyvXKfQYfuY5cvovtUnek1TN1V4_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

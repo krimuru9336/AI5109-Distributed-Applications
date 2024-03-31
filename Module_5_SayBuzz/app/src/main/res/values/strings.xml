@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SayBuzz</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="or">OR</string>
+    <string name="register">SIGN UP!</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="name">Name\n</string>
+</resources>

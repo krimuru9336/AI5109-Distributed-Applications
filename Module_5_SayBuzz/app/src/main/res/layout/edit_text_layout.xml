@@ -1,0 +1,30 @@
+<!-- res/layout/menu_item_layout.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/menuEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="Enter text"
+        />
+
+<!--    <ImageButton-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:src="@drawable/ic_action_edit"-->
+<!--        android:id="@+id/dialog_edit"/>-->
+
+<!--    <ImageButton-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:src="@drawable/ic_action_delete"-->
+<!--        android:id="@+id/dialog_delete"/>-->
+
+
+    <!-- Add other views as needed -->
+
+</LinearLayout>
