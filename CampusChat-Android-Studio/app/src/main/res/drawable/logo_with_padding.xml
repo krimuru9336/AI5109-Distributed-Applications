@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The white background layer acting as padding -->
+    <item android:drawable="@android:color/white" />
+    <item
+        android:drawable="@drawable/logo_2_"
+        android:top="35dp"
+        android:bottom="35dp"
+        android:left="35dp"
+        android:right="35dp"
+    />
+</layer-list>

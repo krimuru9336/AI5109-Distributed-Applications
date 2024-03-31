@@ -42,6 +42,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,24 +55,20 @@ import java.util.List;
 
 import demo.campuschat.adapter.MessageAdapter;
 import demo.campuschat.model.ChatSummary;
+import demo.campuschat.model.Group;
 import demo.campuschat.model.Message;
 import demo.campuschat.model.User;
 
 public class ConversationActivity extends AppCompatActivity implements MessageAdapter.MessageClickListener, MessageAdapter.MessageLongClickListener{
 
-    private String receiver_Id;
-    private String receiver_Name;
-
+    private String receiver_Id, receiver_Name, groupId, groupName;
+    boolean isGroupChat;
     private MessageAdapter adapter;
     private List<Message> messageList;
-    private FirebaseDatabase database;
-    private DatabaseReference messagesRef;
-    private DatabaseReference chatSummaryRef;
-
-    private DatabaseReference userRef;
-    FirebaseUser currentUser;
-
+    private DatabaseReference messagesRef, chatSummaryRef, groupChatSummaryRef, userRef, groupRef;
+    private FirebaseUser currentUser;
     private EditText editTextChatBox;
+    private RecyclerView recyclerView;
 
     private ActivityResultLauncher<String> mGetContentImage;
     private ActivityResultLauncher<String> mGetContentVideo;
@@ -81,25 +79,45 @@ public class ConversationActivity extends AppCompatActivity implements MessageAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation);
 
-        receiver_Id = getIntent().getStringExtra("RECEIVER_ID");
-        receiver_Name = getIntent().getStringExtra("RECEIVER_NAME");
+        // Firebase real-time database
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://campuschat-13dbc-default-rtdb.europe-west1.firebasedatabase.app");
+        userRef = database.getReference("users");
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view_messages);
+        TextView userName= findViewById(R.id.user_info_name);
+
+
+        isGroupChat = getIntent().getBooleanExtra("IS_GROUP_CHAT", false);
+        if (isGroupChat){
+            // This is a group chat
+            groupId = getIntent().getStringExtra("GROUP_ID");
+            groupName = getIntent().getStringExtra("GROUP_NAME");
+            setTitle(groupName);
+            messagesRef = database.getReference("group_messages").child(groupId);
+            groupChatSummaryRef = database.getReference("group_summaries");
+            groupRef = database.getReference("groups").child(groupId);
+            userName.setText(groupName);
+        } else {
+            receiver_Id = getIntent().getStringExtra("RECEIVER_ID");
+            receiver_Name = getIntent().getStringExtra("RECEIVER_NAME");
+            setTitle(receiver_Name);
+            messagesRef = database.getReference("messages");
+            chatSummaryRef = database.getReference("chat_summaries");
+            userName.setText(receiver_Name);
+        }
+
+        recyclerView = findViewById(R.id.recycler_view_messages);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         messageList = new ArrayList<>();
-        adapter = new MessageAdapter(messageList, this, this);
+        adapter = new MessageAdapter(messageList, isGroupChat,this, this);
 
         recyclerView.setAdapter(adapter);
-        recyclerView.post(() -> recyclerView.scrollToPosition(adapter.getItemCount() - 1));
 
 
         editTextChatBox = findViewById(R.id.edittext_chatbox);
         ImageButton buttonSend = findViewById(R.id.button_chatbox_send);
         ImageButton backButton = findViewById(R.id.back_button);
         ImageButton mediaSendButton = findViewById(R.id.send_media_button);
-        TextView userName= findViewById(R.id.user_info_name);
 
-        userName.setText(receiver_Name);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
@@ -384,27 +402,35 @@ public class ConversationActivity extends AppCompatActivity implements MessageAd
 
     private void deleteMessage(Message message, int position) {
         String senderId = currentUser.getUid();
-
         String messageId = message.getMessageId();
 
-        fetchUserName(senderId ,userName -> {
-            messagesRef.child(messageId).removeValue()
-                    .addOnSuccessListener(aVoid -> {
+        boolean isMediaMessage = message.getMediaType() != null && message.getMediaURL() != null;
 
-                        // Successfully deleted the message
-                        if (isLastMessage(position - 1)) {
-                            message.setMessageText("This message was deleted");
-                            message.setTimestamp(System.currentTimeMillis());
-
-                            createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
-                            createOrUpdateChatSummary(receiver_Id, senderId, userName, message);
-                            Log.d("user-name", "deleteMessage: "+ userName);
+        messagesRef.child(messageId).removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    // Successfully deleted the message
+                    if (isLastMessage(position - 1)) {
+                        String deletedMessageText = "This message was deleted";
+                        message.setMessageText("This message was deleted");
+                        if (isMediaMessage) {
+                            // Clear media URL and type for media messages
+                            message.setMediaURL(null);
+                            message.setThumbnailURL(null);
+                            message.setMediaType(null);
                         }
-                    })
-                    .addOnFailureListener( e -> {
-                        Toast.makeText(ConversationActivity.this, "Failed to delete message", Toast.LENGTH_SHORT).show();
-                    });
-        });
+                        message.setTimestamp(System.currentTimeMillis());
+
+                        if (isGroupChat) {
+                            updateGroupChatSummary(groupId, message);
+                        } else {
+                                createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
+                                createOrUpdateChatSummary(receiver_Id, senderId, currentUser.getDisplayName(), message);
+                        }
+                    }
+                })
+                .addOnFailureListener( e -> {
+                    Toast.makeText(ConversationActivity.this, "Failed to delete message", Toast.LENGTH_SHORT).show();
+                });
 
     }
 
@@ -429,21 +455,25 @@ public class ConversationActivity extends AppCompatActivity implements MessageAd
 
         String messageId = message.getMessageId();
 
-        fetchUserName(senderId, userName -> messagesRef.child(messageId).child("messageText").setValue(newMessageText)
+        messagesRef.child(messageId).child("messageText").setValue(newMessageText)
                 .addOnSuccessListener(aVoid -> {
                     // Successfully updated the message
                     message.setMessageText(newMessageText);
                     adapter.notifyItemChanged(position);
 
-                    if (isLastMessage(position)) {
-                        createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
-                        createOrUpdateChatSummary(receiver_Id, senderId, userName, message);
+                    if (isGroupChat) {
+                        updateGroupChatSummary(groupId, message);
+                    } else {
+                        fetchUserName(senderId, userName -> {
+                            createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
+                            createOrUpdateChatSummary(receiver_Id, senderId, userName, message);
+                        });
                     }
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure
                     Toast.makeText(ConversationActivity.this, "Failed to edit message", Toast.LENGTH_SHORT).show();
-                }));
+                });
 
     }
 
@@ -458,14 +488,23 @@ public class ConversationActivity extends AppCompatActivity implements MessageAd
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Message message = snapshot.getValue(Message.class);
                     if (message != null) {
-                        // Check if the message is between the current user and the selected receiver
-                        if ((message.getSenderId().equals(senderId) && message.getReceiverId().equals(receiver_Id)) ||
-                                (message.getSenderId().equals(receiver_Id) && message.getReceiverId().equals(senderId))) {
-                            messageList.add(message);
+                        if (isGroupChat) {
+                            Log.d("idg", "onDataChange: "+ message.getMessageText());
+                            if (message.getGroupId() != null && message.getGroupId().equals(groupId)) {
+                                messageList.add(message);
+                            }
+                        } else {
+                            Log.d("idnor", "onDataChange: "+ message.getGroupId());
+                            // Check if the message is between the current user and the selected receiver
+                            if ((message.getSenderId().equals(senderId) && message.getReceiverId().equals(receiver_Id)) ||
+                                    (message.getSenderId().equals(receiver_Id) && message.getReceiverId().equals(senderId))) {
+                                messageList.add(message);
+                            }
                         }
                     }
                 }
                 adapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(adapter.getItemCount() - 1); // To scroll to the bottom of the list
             }
 
             @Override
@@ -473,35 +512,93 @@ public class ConversationActivity extends AppCompatActivity implements MessageAd
                 Log.e("ConversationActivity", "Database error: " + databaseError.getMessage());
             }
         });
+
     }
 
     private void sendMessage(@Nullable String mediaURL, @Nullable String thumbnailURL, @Nullable Message.MediaType mediaType) {
         String messageText = editTextChatBox.getText().toString().trim();
 
-
-        if ((currentUser != null) && (!messageText.isEmpty() || mediaURL != null)) {
+        if (currentUser != null && (!messageText.isEmpty() || mediaURL != null)) {
             String senderId = currentUser.getUid();
+            String messageId = messagesRef.push().getKey();
 
+            Message message;
+            if (isGroupChat) {
+                // For group chats, receiverId can be null
+                message = new Message(messageId, senderId, null,  groupId, messageText, System.currentTimeMillis(), mediaURL, thumbnailURL, mediaType);
+            } else {
+                // For individual chats
+                message = new Message(messageId, senderId, receiver_Id, null, messageText, System.currentTimeMillis(), mediaURL, thumbnailURL, mediaType);
+            }
 
-            fetchUserName( senderId ,senderName -> {
-                String messageId = messagesRef.push().getKey();
-                Message message = new Message(messageId, senderId, receiver_Id, messageText, System.currentTimeMillis(), mediaURL, thumbnailURL, mediaType);
-                messagesRef.child(messageId).setValue(message)
-                        .addOnSuccessListener(aVoid -> {
-                            // Check if ChatSummary exists, if not create it
-                            createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
-                            createOrUpdateChatSummary(receiver_Id, senderId, senderName, message);
-                        })
-                        .addOnFailureListener(e -> {
-                            // Handle failure
-                            Log.e("Messaging", "Failed to send message", e);
-                        });
+            assert messageId != null;
+            messagesRef.child(messageId).setValue(message)
+                    .addOnSuccessListener(aVoid -> {
+                        recyclerView.scrollToPosition(adapter.getItemCount());
+                        if (!isGroupChat) {
+                            fetchUserName(senderId, userName -> {
+                                createOrUpdateChatSummary(senderId, receiver_Id, receiver_Name, message);
+                                createOrUpdateChatSummary(receiver_Id, senderId, userName, message);
+                            });
+                        } else {
+                            updateGroupChatSummary(groupId, message);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle failure
+                        Log.e("Messaging", "Failed to send message", e);
+                    });
 
-                editTextChatBox.setText("");
-            });
-
+            editTextChatBox.setText("");
         }
     }
+
+    private void updateGroupChatSummary(String groupId, Message message) {
+        groupRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Group group = snapshot.getValue(Group.class);
+                if (group != null) {
+                    List<String> memberIds = group.getMemberIds();
+                    String text = getChatSummaryMessage(message);
+
+                    for (String memberId: memberIds) {
+                        DatabaseReference groupChatSummaryForUserRef = groupChatSummaryRef.child(memberId).child(groupId);
+                        groupChatSummaryForUserRef.runTransaction(new Transaction.Handler() {
+                            @NonNull
+                            @Override
+                            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                                ChatSummary chatSummary = mutableData.getValue(ChatSummary.class);
+                                if (chatSummary == null) {
+                                    chatSummary = new ChatSummary(groupId, groupName, text, System.currentTimeMillis(), true);
+                                } else {
+                                    chatSummary.setLastMessage(text);
+                                    chatSummary.setLastMessageTimestamp(message.getTimestamp());
+                                }
+
+                                mutableData.setValue(chatSummary);
+                                return Transaction.success(mutableData);
+                            }
+
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                                if (error != null) {
+                                    Log.e("GroupChatSummaryUpdate", "Database error: " + error.getMessage());
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("GroupFetchError", "Failed to fetch group details", error.toException());
+            }
+        });
+
+    }
+
 
     private void createOrUpdateChatSummary(String userId, String chatPartnerId, String chatPartnerName, Message message) {
 
@@ -521,7 +618,7 @@ public class ConversationActivity extends AppCompatActivity implements MessageAd
                     }
                 } else {
                     // ChatSummary does not exist, create a new one
-                    chatSummary = new ChatSummary(chatPartnerId, chatPartnerName, text, message.getTimestamp());
+                    chatSummary = new ChatSummary(chatPartnerId, chatPartnerName, text, message.getTimestamp(), false);
                 }
                 chatSummaryRef.child(userId).child(chatPartnerId).setValue(chatSummary);
             }
@@ -534,6 +631,8 @@ public class ConversationActivity extends AppCompatActivity implements MessageAd
     }
 
     private String getChatSummaryMessage(Message message) {
+
+        if (message.getMediaType() == null ) return message.getMessageText();
 
         switch (message.getMediaType()){
             case GIF:

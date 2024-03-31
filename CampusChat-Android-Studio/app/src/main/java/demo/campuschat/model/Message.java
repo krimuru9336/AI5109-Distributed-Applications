@@ -27,7 +27,7 @@ public class Message {
     public Message() {}
 
 //    All Args Constructor
-    public Message(String messageId, String senderId, String receiverId, String messageText, long timestamp, @Nullable String mediaURL, @Nullable String thumbnailURL, @Nullable MediaType mediaType) {
+    public Message(String messageId, String senderId, String receiverId, @Nullable String groupId, String messageText, long timestamp, @Nullable String mediaURL, @Nullable String thumbnailURL, @Nullable MediaType mediaType) {
         this.messageId = messageId;
         this.messageText = messageText;
         this.timestamp = timestamp;
@@ -36,6 +36,7 @@ public class Message {
         this.mediaURL = mediaURL;
         this.mediaType = mediaType;
         this.thumbnailURL = thumbnailURL;
+        this.groupId = groupId;
     }
     public Message(String messageId, String senderId, String receiverId, String messageText, long timestamp) {
         this.messageId = messageId;
@@ -55,13 +56,13 @@ public class Message {
         this.messageText = messageText;
     }
 
-
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public void setSenderId(String senderId) {
         this.senderId = senderId;
     }
-
-
 
     public void setReceiverId(String receiverId) {
         this.receiverId = receiverId;
@@ -79,15 +80,15 @@ public class Message {
         this.mediaType = mediaType;
     }
 
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     //    Getters
 
 
     public String getMessageId() {
         return messageId;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
     }
 
     public String getMessageText() {
@@ -117,4 +118,8 @@ public class Message {
     public String getThumbnailURL() {
         return thumbnailURL;
     }
+
+    public String getGroupId() { return groupId;}
+
+
 }

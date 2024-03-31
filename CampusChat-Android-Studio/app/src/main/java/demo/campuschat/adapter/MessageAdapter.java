@@ -3,6 +3,7 @@ package demo.campuschat.adapter;
 import android.content.Context;
 import android.net.Uri;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +19,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import demo.campuschat.ConversationActivity;
 import demo.campuschat.R;
 import demo.campuschat.model.Message;
+import demo.campuschat.model.User;
 
 import java.io.IOException;
 import java.util.List;
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<Message> messageList;
+    private final boolean isGroupChat;
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance("https://campuschat-13dbc-default-rtdb.europe-west1.firebasedatabase.app");
+    private final DatabaseReference userRef = database.getReference("users");
     private final MessageLongClickListener longClickListener;
     private final MessageClickListener messageClickListener;
 
@@ -42,10 +52,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      private static final int VIEW_TYPE_GIF_RECEIVED = 8;
 
 
-    public MessageAdapter(List<Message> messageList, MessageLongClickListener messageLongClickListener, MessageClickListener messageClickListener) {
+    public MessageAdapter(List<Message> messageList, boolean isGroupChat, MessageLongClickListener messageLongClickListener, MessageClickListener messageClickListener) {
         this.messageList = messageList;
         this.longClickListener = messageLongClickListener;
         this.messageClickListener = messageClickListener;
+        this.isGroupChat = isGroupChat;
     }
 
 
@@ -116,30 +127,51 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_TEXT_SENT:
+                bindTextMessageViewHolder((TextMessageViewHolder) holder, message, isGroupChat, false);
+                break;
             case VIEW_TYPE_TEXT_RECEIVED:
-                bindTextMessageViewHolder((TextMessageViewHolder) holder, message);
+                bindTextMessageViewHolder((TextMessageViewHolder) holder, message, isGroupChat, true);
                 break;
             case VIEW_TYPE_IMAGE_SENT:
             case VIEW_TYPE_GIF_SENT:
+                bindImageMessageViewHolder((ImageMessageViewHolder) holder, message, context, isGroupChat, false);
+                break;
             case VIEW_TYPE_IMAGE_RECEIVED:
             case VIEW_TYPE_GIF_RECEIVED:
-                bindImageMessageViewHolder((ImageMessageViewHolder) holder, message, context);
+                bindImageMessageViewHolder((ImageMessageViewHolder) holder, message, context, isGroupChat, true);
                 break;
             case VIEW_TYPE_VIDEO_SENT:
+                bindVideoViewHolder((VideoMessageViewHolder) holder, message, context, isGroupChat, false);
+                break;
             case VIEW_TYPE_VIDEO_RECEIVED:
-                bindVideoViewHolder((VideoMessageViewHolder) holder, message, context);
+                bindVideoViewHolder((VideoMessageViewHolder) holder, message, context, isGroupChat, true);
                 break;
         }
     }
 
-    private void bindTextMessageViewHolder(TextMessageViewHolder holder, Message message) {
+    private void bindTextMessageViewHolder(TextMessageViewHolder holder, Message message, boolean isGroupChat, boolean isReceived) {
         holder.messageTextView.setText(message.getMessageText());
         holder.timestampView.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", message.getTimestamp()));
-        attachMessageLongClickListener(holder.itemView, message, holder.getAdapterPosition());    }
+        Log.d("isGroupChat", "isGroupChat: "+ isGroupChat);
+        if (isGroupChat && isReceived) {
+            fetchUserName(message.getSenderId(), userName -> {
+                Log.d("ViewHolderDebug", "About to set username text. Holder: " + holder + ", senderNameView: " + holder.senderNameView);
+                holder.senderNameView.setText(userName);
+                holder.senderNameView.setVisibility(View.VISIBLE);
+            });
+        }
+        attachMessageLongClickListener(holder.itemView, message, holder.getAdapterPosition());
+    }
 
-    private void bindImageMessageViewHolder(ImageMessageViewHolder holder, Message message, Context context) {
+    private void bindImageMessageViewHolder(ImageMessageViewHolder holder, Message message, Context context, boolean isGroupChat, boolean isReceived) {
         // Use mediaURL for loading images into ImageView
         if (message.getMediaURL() != null && !message.getMediaURL().isEmpty()) {
+            if (isGroupChat && isReceived){
+                fetchUserName(message.getSenderId(), userName -> {
+                    holder.senderNameView.setText(userName);
+                    holder.senderNameView.setVisibility(View.VISIBLE);
+                });
+            }
             Glide
                     .with(context)
                     .load(message.getMediaURL())
@@ -156,6 +188,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     messageClickListener.onImageClicked(mediaUri, mimeType);
                 }
             });
+
         }
         // Attach long click listener using the refactored method
         attachMessageLongClickListener(holder.itemView, message, holder.getAdapterPosition());
@@ -189,7 +222,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    private void bindVideoViewHolder(VideoMessageViewHolder holder, Message message, Context context) {
+    private void bindVideoViewHolder(VideoMessageViewHolder holder, Message message, Context context, boolean isGroupChat, boolean isReceived) {
+
+        if (isGroupChat && isReceived) {
+            fetchUserName(message.getSenderId(), userName -> {
+                holder.senderNameView.setText(userName);
+                holder.senderNameView.setVisibility(View.VISIBLE);
+            });
+        }
         Uri videoUri = Uri.parse(message.getMediaURL()); // Assuming mediaURL is set to the video's URI
 
 
@@ -213,11 +253,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         // Set any additional video-specific logic here
     }
 
-
-
-
-
-
     @Override
     public int getItemCount() {
         return messageList.size();
@@ -225,12 +260,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     // ViewHolder for text messages
     static class TextMessageViewHolder extends RecyclerView.ViewHolder {
-        TextView messageTextView, timestampView;
+        TextView messageTextView, timestampView, senderNameView;
 
         TextMessageViewHolder(View itemView) {
             super(itemView);
             messageTextView = itemView.findViewById(R.id.message_text_view);
             timestampView = itemView.findViewById(R.id.timestamp_view);
+            senderNameView = itemView.findViewById(R.id.sender_name_view);
         }
     }
 
@@ -238,10 +274,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     static class ImageMessageViewHolder extends RecyclerView.ViewHolder {
         ImageView messageImageView;
 //        TextView timestampView;
+        TextView senderNameView;
 
         ImageMessageViewHolder(View itemView) {
             super(itemView);
             messageImageView = itemView.findViewById(R.id.message_image_view);
+            senderNameView = itemView.findViewById(R.id.sender_name_view);
 //            timestampView = itemView.findViewById(R.id.timestamp_view);
         }
 
@@ -250,16 +288,35 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     static class VideoMessageViewHolder extends RecyclerView.ViewHolder {
         ImageView videoThumbnail;
         ImageButton playButton;
+        TextView senderNameView;
 
         public VideoMessageViewHolder(View itemView) {
             super(itemView);
             videoThumbnail = itemView.findViewById(R.id.message_video_view);
             playButton = itemView.findViewById(R.id.playButtonImageView);
+            senderNameView = itemView.findViewById(R.id.sender_name_view);
 //            videoView = itemView.findViewById(R.id.message_video_view); // other purpose lateR?
         }
     }
 
-    // Future ViewHolder classes for Video and GIF
+    private void fetchUserName(String userId, final MessageAdapter.OnUserNameFetchedListener listener) {
+        userRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    listener.onUserNameFetched(user.getUserName());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("fetchUserName", "Error fetching user data", databaseError.toException());
+                listener.onUserNameFetched(null);
+            }
+        });
+    }
+
 
 
     public interface MessageClickListener {
@@ -271,5 +328,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public interface MessageLongClickListener {
         void onMessageLongClicked(View view, Message message, int position);
     }
+
+    interface OnUserNameFetchedListener {
+        void onUserNameFetched(String userName);
+    }
+
 
 }

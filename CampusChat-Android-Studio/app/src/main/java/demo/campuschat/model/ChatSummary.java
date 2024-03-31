@@ -11,11 +11,12 @@ public class ChatSummary {
 
     public ChatSummary() {}
 
-    public ChatSummary(String chatPartnerId, String chatPartnerName, String lastMessage, long lastMessageTimestamp) {
+    public ChatSummary(String chatPartnerId, String chatPartnerName, String lastMessage, long lastMessageTimestamp, boolean isGroupChat) {
         this.chatPartnerId = chatPartnerId;
         this.chatPartnerName = chatPartnerName;
         this.lastMessage = lastMessage;
         this.lastMessageTimestamp = lastMessageTimestamp;
+        this.isGroupChat = isGroupChat;
     }
 
     public String getChatPartnerId() {
@@ -48,5 +49,13 @@ public class ChatSummary {
 
     public void setLastMessageTimestamp(long lastMessageTimestamp) {
         this.lastMessageTimestamp = lastMessageTimestamp;
+    }
+
+    public boolean isGroupChat() {
+        return isGroupChat;
+    }
+
+    public void setGroupChat(boolean groupChat) {
+        isGroupChat = groupChat;
     }
 }

@@ -9,6 +9,16 @@
     android:maxWidth="240dp"
     android:layout_marginBottom="9dp">
 
+    <TextView
+        android:id="@+id/sender_name_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:visibility="gone"/>
+
+
     <ImageView
         android:id="@+id/message_image_view"
         android:layout_width="300dp"

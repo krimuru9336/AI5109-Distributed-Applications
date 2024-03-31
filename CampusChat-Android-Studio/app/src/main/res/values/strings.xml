@@ -33,5 +33,6 @@
     <string name="play_video">play Video\n</string>
     <string name="button_to_add_a_group">button to add a group</string>
     <string name="enter_group_name">Enter group name</string>
+    <string name="CampusChat" />
 
 </resources>

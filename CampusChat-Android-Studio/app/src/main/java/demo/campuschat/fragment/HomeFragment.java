@@ -1,5 +1,6 @@
 package demo.campuschat.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +38,7 @@ public class HomeFragment extends Fragment {
     private ChatSummaryAdapter adapter;
     private List<ChatSummary> chatSummaries;
     private FirebaseDatabase database;
-    private DatabaseReference csRef;
+    private DatabaseReference csRef, gcsRef;
 
     FirebaseUser currentUser;
 
@@ -58,16 +60,24 @@ public class HomeFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_chats);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ChatSummaryAdapter(chatSummaries, new OnChatSummaryClickListener() {
-            @Override
-            public void onChatSummaryClicked(ChatSummary chatSummary) {
-                Intent intent = new Intent(getActivity(), ConversationActivity.class);
+        adapter = new ChatSummaryAdapter(chatSummaries, chatSummary ->  {
+            Intent intent;
+            intent = new Intent(getActivity(), ConversationActivity.class);
+            Log.d("isgroup", "onViewCreated: "+ chatSummary.isGroupChat());
+            if (chatSummary.isGroupChat()) {
+                intent.putExtra("IS_GROUP_CHAT", chatSummary.isGroupChat());
+                intent.putExtra("GROUP_ID", chatSummary.getChatPartnerId());
+                intent.putExtra("GROUP_NAME", chatSummary.getChatPartnerName());
+                Log.d("group", "onChatSummaryClicked: "+ chatSummary.getChatPartnerId());
+            } else {
+                intent.putExtra("IS_GROUP_CHAT", chatSummary.isGroupChat());
                 intent.putExtra("RECEIVER_ID", chatSummary.getChatPartnerId());
                 intent.putExtra("RECEIVER_NAME", chatSummary.getChatPartnerName());
-                Log.d("TAG", "onChatSummaryClicked: "+ chatSummary.getChatPartnerName());
-                startActivity(intent);
+                Log.d("normal", "onChatSummaryClicked: "+ chatSummary.getChatPartnerId());
             }
-        });
+            startActivity(intent);
+
+            });
 
         logoutButton.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
@@ -80,33 +90,38 @@ public class HomeFragment extends Fragment {
 
 
         csRef = database.getReference("chat_summaries").child(currentUser.getUid());
+        gcsRef = database.getReference("group_summaries").child(currentUser.getUid());
         loadChatSummaries();
 
     }
 
     private void loadChatSummaries() {
 
-        if (currentUser != null){
-            csRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    chatSummaries.clear();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        // Assuming you have a method to create a ChatSummary from a snapshot
-                        ChatSummary summary = snapshot.getValue(ChatSummary.class);
+        if (currentUser == null) return;
+
+        chatSummaries.clear();
+        ValueEventListener chatSummaryListener = new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ChatSummary summary = snapshot.getValue(ChatSummary.class);
+                    if (summary != null) {
                         chatSummaries.add(summary);
                     }
-                    adapter.notifyDataSetChanged();
                 }
-
+                chatSummaries.sort(((o1, o2) -> Long.compare(o2.getLastMessageTimestamp(), o1.getLastMessageTimestamp())));
+                adapter.notifyDataSetChanged();
+            }
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError databaseError) {
                     Log.e("HomeFragment", "Database error: " + databaseError.getMessage());
                 }
-            });
+        };
 
-        }
+        csRef.addListenerForSingleValueEvent(chatSummaryListener);
+        gcsRef.addListenerForSingleValueEvent(chatSummaryListener);
+
     }
-
 
 }

@@ -76,14 +76,16 @@ public class DataSeeder {
                 "wkSU1jlFo7eriCoUqrmiehoefQo1",
                 "User2",
                 "Hi User1!",
-                System.currentTimeMillis()
+                System.currentTimeMillis(),
+                false
         );
 
         ChatSummary chatSummary2 = new ChatSummary(
                 "JenIABYjFFfs51RPxEdhiQqhXb42",
                 "User1",
                 "Hi User1!",
-                System.currentTimeMillis() // The timestamp for this last message
+                System.currentTimeMillis(), // The timestamp for this last message
+                false
         );
 
 

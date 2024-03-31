@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.
         this.listener = listener;
     }
 
+    @NonNull
     @Override
     public ChatSummaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_summary_item, parent, false);
@@ -52,14 +54,11 @@ public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.
             lastMessageView = itemView.findViewById(R.id.last_message);
             timestampView = itemView.findViewById(R.id.timestamp);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Get the position of the ViewHolder
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onChatSummaryClicked(chatSummaries.get(position));
-                    }
+            itemView.setOnClickListener(v -> {
+                // Get the position of the ViewHolder
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onChatSummaryClicked(chatSummaries.get(position));
                 }
             });
         }

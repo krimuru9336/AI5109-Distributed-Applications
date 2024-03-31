@@ -1,12 +1,16 @@
 package demo.campuschat.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,23 +27,54 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import demo.campuschat.ConversationActivity;
 import demo.campuschat.R;
 import demo.campuschat.adapter.UserAdapter;
+import demo.campuschat.model.ChatSummary;
+import demo.campuschat.model.Group;
 import demo.campuschat.model.User;
 
 public class UserListFragment extends Fragment {
 
     private UserAdapter adapter;
     private List<User> userList;
-    private DatabaseReference usersRef;
+    private DatabaseReference usersRef, groupRef, groupChatSummaryRef;
     private FirebaseUser currentUser;
+    private ImageButton createGroupButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_user_list, container, false);
+        View view = inflater.inflate(R.layout.activity_user_list, container, false);
+
+        createGroupButton = view.findViewById(R.id.button_create_group);
+        createGroupButton.setOnClickListener(v -> {
+            Log.d("selected", "onCreateView: "+ adapter.getSelectedUserIds());
+            if (adapter.getSelectedUserIds().size() < 2) {
+                Toast.makeText(getContext(), "Please select at least 2 users to create a group", Toast.LENGTH_SHORT).show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_create_group, null);
+                EditText editTextGroupName = dialogView.findViewById(R.id.editText_group_name);
+                
+                builder.setView(dialogView)
+                        .setTitle("Create Group")
+                        .setPositiveButton("Create", (dialog, which) -> {
+                            String groupName = editTextGroupName.getText().toString().trim();
+                            if (!groupName.isEmpty()){
+                                createGroup(groupName, adapter.getSelectedUserIds());
+                            } else {
+                                Toast.makeText(getContext(), "Group name cannot be empty", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -58,6 +93,8 @@ public class UserListFragment extends Fragment {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://campuschat-13dbc-default-rtdb.europe-west1.firebasedatabase.app");
         usersRef = database.getReference("users");
+        groupRef = database.getReference("groups");
+        groupChatSummaryRef = database.getReference("group_summaries");
         loadUsers();
     }
 
@@ -68,7 +105,6 @@ public class UserListFragment extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("UserListActivity", "Total users: " + dataSnapshot.getChildrenCount());
                 userList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
@@ -85,6 +121,43 @@ public class UserListFragment extends Fragment {
                 Log.e("UserListActivity", "Database error: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void createGroup(String groupName, Set<String> memberIds) {
+
+        String groupId = groupRef.push().getKey();
+        memberIds.add(currentUser.getUid());
+        List<String> memeberIdsList = new ArrayList<>(memberIds);
+
+        Group group = new Group(groupId, groupName, memeberIdsList);
+        assert groupId != null;
+        groupRef.child(groupId).setValue(group)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(getContext(), "Your Group has been successfully created!", Toast.LENGTH_SHORT).show();
+
+                    // Create ChatSummary for each member
+                    for (String memberId : memberIds) {
+                        ChatSummary chatSummary = new ChatSummary(
+                                groupId,
+                                groupName,
+                                "You were added to the group: "+groupName,
+                                System.currentTimeMillis(),
+                                true
+                        );
+                        groupChatSummaryRef.child(memberId).child(groupId).setValue(chatSummary);
+                    }
+                    navigateToChatActivity(groupId, groupName);
+
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to create group", Toast.LENGTH_SHORT).show());
+    }
+
+    private void navigateToChatActivity(String groupId, String groupName) {
+        Intent intent = new Intent(getActivity(), ConversationActivity.class);
+        intent.putExtra("GROUP_ID", groupId);
+        intent.putExtra("GROUP_NAME", groupName);
+        intent.putExtra("IS_GROUP_CHAT", true);
+        startActivity(intent);
     }
 
 
