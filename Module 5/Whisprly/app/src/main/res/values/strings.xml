@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Wisprly</string>
+    <string name="server_client_id">661909123961-0eat6drmc94l380qkr7em6i7aqisr1a7.apps.googleusercontent.com</string>
+    <string name="chats">Chats</string>
+    <string name="groups">Groups</string>
+    <string name="profile">Profile</string>
+</resources>

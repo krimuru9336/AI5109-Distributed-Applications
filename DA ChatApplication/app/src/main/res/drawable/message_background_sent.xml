@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:bottomRightRadius="2dp" android:topRightRadius="2dp"
-        android:bottomLeftRadius="16dp" android:topLeftRadius="16dp"/>
-    <solid android:color="#DCF8C6"/> <!-- WhatsApp-like color for sent messages -->
+    <corners android:radius="16dp" />
+    <solid android:color="#FFFFFF" />
     <padding android:left="10dp" android:top="10dp" android:right="10dp" android:bottom="10dp"/>
 </shape>

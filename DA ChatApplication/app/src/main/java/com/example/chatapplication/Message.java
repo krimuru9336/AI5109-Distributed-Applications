@@ -1,57 +1,44 @@
 package com.example.chatapplication;
 
-
-import java.util.Date;
-
 public class Message {
     private String id;
     private String text;
-    private String sender;
     private long timestamp;
-    private boolean isCurrentUser;
+    private boolean isSent;
+    private String senderId;
+    private String sender;
 
-
+    // No-argument constructor needed for Firebase
     public Message() {
     }
 
-    // Constructor
-    public Message(String id, String text, String sender) {
-        this.text = text;
-        this.sender = sender;
-        this.timestamp = new Date().getTime();
+    // Argument constructor
+    public Message(String id, String text, long timestamp, boolean isSent, String senderId) {
         this.id = id;
+        this.text = text;
+        this.timestamp = timestamp;
+        this.isSent = isSent;
+        this.senderId = senderId;
     }
 
-    public boolean isCurrentUser() {
-        return isCurrentUser;
-    }
-
-    // Getters
+    // Getters and setters
     public String getId() { return id; }
-    public String getText() {
-        return text;
-    }
+    public void setId(String id) { this.id = id; }
+    public String getText() { return text; }
+    public void setText(String text) { this.text = text; }
+    public long getTimestamp() { return timestamp; }
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+    public boolean isSent() { return isSent; }
+    public void setSent(boolean sent) { isSent = sent; }
+    public String getSenderId() { return senderId; }
+    public void setSenderId(String senderId) { this.senderId = senderId; }
+
 
     public String getSender() {
         return sender;
     }
 
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    // Setters
-    public void setId(String id) { this.id = id; }
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public void setSender(String sender) {
         this.sender = sender;
     }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
 }
-

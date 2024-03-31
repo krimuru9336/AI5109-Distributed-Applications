@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Chat Application</string>
+    <string name="edit_message">Edit</string>
+    <string name="delete_message">Delete</string>
+    <string name="send">Send</string>
+
 </resources>

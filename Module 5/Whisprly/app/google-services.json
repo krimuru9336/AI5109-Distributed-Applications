@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "661909123961",
+    "project_id": "kotlin-chat-app-53ccc",
+    "storage_bucket": "kotlin-chat-app-53ccc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661909123961:android:b457c26d31ba7ed2df35a8",
+        "android_client_info": {
+          "package_name": "com.example.whatsdown"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "661909123961-0eat6drmc94l380qkr7em6i7aqisr1a7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr0AzUoOw1sD7MvR1-UpeD5m5VbOGkAWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "661909123961-0eat6drmc94l380qkr7em6i7aqisr1a7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661909123961:android:cd772068413ee12edf35a8",
+        "android_client_info": {
+          "package_name": "com.example.wisperly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "661909123961-0eat6drmc94l380qkr7em6i7aqisr1a7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr0AzUoOw1sD7MvR1-UpeD5m5VbOGkAWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "661909123961-0eat6drmc94l380qkr7em6i7aqisr1a7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
