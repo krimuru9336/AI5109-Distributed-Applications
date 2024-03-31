@@ -13,6 +13,27 @@
         android:theme="@style/Theme.MyChat"
         tools:targetApi="31">
         <activity
+            android:name=".GroupListAdapter"
+            android:exported="false"
+            android:label="@string/title_activity_group_list_adapter"
+            android:theme="@style/Theme.MyChat" />
+        <activity
+            android:name=".GroupList"
+            android:exported="false"
+            android:label="@string/title_activity_group_list"
+            android:theme="@style/Theme.MyChat" />
+        <activity
+            android:name=".UserListAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".UserList"
+            android:exported="false" />
+        <activity
+            android:name=".GroupChatActivity"
+            android:exported="false"
+            android:label="@string/title_activity_group_chat"
+            android:theme="@style/Theme.MyChat" />
+        <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
@@ -29,7 +50,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

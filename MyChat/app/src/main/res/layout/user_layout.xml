@@ -16,12 +16,12 @@
     </TextView>
 
     <View
-        android:id="@+id/txt_name"
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
+       android:id="@+id/txt_Name"
+       android:layout_marginTop="5dp"
+       android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/black"/>
-    
+
 </RelativeLayout>
 
     

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:layout_width="250dp"
+        android:layout_width="180dp"
         android:background="@drawable/edt_background"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp"
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:orientation="vertical"
-            android:background="@drawable/btn_bckgrnd">
+            android:background="@drawable/edt_background">
 
             <TextView
                 android:id="@+id/txt_receive_message"
@@ -25,7 +25,6 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="This is sent Message"
-                android:textColor="@color/white"
                 android:textSize="18sp">
 
             </TextView>
@@ -35,10 +34,20 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="This is sent Message"
-                android:textColor="@color/white"
                 android:textSize="9sp">
 
             </TextView>
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:id="@+id/Images">
+            </ImageView>
+
+            <androidx.media3.ui.PlayerView
+                android:id="@+id/Video"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

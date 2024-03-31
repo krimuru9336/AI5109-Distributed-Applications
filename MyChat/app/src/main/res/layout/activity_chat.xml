@@ -23,22 +23,31 @@
         android:layout_marginBottom="5dp"
         android:weightSum="100">
 
-        <EditText
-            android:id="@+id/messagebox"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:hint="Type a message"
-            android:layout_marginLeft="10dp"
-            android:paddingLeft="10dp"
-            android:background="@drawable/message_box_background"
-            android:layout_weight="85"/>
-        
+            <EditText
+                android:id="@+id/messagebox"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:hint="Type a message"
+                android:layout_marginLeft="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/message_box_background"
+                android:layout_weight="85"/>
+
         <ImageView
             android:id="@+id/sentButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/sendbut"
             android:layout_weight="20"/>
+
+        <ImageButton
+            android:id="@+id/sendMediaButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="20"
+            android:layout_marginRight="40dp"
+            android:background="@color/white"
+            android:src="@drawable/attach_foreground" />
 
     </LinearLayout>
 </RelativeLayout>
