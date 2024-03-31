@@ -13,8 +13,10 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import traceback
 
+# loading environment variables from .env file
 load_dotenv()
 
+# settting up database variables
 dbHost = os.getenv("DB_HOST")
 dbUser = os.getenv("DB_USER")
 dbPassword = os.getenv("DB_PASSWORD")
@@ -23,12 +25,15 @@ dbName = os.getenv("DB_NAME")
 appSecret = os.getenv("APP_SECRET")
 
 app = Flask(__name__)
+
+# This will ensure "Cross Original Resource Sharing" errors do not occur
 CORS(app)
 
-# Setup the Flask-JWT-Extended extension
+# Seting up the Flask-JWT-Extended to handle authentication for this app
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
+# Setting up Socket, which will handle the real time communication
 app.config['SECRET_KEY'] = os.getenv("SOCKET_SECRET_KEY")
 CORS(app,resources={r"/*":{"origins":"decoded_token*"}})
 socketio = SocketIO(app,cors_allowed_origins="*")
@@ -36,11 +41,12 @@ socketio = SocketIO(app,cors_allowed_origins="*")
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
-app.config['UPLOAD_FOLDER'] = os.path.join(current_directory, 'static')
+app.config['UPLOAD_FOLDER'] = os.path.join(current_directory, 'static') # folder in with static files like images and video will be stored
 
 # vaild file types
 fileTypes = ["image", "video"]
 
+# configuration for database
 dbConfig = {
   'user': dbUser,
   'password': dbPassword,
@@ -49,6 +55,7 @@ dbConfig = {
   'raise_on_warnings': True
 }
 
+# Connecting to the database and handeling any error that might occur
 try:
     dbCnx = mysql.connector.connect(**dbConfig)
     print("Database connection successfull")
@@ -78,8 +85,8 @@ insert_new_message = (
 "INSERT INTO messages (id, sender_id, sender_username, receiver_user_id, receiver_group_id, content, content_type)"
 "VALUES (%s, %s, %s, %s, %s, %s, %s)")
 select_message_by_id = "SELECT * FROM messages WHERE id=%s"
-select_messages_by_sender_receiver_user_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_user_id = %s) OR (receiver_user_id = %s AND sender_id = %s)"
-select_messages_by_sender_receiver_group_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_group_id = %s) OR (receiver_group_id = %s AND sender_id = %s)"
+select_messages_by_sender_receiver_user_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_user_id = %s) OR (receiver_user_id = %s AND sender_id = %s) ORDER BY sent_at ASC"
+select_messages_by_sender_receiver_group_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_group_id = %s) OR (receiver_group_id = %s AND sender_id = %s) ORDER BY sent_at ASC"
 update_message_by_id = "UPDATE messages SET content=%s, is_edited=True WHERE id=%s"
 delete_message_by_id = "DELETE FROM messages WHERE id=%s"
 
@@ -97,18 +104,20 @@ select_usergroups_by_userid = "SELECT * from usergroups WHERE userid=%s"
 userIdToSid = {}
 sidToUserId = {}
 
+# Simple function that generates a random ID
 def getUniqueId():
     uuidObj = uuid.uuid4()
     return str(uuidObj)
 
+# This event establishes the connection between a user and our socket server
 @socketio.on("connect")
 def connected():
     access_token = request.args.get("access_token")
     if not access_token:
         return False
     try:
-        decoded_token = decode_token(access_token)
-        userId = decoded_token["sub"] # this also performs token verification
+        decoded_token = decode_token(access_token) # validating 
+        userId = decoded_token["sub"]
         print("client has connected with socket id:", request.sid)
         userIdToSid[userId] = request.sid
         sidToUserId[request.sid] = userId

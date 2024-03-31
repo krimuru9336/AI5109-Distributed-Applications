@@ -34,7 +34,7 @@ function App({ route }) {
     const videoRef = useRef(null);
 
     useEffect(() => {
-        if(!fetchChatHistory) return;
+        if (!fetchChatHistory) return;
         (async () => {
             const params = {};
             if (recipientType == "user") {
@@ -89,6 +89,7 @@ function App({ route }) {
             message_type: type
         })
         setNewMessage("")
+        setFetchChatHistory(true);
     }, [socket, recipientId, recipientType])
 
     const editMessage = useCallback(() => {
@@ -104,6 +105,7 @@ function App({ route }) {
         socket.emit("delete", {
             message_id: messageId,
         })
+        setFetchChatHistory(true);
     }, [socket])
 
     const pickAndSendMediaFile = useCallback(async () => {
@@ -189,7 +191,7 @@ function App({ route }) {
                                     <TouchableOpacity>
                                         <View style={{ width: "100%", height: 200, position: 'relative' }}>
                                             <Video
-                                                source={{ uri: "http://localhost:5000/static/video/20240328_230115_77cc98d9c659419b954891bd01b9263c.mp4" }}
+                                                source={{ uri: `${API_URL + m.content}` }}
                                                 ref={videoRef}
                                                 style={{
                                                     position: 'absolute',
