@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">424611347445</string>
+    <string name="google_api_key" translatable="false">AIzaSyCEDjna4A4rDEZvTKkaTd462nGTfUsfC6c</string>
+    <string name="google_app_id" translatable="false">1:424611347445:android:6c810f0a052038bb60bebc</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCEDjna4A4rDEZvTKkaTd462nGTfUsfC6c</string>
+    <string name="google_storage_bucket" translatable="false">zaptalkfinal.appspot.com</string>
+    <string name="project_id" translatable="false">zaptalkfinal</string>
+</resources>
