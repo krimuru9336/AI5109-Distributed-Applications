@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -28,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
@@ -65,10 +65,16 @@ fun ChatsListScreen(
        mutableStateOf<List<String>>(emptyList())
     }
     var showBottomSheet by remember { mutableStateOf(false) }
+    var showModal by remember { mutableStateOf(false) }
+    var groupName by remember {
+        mutableStateOf("")
+    }
+
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
+        print("USER ID: ${userViewModel.userId}")
         if (userViewModel.userObj != null) {
             firebaseViewModel.getChatRooms(userViewModel.userObj!!.id)
         }
@@ -90,6 +96,13 @@ fun ChatsListScreen(
     }
 
     fun onGroupChat() {
+        if (userViewModel.userObj != null && groupName.isNotEmpty()) {
+            firebaseViewModel.createGroupChat(
+                currentUserId = userViewModel.userObj!!.id,
+                newChatUserIds = checkedUsers,
+                roomName = groupName,
+            )
+        }
         print(checkedUsers)
     }
 
@@ -98,10 +111,21 @@ fun ChatsListScreen(
             firebaseViewModel.createPrivateChat(
                 currentUserId = userViewModel.userObj!!.id,
                 newChatUserIds = checkedUsers,
-                roomType = RoomType.PRIVATE,
             )
         }
         print(checkedUsers)
+    }
+
+    fun onSubmit() {
+        if (checkedUsers.size > 1) {
+            // Group
+            onGroupChat()
+            showBottomSheet = false
+        } else if (checkedUsers.size == 1) {
+            // Private
+            onPrivateChat()
+            showBottomSheet = false
+        }
     }
 
     @Composable
@@ -128,6 +152,15 @@ fun ChatsListScreen(
                         style = MaterialTheme.typography.headlineSmall.copy(),
                     )
                 }
+                Spacer(modifier = Modifier.height(20.dp))
+                if (checkedUsers.size > 1) {
+                    TextField(
+                        value = groupName,
+                        onValueChange = { groupName = it },
+                        label = { Text("Group name") },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 LazyColumn {
                     items(firebaseViewModel.usersList) { user ->
@@ -139,9 +172,7 @@ fun ChatsListScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp),
-
-
-                                ) {
+                            ) {
                                 Text(text = user.username)
                                 Checkbox(checked = checkedUsers.contains(user.id), onCheckedChange = {
                                     if (it) {
@@ -154,39 +185,21 @@ fun ChatsListScreen(
                         }
                     }
                 }
-                Row(
-                    horizontalArrangement = Arrangement.Absolute.Right,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                ) {
-                    Button(
-                        onClick = {
-                            onGroupChat()
-//                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-//                                if (!sheetState.isVisible) {
-//                                    showBottomSheet = false
-//                                }
-//                            }
-                        }) {
-                        Text("Group")
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        onClick = {
-                            onPrivateChat()
-//                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-//                                if (!sheetState.isVisible) {
-//                                    showBottomSheet = false
-//                                }
-//                            }
-                        }) {
-                        Text("Private chat")
+                Spacer(modifier = Modifier.height(10.dp))
+                Row (
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxSize()
+                ){
+                    Button(onClick = {
+                        onSubmit()
+                    }) {
+                        Text(text = "Submit")
                     }
                 }
             }
         }
     }
+
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -209,6 +222,7 @@ fun ChatsListScreen(
         if (showBottomSheet) {
             BottomSheet()
         }
+
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
@@ -226,23 +240,16 @@ fun ChatsListScreen(
                         .background(Color.LightGray)
                         .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
-//                    Box(
-//                        modifier = Modifier
-//                            .clip(CircleShape)
-//                            .background(Color.DarkGray)
-//                            .height(48.dp)
-//                            .width(48.dp)
-
-//                    ) {
-//                        Text(text = "A.A", modifier = Modifier
-//                            .align(Alignment.Center),
-//                            color = Color.White
-//                        )
-//                    }
-//                    Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(text = it.roomName, fontWeight = FontWeight.Bold)
-                        Text(text = "Last message from chaat", fontWeight = FontWeight.Light)
+                        Text(
+                            text =  if (it.roomType == RoomType.GROUP) {
+                                "Group"
+                            } else {
+                                "Private"
+                            }
+                            , fontWeight = FontWeight.Light
+                        )
                     }
                 }
                 Divider(
