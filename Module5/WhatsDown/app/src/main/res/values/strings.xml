@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WhatsDown</string>
+    <string name="server_client_id">1042468585378-jojs1d78bhi4s6jiisvfgrfv95adeduv.apps.googleusercontent.com</string>
+    <string name="chats">Chats</string>
+    <string name="groups">Groups</string>
+    <string name="profile">Profile</string>
+</resources>
