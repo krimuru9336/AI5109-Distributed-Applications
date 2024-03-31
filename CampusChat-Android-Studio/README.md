@@ -4,6 +4,7 @@
 CampusChat is an Android-based chat application designed for easy and efficient communication within campus communities. Utilizing Firebase for database management and user authentication, the application supports text and multimedia messaging in a user-friendly environment.
 
 ### Module 4: Editing and Deleting Message Video: [Download .zip file](Module_4_Video-Mohammed_Amine_Malloul.zip)
+### Module 5: Videos, Images, Gifs, Group chats Video: [Download .zip file](Module_5_Video-Mohammed_Amine_Malloul.zip)
 
 ## Features
 - User Authentication: Utilizes Firebase Authentication for secure user sign-up and login.
