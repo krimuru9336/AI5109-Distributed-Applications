@@ -1,6 +1,20 @@
 package com.example.chatapplication.adapters;
 
 
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.BROADCAST_DOWNLOAD_EVENT;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.COMPLETED;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.DOWNLOAD_DATA;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.SLASH;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_AUDIO;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_CONTACT;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_DOCUMENT;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_IMAGE;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_LOCATION;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_RECORDING;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_TEXT;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.TYPE_VIDEO;
+import static com.bytesbee.firebase.chat.activities.constants.IConstants.ZERO;
+import android.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -610,7 +624,6 @@ public class MessageAdapters extends RecyclerView.Adapter<MessageAdapters.ViewHo
 
     }
 
-
     private void deleteMessage(int position) {
         String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String snd = mChats.get(position).getSender();
@@ -623,7 +636,6 @@ public class MessageAdapters extends RecyclerView.Adapter<MessageAdapters.ViewHo
 
         DatabaseReference dbref_sender = FirebaseDatabase.getInstance().getReference("Chats_v2").child(snd).child(rev).child(msg_id);
         DatabaseReference dbref_reciever = FirebaseDatabase.getInstance().getReference("Chats_v2").child(rev).child(snd).child(msg_id);
-
 
         dbref_sender.getRef().child("message").setValue("This message was deleted.");
         dbref_reciever.getRef().child("message").setValue("This message was deleted.");
