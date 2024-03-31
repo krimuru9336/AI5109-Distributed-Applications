@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ChatApp</string>
+    <string name="server_client_id">39203182759-4iapd530um22g1dkdjos1tk5kkctjvtu.apps.googleusercontent.com</string>
+    <string name="chats">Chats</string>
+    <string name="groups">Groups</string>
+    <string name="profile">Profile</string>
+</resources>
