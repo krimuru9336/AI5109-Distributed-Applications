@@ -10,15 +10,19 @@ public class ChatroomModel {
     Timestamp lastMessageTimestamp;
     String lastMessageSenderId;
     String lastMessage;
+    String lastImageSentUrl;
+    String lastVideoSentUrl;
 
     public ChatroomModel() {
     }
 
-    public ChatroomModel(String chatroomId, List<String> userIds, Timestamp lastMessageTimestamp, String lastMessageSenderId) {
+    public ChatroomModel(String chatroomId, List<String> userIds, Timestamp lastMessageTimestamp, String lastMessageSenderId, String lastImageSentUrl, String lastVideoSentUrl) {
         this.chatroomId = chatroomId;
         this.userIds = userIds;
         this.lastMessageTimestamp = lastMessageTimestamp;
         this.lastMessageSenderId = lastMessageSenderId;
+        this.lastImageSentUrl = lastImageSentUrl; // Include lastImageSentUrl parameter
+        this.lastVideoSentUrl = lastVideoSentUrl;
     }
 
     public String getChatroomId() {
@@ -59,5 +63,21 @@ public class ChatroomModel {
 
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public String getLastImageSentUrl() {
+        return lastImageSentUrl;
+    }
+
+    public void setLastImageSentUrl(String lastImageSentUrl) {
+        this.lastImageSentUrl = lastImageSentUrl;
+    }
+
+    public String getLastVideoSentUrl() {
+        return lastVideoSentUrl;
+    }
+
+    public void setLastVideoSentUrl(String lastVideoSentUrl) {
+        this.lastVideoSentUrl = lastVideoSentUrl;
     }
 }

@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
+
     <!-- Left Chat Layout -->
     <LinearLayout
         android:layout_width="wrap_content"
@@ -21,6 +22,35 @@
             android:textSize="18sp"
             android:text="Hello"
             android:id="@+id/left_chat_textview"/>
+        <!-- ImageView for displaying images -->
+        <ImageView
+            android:id="@+id/left_chat_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" /> <!-- Initially hidden -->
+        <!-- FrameLayout to contain VideoView -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <!-- VideoView for displaying videos -->
+            <VideoView
+                android:id="@+id/left_chat_video_view"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:visibility="gone"
+                android:layout_gravity="center"/> <!-- Initially hidden -->
+
+            <!-- Play Button for Left Chat Video -->
+            <ImageButton
+                android:id="@+id/left_play_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_play_arrow_24"
+                android:layout_gravity="center"
+                android:visibility="gone" /> <!-- Initially hidden -->
+        </FrameLayout>
+
     </LinearLayout>
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -53,6 +83,33 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:id="@+id/right_chat_textview"/>
+        <!-- ImageView for displaying images -->
+        <ImageView
+            android:id="@+id/right_chat_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" /> <!-- Initially hidden -->
+        <!-- FrameLayout to contain VideoView -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <!-- VideoView for displaying videos -->
+        <VideoView
+            android:id="@+id/right_chat_video_view"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            android:layout_gravity="center"/> <!-- Initially hidden -->
+        <!-- Play Button for Left Chat Video -->
+        <ImageButton
+            android:id="@+id/right_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_play_arrow_24"
+            android:layout_gravity="center"
+            android:visibility="gone" /> <!-- Initially hidden -->
+        </FrameLayout>
     </LinearLayout>
     <RelativeLayout
         android:layout_width="wrap_content"

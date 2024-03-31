@@ -56,8 +56,19 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
             android:id="@+id/main_search_btn">
-
         </ImageButton>
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/group_chat_icon"
+            android:layout_toLeftOf="@id/main_search_btn"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/group_chat_btn">
+        </ImageButton>
+
     </RelativeLayout>
 
     <FrameLayout
@@ -66,6 +77,7 @@
         android:layout_below="@id/main_toolbar"
         android:layout_above="@id/divider"
         android:id="@+id/main_frame_layout">
+
     </FrameLayout>
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
@@ -80,4 +92,5 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:id="@+id/bottom_navigation"
         app:menu="@menu/bottom_navigation_menu"/>
+
 </RelativeLayout>

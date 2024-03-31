@@ -2,11 +2,13 @@ package com.example.chatapp.model;
 
 import com.google.firebase.Timestamp;
 
-public class UserModel {
+public class UserModel{
     private String phone;
     private String username;
     private Timestamp createdTimestamp;
     private String userId;
+    String fcmToken;
+    private boolean isSelected;
 
     public UserModel() {
     }
@@ -16,6 +18,10 @@ public class UserModel {
         this.phone = phone;
         this.userId = userId;
         this.username = username;
+
+    }
+
+    public UserModel(String s) {
     }
 
     public String getPhone() {
@@ -48,5 +54,21 @@ public class UserModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

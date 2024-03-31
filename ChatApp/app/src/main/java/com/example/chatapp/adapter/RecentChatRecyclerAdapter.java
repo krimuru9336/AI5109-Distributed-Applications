@@ -2,6 +2,7 @@ package com.example.chatapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.ChatActivity;
 import com.example.chatapp.R;
+import com.example.chatapp.model.ChatMessageModel;
 import com.example.chatapp.model.ChatroomModel;
 import com.example.chatapp.model.UserModel;
 import com.example.chatapp.utils.AndroidUtil;
@@ -24,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 
 public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatroomModel, RecentChatRecyclerAdapter.ChatroomModelViewHolder> {
 
@@ -34,6 +37,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
         this.context = context;
     }
 
+
     @Override
     protected void onBindViewHolder(@NonNull ChatroomModelViewHolder holder, int position, @NonNull ChatroomModel model) {
         FirebaseUtil.getOtherUserFromChatroom(model.getUserIds())
@@ -42,12 +46,61 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
                         boolean lastMessageSentByMe = model.getLastMessageSenderId().equals(FirebaseUtil.currentUserId());
 
                         UserModel otherUserModel = task.getResult().toObject(UserModel.class);
+
+                        FirebaseUtil.getOtherProfilePicStorageRef(otherUserModel.getUserId()).getDownloadUrl()
+                                .addOnCompleteListener(t -> {
+                                    if(t.isSuccessful()){
+                                        Uri uri = t.getResult();
+                                        AndroidUtil.setProfilePic(context,uri,holder.profilePic);
+                                    }
+                                });
+
                         holder.usernameText.setText(otherUserModel.getUsername());
-                        if (lastMessageSentByMe) {
-                            holder.lastMessageText.setText("You : " + model.getLastMessage());
-                        } else
-                            holder.lastMessageText.setText(model.getLastMessage());
-                        holder.lastMessageTime.setText(FirebaseUtil.timeStampToString(model.getLastMessageTimestamp()));
+
+
+                        // Fetch the last sent and undeleted message
+                        FirebaseUtil.getChatroomMessageReference(model.getChatroomId())
+                                .orderBy("timestamp", Query.Direction.DESCENDING)
+                                .limit(1)
+                                .get()
+                                .addOnCompleteListener(messageTask -> {
+                                    if (messageTask.isSuccessful()) {
+                                        for (DocumentSnapshot document : messageTask.getResult()) {
+                                            ChatMessageModel lastMessage = document.toObject(ChatMessageModel.class);
+                                            if (lastMessage != null && !lastMessage.isDeleted()) {
+                                                if (lastMessage.getImageUrl() != null && !lastMessage.getImageUrl().isEmpty()) {
+                                                    // If the last message is an image
+                                                    if (lastMessageSentByMe) {
+                                                        holder.lastMessageText.setText("You: image sent");
+                                                    } else {
+                                                        holder.lastMessageText.setText("Image received");
+                                                    }
+                                                }else if (lastMessage.getVideoUrl() != null && !lastMessage.getVideoUrl().isEmpty()) {
+                                                    // If the last message is a video
+                                                    if (lastMessageSentByMe) {
+                                                        holder.lastMessageText.setText("You: video sent");
+                                                    } else {
+                                                        holder.lastMessageText.setText("Video received");
+                                                    }
+                                                }else {
+                                                    // If the last message is a text message
+                                                    if (lastMessageSentByMe) {
+                                                        holder.lastMessageText.setText("You: " + lastMessage.getMessage());
+                                                    } else {
+                                                        holder.lastMessageText.setText(lastMessage.getMessage());
+                                                    }
+                                                }
+                                                holder.lastMessageTime.setText(FirebaseUtil.timeStampToString(lastMessage.getTimestamp()));
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        // Handle the case where fetching the last message was not successful
+                                        holder.lastMessageText.setText("Error loading message"+ messageTask.getException());
+                                        holder.lastMessageTime.setText("");
+                                    }
+                                });
+
                         holder.itemView.setOnClickListener(v -> {
                             // Navigate to chat activity
                             Intent intent = new Intent(context, ChatActivity.class);
@@ -65,6 +118,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
                     }
                 });
     }
+
 
     @NonNull
     @Override
