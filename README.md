@@ -19,18 +19,18 @@ Follow these steps to create and work on your own branch:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git
+   git clone https://github.com/krimuru9336/AI5109-Distributed-Applications.git/fdai7687
    cd AI5109-Distributed-Applications
    ```
 
 2. **Create a New Branch Named After Your FD Number:**
    ```bash
-   git checkout -b fdai1234
+   git checkout -b fdai7687
    ```
    - Replace `fdai1234` with your actual FD number.
 
 3. **Make Changes:**
-   - Implement your features or make necessary changes.
+   - Implemented project is on Module 5 (All the set up and Configs are on README.md in Module 5)
 
 4. **Commit Changes:**
    ```bash
@@ -40,6 +40,4 @@ Follow these steps to create and work on your own branch:
 
 5. **Push Changes to Your Branch:**
    ```bash
-   git push origin fdai1234
-   ```
-   - Replace `fdai1234` with your actual FD number.
+   git push origin fdai...
