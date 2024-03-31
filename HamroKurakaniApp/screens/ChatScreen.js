@@ -26,6 +26,7 @@ function App({ route }) {
     const [allMessages, setAllMessages] = useState([]);
     const [mode, setMode] = useState(modes.NEW_MESSAGE);
     const [editMessageId, setEditMessageId] = useState("");
+    const [fetchChatHistory, setFetchChatHistory] = useState(true);
     const { socket } = useContext(SocketContext);
     const { accessToken } = useContext(AuthContext);
     const recipientId = route.params.receipientId;
@@ -33,12 +34,17 @@ function App({ route }) {
     const videoRef = useRef(null);
 
     useEffect(() => {
+        if(!fetchChatHistory) return;
         (async () => {
+            const params = {};
+            if (recipientType == "user") {
+                params["user_id"] = recipientId
+            } else if (recipientType == "group") {
+                params["group_id"] = recipientId
+            }
             try {
                 const response = await axios.get(`${API_URL}/chat_history`, {
-                    params: {
-                        user_id: recipientId
-                    },
+                    params,
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -49,7 +55,8 @@ function App({ route }) {
                 console.log(err)
             }
         })()
-    }, [])
+        setFetchChatHistory(false);
+    }, [fetchChatHistory])
 
     useEffect(() => {
         if (!socket) return
@@ -90,6 +97,7 @@ function App({ route }) {
             content: newMessage
         })
         setNewMessage("")
+        setFetchChatHistory(true);
     }, [socket, newMessage, editMessageId])
 
     const deleteMessage = useCallback((messageId) => {

@@ -78,7 +78,8 @@ insert_new_message = (
 "INSERT INTO messages (id, sender_id, sender_username, receiver_user_id, receiver_group_id, content, content_type)"
 "VALUES (%s, %s, %s, %s, %s, %s, %s)")
 select_message_by_id = "SELECT * FROM messages WHERE id=%s"
-select_messages_by_sender_receiver_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_user_id = %s) OR (receiver_user_id = %s AND sender_id = %s)"
+select_messages_by_sender_receiver_user_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_user_id = %s) OR (receiver_user_id = %s AND sender_id = %s)"
+select_messages_by_sender_receiver_group_id = "SELECT * FROM messages WHERE (sender_id = %s AND receiver_group_id = %s) OR (receiver_group_id = %s AND sender_id = %s)"
 update_message_by_id = "UPDATE messages SET content=%s, is_edited=True WHERE id=%s"
 delete_message_by_id = "DELETE FROM messages WHERE id=%s"
 
@@ -305,14 +306,21 @@ def chats():
 def chat_history():
     current_userid = get_jwt_identity()
     second_userid = request.args.get('user_id')
+    group_id = request.args.get('group_id')
+
     try:
-        dbCur.execute(select_messages_by_sender_receiver_id, (current_userid, second_userid, current_userid, second_userid))
+        if second_userid is not None:
+            # fetching user to user chat
+            dbCur.execute(select_messages_by_sender_receiver_user_id, (current_userid, second_userid, current_userid, second_userid))
+        elif group_id is not None:
+            # fetching group chats
+            dbCur.execute(select_messages_by_sender_receiver_group_id, (current_userid, group_id, current_userid, second_userid))
         columns = [column[0] for column in dbCur.description]
         rows = dbCur.fetchall()
         chats = [dict(zip(columns, row)) for row in rows]
         return jsonify({"chats": chats}), 201
     except Exception as ex:
-        if ex.errno == 1062:
+        if ex.errno == 1062:    
             return "Username already taken.", 400
         else:
             return f"Unexpected {ex=}, {type(ex)=}", 400
