@@ -4,92 +4,91 @@ import java.io.File;
 
 public interface IConstants {
 
-    String SDPATH = "/storage/emulated/0/";
-    String IMG_FOLDER = "MyImages";
-    String SLASH = File.separator;
-    String SENT_FILE = "/Sent/";
+    String SDPATH = "/storage/emulated/1/";
+    String IMG_FOLDER = "MyImages_v2";
+    String SENT_FILE = "/SentFiles_v2/";
 
-    String REF_USERS = "Users";
-    String REF_CHATS = "Chats_v2";
-    String REF_UPLOAD = "Uploads";
+    String REF_USERS = "Users_v2";
+    String REF_CHATS = "Chats_v3";
+    String REF_UPLOAD = "Uploads_v2";
 
-    String REF_GROUP_UPLOAD = "GroupUploads";
-    String REF_GROUP_PHOTO_UPLOAD = "GroupPhotos";
-    String REF_GROUP_ATTACHMENT = "GroupAttachment";
-    String REF_CHAT_PHOTO_UPLOAD = "ChatPhotos";
-    String REF_CHAT_ATTACHMENT = "ChatAttachment";
-    String REF_VIDEO_THUMBS = "Thumbnails";
+    String REF_GROUP_UPLOAD = "GroupUploads_v2";
+    String REF_GROUP_PHOTO_UPLOAD = "GroupPhotos_v2";
+    String REF_GROUP_ATTACHMENT = "GroupAttachment_v2";
+    String REF_CHAT_PHOTO_UPLOAD = "ChatPhotos_v2";
+    String REF_CHAT_ATTACHMENT = "ChatAttachment_v2";
+    String REF_VIDEO_THUMBS = "Thumbnails_v2";
 
-    String REF_TOKENS = "Tokens";
-    String REF_OTHERS = "Others";
+    String REF_TOKENS = "Tokens_v2";
+    String REF_OTHERS = "Others_v2";
 
-    String REF_GROUPS = "Groups";
+    String REF_GROUPS = "Groups_v2";
     String REF_GROUPS_S = REF_GROUPS + SLASH;
-    String REF_GROUP_MEMBERS = "MembersGroups";
+    String REF_GROUP_MEMBERS = "MembersGroups_v2";
     String REF_GROUP_MEMBERS_S = REF_GROUP_MEMBERS + SLASH;
-    String REF_GROUPS_MESSAGES = "GroupsMessages";
+    String REF_GROUPS_MESSAGES = "GroupsMessages_v2";
 
-    String IMG_DEFAULTS = "default";
+    String IMG_DEFAULTS = "defaults_v2";
 
-    String EXTRA_USER_ID = "userId";
+    String EXTRA_USER_ID = "userId_v2";
 
-    String EXTRA_SENDER = "sender";
-    String EXTRA_RECEIVER = "receiver";
-    String EXTRA_MESSAGE = "message";
-    String EXTRA_TYPE = "type";
-    String EXTRA_IMGPATH = "imgPath";
-    String EXTRA_ATTACH_TYPE = "attachmentType";
-    String EXTRA_ATTACH_PATH = "attachmentPath";
-    String EXTRA_ATTACH_NAME = "attachmentName";
-    String EXTRA_ATTACH_FILE = "attachmentFileName";
-    String EXTRA_ATTACH_SIZE = "attachmentSize";
-    String EXTRA_ATTACH_DATA = "attachmentData";
-    String EXTRA_ATTACH_DURATION = "attachmentDuration";
-    String EXTRA_DATETIME = "datetime";
+    String EXTRA_SENDER = "sender_v2";
+    String EXTRA_RECEIVER = "receiver_v2";
+    String EXTRA_MESSAGE = "message_v2";
+    String EXTRA_TYPE = "type_v2";
+    String EXTRA_IMGPATH = "imgPath_v2";
+    String EXTRA_ATTACH_TYPE = "attachmentType_v2";
+    String EXTRA_ATTACH_PATH = "attachmentPath_v2";
+    String EXTRA_ATTACH_NAME = "attachmentName_v2";
+    String EXTRA_ATTACH_FILE = "attachmentFileName_v2";
+    String EXTRA_ATTACH_SIZE = "attachmentSize_v2";
+    String EXTRA_ATTACH_DATA = "attachmentData_v2";
+    String EXTRA_ATTACH_DURATION = "attachmentDuration_v2";
+    String EXTRA_DATETIME = "datetime_v2";
 
-    String EXTRA_ID = "id";
-    String EXTRA_EMAIL = "email";
-    String EXTRA_USERNAME = "username";
-    String EXTRA_PASSWORD = "password";
-    String EXTRA_IMAGEURL = "imageURL";
-    String EXTRA_ACTIVE = "active";
-    String EXTRA_TYPING = "typing";
-    String EXTRA_TYPINGWITH = "typingwith";
-    String EXTRA_LINK = "linkPath";
-    String EXTRA_ABOUT = "about";
-    String EXTRA_GENDER = "genders";
-    String EXTRA_LASTSEEN = "lastSeen";
-    String EXTRA_GROUPS_IN = "groupsIn";
+    String EXTRA_ID = "id_v2";
+    String EXTRA_EMAIL = "email_v2";
+    String EXTRA_USERNAME = "username_v2";
+    String EXTRA_PASSWORD = "password_v2";
+    String EXTRA_IMAGEURL = "imageURL_v2";
+    String EXTRA_ACTIVE = "active_v2";
+    String EXTRA_TYPING = "typing_v2";
+    String EXTRA_TYPINGWITH = "typingwith_v2";
+    String EXTRA_LINK = "linkPath_v2";
+    String EXTRA_ABOUT = "about_v2";
+    String EXTRA_GENDER = "genders_v2";
+    String EXTRA_LASTSEEN = "lastSeen_v2";
+    String EXTRA_GROUPS_IN = "groupsIn_v2";
     String EXTRA_GROUPS_IN_BOTH = SLASH + EXTRA_GROUPS_IN + SLASH;
 
-    String EXTRA_GROUP_ID = "groupId";
-    String EXTRA_GROUP_NAME = "name";
-    String EXTRA_ADMIN = "admin";
-    String EXTRA_GROUP_MEMBERS = "members";
-    String EXTRA_GROUP_IMG = "groupImg";
-    String EXTRA_LAST_MSG = "lastMsg";
-    String EXTRA_LAST_TIME = "lastMsgTime";
-    String EXTRA_CREATED_AT = "createdAt";
-    String EXTRA_SEND_MESSAGES = "sendMessageSetting";
+    String EXTRA_GROUP_ID = "groupId_v2";
+    String EXTRA_GROUP_NAME = "name_v2";
+    String EXTRA_ADMIN = "admin_v2";
+    String EXTRA_GROUP_MEMBERS = "members_v2";
+    String EXTRA_GROUP_IMG = "groupImg_v2";
+    String EXTRA_LAST_MSG = "lastMsg_v2";
+    String EXTRA_LAST_TIME = "lastMsgTime_v2";
+    String EXTRA_CREATED_AT = "createdAt_v2";
+    String EXTRA_SEND_MESSAGES = "sendMessageSetting_v2";
 
-    String EXTRA_OBJ_GROUP = "groupObject";
+    String EXTRA_OBJ_GROUP = "groupObject_v2";
 
     boolean TRUE = true;
     boolean FALSE = false;
 
-    String FCM_ICON = "icon";
-    String FCM_USER = "user";
-    String FCM_SENT = "sent";
-    String FCM_TITLE = "title";
-    String FCM_BODY = "body";
-    String FCM_GROUPS = "groups";
-    String FCM_USERNAME = "username";
-    String FCM_TYPE = "type";
+    String FCM_ICON = "icon_v2";
+    String FCM_USER = "user_v2";
+    String FCM_SENT = "sent_v2";
+    String FCM_TITLE = "title_v2";
+    String FCM_BODY = "body_v2";
+    String FCM_GROUPS = "groups_v2";
+    String FCM_USERNAME = "username_v2";
+    String FCM_TYPE = "type_v2";
 
-    long CLICK_DELAY_TIME = 250;
-    int EXTRA_TYPING_DELAY = 800;
-    int EXTRA_DELAY = 1000;
-    int SPLASH_DELAY = 4000;
+    long CLICK_DELAY_TIME = 300;
+    int EXTRA_TYPING_DELAY = 1000;
+    int EXTRA_DELAY = 1500;
+    int SPLASH_DELAY = 5000;
     int ZERO = 0; 
     int ONE = 1; 
     int TWO = 2; 
