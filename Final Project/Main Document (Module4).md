@@ -24,15 +24,55 @@ The application serves as a communication medium for two users via chatting. It 
 
 -   **Edit/Delete texts:** Users can choose to edit or delete their already sent messages.
 
+-   Send images, GIFs, Videos
+
+-   Groupchats: Create groups, Add members intuitively with check boxes and name group
+
+-   Recent chats view: Homepage shows the contacts user has interacted with and also groups the current user is part of.
+
 #### Screenshots
 
 ##### Start \| Login \| Signup
 
-![SignUp screen](images/WhatsApp Image 2024-04-01 at 3.37.25 AM (1).jpeg){fig-align="left" width="149"}
+![SignUp screen: Creates a user and stores in firebase database. ](images/WhatsApp Image 2024-04-01 at 3.37.25 AM (1).jpeg){alt="SignUp screen: Creates a user and stores in firebase database." width="140"}
 
-![Login screen](images/WhatsApp Image 2024-04-01 at 3.37.25 AM.jpeg){width="152"}
+![Login screen: Using firebase authentication mechanism for login.](images/WhatsApp Image 2024-04-01 at 3.37.25 AM.jpeg){width="135" height="271"}
 
 ##### New Chat \| Search User \| Start Chat
+
+**Home Screen:**
+
+![](images/Home screen.jpeg){width="171"}
+
+Shows users, groups current user is part of. Click + icon to start new chat
+
+**Search Users:**
+
+Enter Username in searchbar. It fetches probable users from database, matching with user entered characters.
+
+Choosing a user, redirects to chatscreen.
+
+**Create Group:**
+
+Choose members\|Group Name\|click create
+
+Choose group members: Use search bar to search for users. Choose with checkboxes.
+
+Cancel anytime or go to previous steps using buttons on left-top.
+
+Click Next after confirming group members.
+
+Number of selected members visible.
+
+Give groupname and click on create.
+
+**Edit, delete texts:**
+
+Send images
+
+Send videos
+
+Send GIFs
 
 #### Getting Started
 
