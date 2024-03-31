@@ -48,31 +48,33 @@ Shows users, groups current user is part of. Click + icon to start new chat
 
 **Search Users:**
 
-Enter Username in searchbar. It fetches probable users from database, matching with user entered characters.
+-   Enter Username in searchbar. It fetches probable users from database, matching with user entered characters.
 
-Choosing a user, redirects to chatscreen.
+-   Choosing a user, redirects to chatscreen.
 
 **Create Group:**
 
-Choose members\|Group Name\|click create
+-   Choose members\|Group Name\|click create
 
-Choose group members: Use search bar to search for users. Choose with checkboxes.
+-   Choose group members: Use search bar to search for users. Choose with checkboxes.
 
-Cancel anytime or go to previous steps using buttons on left-top.
+-   Cancel anytime or go to previous steps using buttons on left-top.
 
-Click Next after confirming group members.
+-   Click Next after confirming group members.
 
-Number of selected members visible.
+-   Number of selected members visible.
 
-Give groupname and click on create.
+-   Give groupname and click on create.
 
 **Edit, delete texts:**
 
-Send images
+**Media Sharing:**
 
-Send videos
+-   Send images
 
-Send GIFs
+-   Send videos
+
+-   Send GIFs
 
 #### Getting Started
 
