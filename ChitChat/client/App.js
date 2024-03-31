@@ -10,9 +10,9 @@ import { Text, View, KeyboardAvoidingView } from "react-native";
 const Stack = createStackNavigator();
 
 const CustomHeaderTitle = () => (
-  <View style={{ alignItems: "center" }}>
-    <Text style={{ fontWeight: 700 }}>Dipesh Kewalramani (fdai8004)</Text>
-    <Text style={{ fontWeight: 700 }}>1493481 (Matrikel-Nr)</Text>
+  <View style={{ alignItems: "flex-end", width: 300 }}>
+    <Text style={{ fontWeight: 500 }}>Dipesh Kewalramani (fdai8004)</Text>
+    <Text style={{ fontWeight: 500 }}>1493481 (Matrikel-Nr)</Text>
   </View>
 );
 

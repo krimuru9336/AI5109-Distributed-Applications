@@ -171,11 +171,11 @@ async def get_past_messages(sender_id: int = Query(...), reciever_id: int = Quer
     try:
         cursor = conn.cursor(dictionary=True)
         if isGroup:
-            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE receiver_id = %s AND isGroup = %s ORDER BY id DESC"
+            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE receiver_id = %s AND isGroup = %s ORDER BY id"
             print(query)
             cursor.execute(query, (reciever_id, isGroup))
         else:
-            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE ((receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s)) AND isGroup = %s ORDER BY id DESC"
+            query = "SELECT id, message as text, receiver_id as recieverId, sender_id as senderId, timestamp, type, isGroup  FROM messages WHERE ((receiver_id = %s AND sender_id = %s) OR (receiver_id = %s AND sender_id = %s)) AND isGroup = %s ORDER BY id"
             cursor.execute(query, (sender_id, reciever_id,
                                    reciever_id, sender_id, isGroup))
         past_messages = cursor.fetchall()

@@ -126,6 +126,8 @@ const Chat = ({ route }) => {
         messageType: "delete",
         messageId: selectedMessage.id,
         recieverId: selectedMessage.recieverId,
+        isGroup: route?.params?.isGroup,
+        members: route?.params?.members,
       })
     );
     getPastMessages();
@@ -139,6 +141,8 @@ const Chat = ({ route }) => {
         messageId: selectedMessage.id,
         recieverId: selectedMessage.recieverId,
         updatedText: editedMessage.current,
+        isGroup: route?.params?.isGroup,
+        members: route?.params?.members,
       })
     );
     getPastMessages();
@@ -243,6 +247,7 @@ const Chat = ({ route }) => {
                     onError={(error) => {
                       console.log(error);
                     }}
+                    shouldPlay
                   />
                 ) : (
                   <Image
@@ -317,6 +322,7 @@ const Chat = ({ route }) => {
         data={messages}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderMessage}
+        contentContainerStyle={{ paddingBottom: 70 }}
       />
       <View style={styles.inputContainer}>
         <TextInput
@@ -382,7 +388,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     backgroundColor: "#E0E0E0",
-    paddingBottom: 40,
+    paddingBottom: 20,
   },
   textInput: {
     flex: 1,
