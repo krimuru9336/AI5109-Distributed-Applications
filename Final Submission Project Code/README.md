@@ -1,4 +1,4 @@
-# Ripplechat Application Readme
+# RippleChat Application Readme
 
 ## Project Overview
 
@@ -6,26 +6,43 @@ Ripplechat is a feature-rich chat application designed for seamless user registr
 
 ## Features
 
-### 1. User Registration
+### User Registration
 
-- **XML Layout File:** `res/layout/registeractivity.xml`
-- **Java File:** `src/main/java/com/example/yourpackage/RegisterActivity.java`
+New users can easily register by providing essential details such as username, email, and password. The information is securely stored in Firebase for future logins.
 
-  New users can easily register by providing essential details such as username, email, and password. The information is securely stored in Firebase for future logins.
+### User Login
 
-### 2. User Login
+Users can log in using their registered credentials. Firebase authentication is utilized to verify the entered information, granting access to the chat interface upon successful login.
 
-- **XML Layout File:** `res/layout/loginactivity.xml`
-- **Java File:** `src/main/java/com/example/yourpackage/LoginActivity.java`
+### Chat Messaging
 
-  Users can log in using their registered credentials. Firebase authentication is utilized to verify the entered information, granting access to the chat interface upon successful login.
+Once logged in, users can engage in real-time text-based conversations. Firebase Realtime Database is employed to store and retrieve chat messages. Note that this version currently supports text messages only.
 
-### 3. Chat Messaging
+### Editing and Deleting Messages
 
-- **XML Layout File:** `res/layout/messageactivity.xml`
-- **Java File:** `src/main/java/com/example/yourpackage/MessageActivity.java`
+Users have the ability to edit their previously sent messages within a certain time frame to correct mistakes or update information. Additionally, users can delete messages they have sent to remove them from the conversation thread.
 
-  Once logged in, users can engage in real-time text-based conversations. Firebase Realtime Database is employed to store and retrieve chat messages. Note that this version currently supports text messages only.
+### Multimedia Support
+
+Enriching the messaging experience, Ripplechat supports multimedia elements such as videos and GIFs in messages, allowing users to share various media types.
+
+### Group Chat
+
+Extended the application to support group chat functionality, enabling multiple users to participate in a single conversation thread. The group chat feature also includes multimedia support, allowing users to share various media types within group conversations. Moreover, the application facilitates capturing pictures from the camera directly within the chat interface for enhanced multimedia sharing capabilities.
+
+## App Look
+
+![Screenshot 1](https://drive.google.com/file/d/1Cxq7GCif303gupB2TTI_66WA-nq8IllH/view?usp=sharing)
+
+![Screenshot 2](https://drive.google.com/file/d/1sQEpnLsgCUsJVFjbZYiImPpMXM7pSLBC/view?usp=sharing)
+
+![Screenshot 3](https://drive.google.com/file/d/1azDldKo5lPI4Qtv0BG3e-V0Ybwp4_dEs/view?usp=sharing)
+
+![Screenshot 4](https://drive.google.com/file/d/1nF9rt2AYxdZkZ7r7jihPRU21j5vTgrRi/view?usp=sharing)
+
+![Screenshot 5](https://drive.google.com/file/d/1OJufamP-gc4BjmpVAZ9qsykXIL_UXvz6/view?usp=sharing)
+
+![Screenshot 6](https://drive.google.com/file/d/1DSDk-bj1sMd0CUiKu0XC1z690kswbUMO/view?usp=sharing)
 
 ## Project Structure
 
@@ -55,15 +72,6 @@ Ripplechat is a feature-rich chat application designed for seamless user registr
 
 4. **Run the Application:**
    - Run the application on an emulator or physical Android device to test the registration, login, and messaging functionalities.
-
-## Futures added In Module 5
-
-- **Multimedia Support:**
-
-  - Enhanced the messaging functionality to support multimedia elements, including videos and GIFs.
-
-- **Group Chat:**
-  - Extended the application to support group chat functionality.
 
 ## Notes
 
