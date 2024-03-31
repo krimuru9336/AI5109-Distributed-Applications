@@ -56,7 +56,7 @@ Ripplechat is a feature-rich chat application designed for seamless user registr
 4. **Run the Application:**
    - Run the application on an emulator or physical Android device to test the registration, login, and messaging functionalities.
 
-## Futures added In Module 5
+## Features added In Module 5
 
 - **Multimedia Support:**
 
@@ -64,6 +64,8 @@ Ripplechat is a feature-rich chat application designed for seamless user registr
 
 - **Group Chat:**
   - Extended the application to support group chat functionality.
+  - Added a multimedia support in the Group chat.
+  - Added funtionlatiy to take pictures from camera.
 
 ## Notes
 
