@@ -44,11 +44,17 @@
             android:layout_weight="1"
             android:hint="Type a message"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/button_chatbox_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send"/>
+            android:src="@drawable/ic_send"
+            android:contentDescription="@string/send"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="12dp" />
+
+
+
 
     </LinearLayout>
 </RelativeLayout>
