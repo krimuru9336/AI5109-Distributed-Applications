@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/left_chat_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:background="@drawable/edit_text_rounded_corner"
+        android:backgroundTint="@color/light_grey"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/left_chat_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/left_chat_gifImageView"
+            android:layout_width="150dp"
+        android:layout_height="150dp"
+            android:visibility="gone"
+        android:scaleType="centerCrop"
+        android:background="@drawable/edit_text_rounded_corner" />
+
+        <ImageView
+            android:id="@+id/left_chat_imageView"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="left"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:background="@drawable/edit_text_rounded_corner" />
+
+        <VideoView
+            android:id="@+id/left_chat_videoView"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="left"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/left_chat_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_rounded_corner"
+        android:backgroundTint="@color/blue"
+        android:layout_alignParentEnd="true"
+        android:padding="5dp"
+        android:layout_marginStart="80dp"
+        android:id="@+id/right_chat_layout"
+        android:orientation="vertical">
+
+        <TextView
+
+            android:id="@+id/right_chat_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/right_chat_gifImageView"
+            android:layout_width="150dp"
+        android:layout_height="150dp"
+            android:visibility="gone"
+        android:scaleType="centerCrop"
+        android:background="@drawable/edit_text_rounded_corner" />
+
+        <ImageView
+            android:id="@+id/right_chat_imageView"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            android:layout_gravity="right"
+            android:scaleType="centerCrop"
+            android:background="@drawable/edit_text_rounded_corner" />
+
+        <VideoView
+            android:id="@+id/right_chat_videoView"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="right"
+            android:visibility="gone"
+             />
+
+        <TextView
+            android:id="@+id/right_chat_timestamp"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+</RelativeLayout>
+
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:padding="8dp">-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/left_chat_layout"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:layout_marginEnd="80dp"-->
+<!--        android:background="@drawable/edit_text_rounded_corner"-->
+<!--        android:backgroundTint="@color/light_grey"-->
+<!--        android:padding="5dp">-->
+<!--        &lt;!&ndash;        android:orientation="vertical"&ndash;&gt;-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/left_chat_textview"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Hello"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="18sp" />-->
+<!--        &lt;!&ndash;Added the below 3 for latest&ndash;&gt;-->
+<!--        <ImageView-->
+<!--            android:id="@+id/left_chat_imageView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone" />-->
+
+<!--        <VideoView-->
+<!--            android:id="@+id/left_chat_videoView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/left_chat_gifImageView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/left_chat_timestamp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="12dp"-->
+<!--            android:text="Testing"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="12sp" />-->
+<!--    </LinearLayout>-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:background="@drawable/edit_text_rounded_corner"-->
+<!--        android:backgroundTint="@color/blue"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:padding="5dp"-->
+<!--        android:layout_marginStart="80dp"-->
+<!--        android:id="@+id/right_chat_layout">-->
+
+<!--        <TextView-->
+<!--            android:text="Hello"-->
+<!--            android:id="@+id/right_chat_textview"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="@color/white"-->
+
+
+<!--            android:textSize="18sp" />-->
+<!--&lt;!&ndash;Added the below 3 for latest&ndash;&gt;-->
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone" />-->
+
+<!--        <VideoView-->
+<!--            android:id="@+id/videoView"-->
+<!--            android:layout_width="80dp"-->
+<!--            android:layout_height="80dp"-->
+<!--            android:visibility="gone"-->
+<!--             />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/gifImageView"-->
+<!--            android:layout_width="150dp"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:scaleType="fitCenter"-->
+<!--            android:visibility="gone"/>-->
+
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/right_chat_timestamp"-->
+<!--            android:layout_marginTop="12dp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:text="Testing"-->
+<!--            android:textSize="12sp"/>-->
+
+<!--    </LinearLayout>-->
+
+<!--</RelativeLayout>-->
