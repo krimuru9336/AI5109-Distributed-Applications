@@ -38,13 +38,12 @@ function App() {
         <Stack.Navigator initialRouteName='ChatListScreen'
           screenOptions={{
             headerTitle: () =>
-              <Box display='flex' flexDirection='row' justifyContent='space-between' w="100%">
-                <Heading>Hamro KuraKani</Heading>
+              <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' w="90%">
+                <Heading size="sm">Hamro KuraKani</Heading>
                 <Button
                   size="md"
                   variant="solid"
                   action="negative"
-                  marginRight={50}
                 >
                   <ButtonText onPress={logout}>Logout</ButtonText>
                 </Button>

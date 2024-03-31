@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Image, View, Text, TouchableOpacity } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import SocketContext from '../context/SocketContext';
-import { Input, InputField, Button, ButtonText } from '@gluestack-ui/themed';
+import { Input, InputField, Button, ButtonText, ScrollView } from '@gluestack-ui/themed';
 import AuthContext from '../context/AuthContext';
 import { API_URL } from "@env";
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -142,7 +142,7 @@ function App({ route }) {
 
     return (
         <View className="ChatScreen" style={{ height: '100%', display: 'flex', justifyContent: 'flex-end', padding: 10 }}>
-            <View style={{ display: 'flex', gap: 10 }}>
+            <ScrollView style={{ display: 'flex', gap: 10 }}>
                 {
                     allMessages.map((m, idx) => (
                         <View key={`${m.content}-${idx}`}>
@@ -211,7 +211,7 @@ function App({ route }) {
                         </View>
                     ))
                 }
-            </View>
+            </ScrollView>
             <View style={{ display: 'flex', gap: 5, marginTop: 10 }}>
                 <Input
                     variant="outline"
