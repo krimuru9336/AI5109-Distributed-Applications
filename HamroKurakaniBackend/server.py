@@ -125,10 +125,11 @@ def connected():
     except:
         return False
 
+# This event gets triggered when the android app sends an event for a new message
 @socketio.on('new_message')
 def handle_new_message(data):
     userSid = request.sid
-    recipient_id_client = data.get('recipient_id')
+    recipient_id_client = data.get('recipient_id') # this can either be the id of the receiving user, or receiving group
     recipient_type = data.get('recipient_type')
     message_type = data.get('message_type')
     content = data.get("content")
@@ -162,7 +163,7 @@ def handle_new_message(data):
             dbCur.execute(insert_new_message, (messageId, senderId, senderUsername, recipient_id, recipient_group_id, content, message_type))
             dbCnx.commit()
 
-            # retreiving a stored
+            # retreiving the stored message
             dbCur.execute(select_message_by_id, (messageId,))
 
             rows = dbCur.fetchall()
@@ -170,16 +171,17 @@ def handle_new_message(data):
             messages = [dict(zip(columns, row)) for row in rows]
             newMessage = messages[0]
 
-            roomName = recipient_id
+            roomName = recipient_id # every user which is in this room should received the message
             if recipient_type == "user" and recipient_id in userIdToSid:
                 recipientSid = userIdToSid[recipient_id]
                 roomName = recipientSid
-                join_room(roomName)
+                join_room(roomName) # user needs to join the room before sending message to other users who are already in the room
             elif recipient_type == "group":
                 roomName = recipient_group_id
                 join_room(roomName)
 
             print(f"Sending message: '{messageId}' to room: '{roomName}'")
+            # this is the actual socket event that send the new message in real time
             emit("new_message", {"content":newMessage["content"], "content_type": newMessage["content_type"], "sender_username": newMessage['sender_username'], 'sent_at': newMessage['sent_at'].strftime("%a, %d %b %Y %H:%M:%S GMT")}, room=roomName)
 
         except Exception:
@@ -187,9 +189,8 @@ def handle_new_message(data):
             return False; 
     else:
         print(f"Broadcasting message: {messageId}")
-        # # If recipientSid is not provided, broadcast the message to all connected clients
-        # emit("data", {'message': msg, 'sender': userSid,  'id': userSid, 'timestamp': timestamp}, broadcast=True)
 
+# This event if for when a user edits a message
 @socketio.on('edit')
 def handle_edit_message(data):
     userSid = request.sid
@@ -211,6 +212,7 @@ def handle_edit_message(data):
     except:
         return False; 
 
+# This event if for when a user delets a message
 @socketio.on('delete')
 def handle_delete_message(data):
     userSid = request.sid
@@ -222,16 +224,19 @@ def handle_delete_message(data):
     except:
         return False; 
 
+# This even is form when a user stops using the application.
 @socketio.on("disconnect")
 def disconnected():
     """event listener when client disconnects to the server"""
     print("user disconnected")
     emit("disconnect",f"user {request.sid} disconnected",broadcast=True)
 
+# just for debugging purpose
 @app.route("/", methods=["GET"])
 def getServerStatus():
     return jsonify({"userIdToSid": userIdToSid, "sidToUserId": sidToUserId }), 201
 
+# this endpoint hanlde logging in
 @app.route("/login", methods=['POST'])
 def login():
     data = request.json
@@ -242,18 +247,19 @@ def login():
     if(password == None):
         return "Password is required!", 400
     try:
-        dbCur.execute(select_user_by_username, (username,))
+        dbCur.execute(select_user_by_username, (username,)) # select the record of the user from database
         users = dbCur.fetchall()
         user = users[0] if len(users) > 0 else None
         if user and check_password_hash(user[2], password):
             user_id = user[0]
-            access_token = create_access_token(identity=user_id, expires_delta=timedelta(days=30))
+            access_token = create_access_token(identity=user_id, expires_delta=timedelta(days=30)) # create a fresh now jwt token, that the user can use to identify himself.
             return jsonify({"message": "Login successfully", "accessToken": access_token}), 201
         else:
             return jsonify({"message": "Incorrect username or password"}), 400
     except Exception as ex:
         return f"Unexpected {ex=}, {type(ex)=}", 400
-            
+
+# this endpoint hanldes new user registering  
 @app.route("/register", methods=['POST'])
 def register():
     data = request.json
@@ -266,7 +272,7 @@ def register():
         return "Password is required!", 400
     
     userId = getUniqueId()
-    hashedPassword = generate_password_hash(password=password)
+    hashedPassword = generate_password_hash(password=password) # hasing the password for better security
 
     try:
         dbCur.execute(insert_new_user, (userId, username, hashedPassword))
@@ -278,6 +284,7 @@ def register():
         else:
             return f"Unexpected {ex=}, {type(ex)=}", 400
         
+# This endpoint returns all the user or groups that the current user can chat with. 
 @app.route("/chats", methods=['GET'])
 @jwt_required()
 def chats():
@@ -310,6 +317,7 @@ def chats():
         else:
             return f"Unexpected {ex=}, {type(ex)=}", 400
 
+# This endponit returns all the messages that the user has sent/received with another user or in a group. 
 @app.route("/chat_history", methods=['GET'])
 @jwt_required()
 def chat_history():
@@ -334,6 +342,7 @@ def chat_history():
         else:
             return f"Unexpected {ex=}, {type(ex)=}", 400
             
+# Just creates a new group
 @app.route("/groups", methods=['POST'])
 @jwt_required()
 def create_group():
@@ -368,9 +377,9 @@ def create_group():
             return "Username already taken.", 400
         else:
             return f"Unexpected {ex=}, {type(ex)=}", 400
-        
+
+# This endpoint is used when a user wants to upload files such as images for videos. 
 @app.route("/upload_file", methods=['POST'])
-# @jwt_required()
 def upload_file():
     files = request.files
     file_type = request.form.get("file_type")
@@ -394,8 +403,8 @@ def save_file(file, type):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_extension = os.path.splitext(orignal_filename)[1]
     unique_filename = f"{timestamp}_{uuid.uuid4().hex}{file_extension}" # constructing a unique file name
-    file.save(os.path.join(f"{app.config['UPLOAD_FOLDER']}/{type}", unique_filename))
-    return url_for('static', filename=f"{type}/{unique_filename}")
+    file.save(os.path.join(f"{app.config['UPLOAD_FOLDER']}/{type}", unique_filename)) # saving the file in our filesystem
+    return url_for('static', filename=f"{type}/{unique_filename}") # create a path that the client can use to request this file
 
 if __name__ == "__main__":
-    socketio.run(app, debug=False)
+    socketio.run(app, debug=False) # actually running the server
