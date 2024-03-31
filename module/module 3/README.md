@@ -2,18 +2,16 @@
 
 ## Overview
 
-The Chat Application is an Android-based messaging app that allows users to communicate in real-time. It provides a user-friendly interface for sending and receiving text messages.
+The Chat Application is an Android-based messaging app that allows users to communicate in real-time. This Application is created for the submission of the Distributed Application exam - AI5109. 
 
 ## Features
 
-- Users can sign up with their email and password.
-- Users can log in to their accounts.
-- The app provides a user-friendly interface for seamless navigation.
-- Users can view a list of other registered users.
-- Users can start conversations with other users.
-- Firebase Cloud Messaging is used for real-time communication.
-- Users receive instant notifications for new messages.
-- User data, chat messages, and other relevant information are stored in Cloud Firestore.
+- Firebase authentication Verification.
+- Intregration with google sign-in.
+- Firebase Realtime Database provides real-time database capability.
+- Media files such as image, video, gif sharing.
+- Message editing and deleting feature.
+- Group chat.
 
 ## Getting Started
 
@@ -30,6 +28,9 @@ Follow these steps to set up and run the Chat Application locally:
 4. **Sign Up and Log In:**
 - Sign up with a new account or log in with an existing account.
 - Explore the app and start conversations with other users.
+5. **Set up Realtime Database:**
+- In firebase console, create a real time database.
+6. **Build and run the application.**
 
 ## Dependencies
 
