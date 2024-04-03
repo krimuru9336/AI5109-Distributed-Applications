@@ -23,7 +23,7 @@ function HomeScreen({navigation}) {
         screenOptions={({route, navigation}) => ({
           tabBarIcon: ({focused, color, size}) => {
             const icons = {
-              Requests: 'bell',
+              Requests: 'user',
               ChatList: 'inbox',
               Profile: 'user',
             };
@@ -44,8 +44,9 @@ function HomeScreen({navigation}) {
           tabBarIndicator: null,
           tabBarIndicatorStyle: null,
         })}>
-        <Tab.Screen name="Requests" component={RequestScreen} />
         <Tab.Screen name="ChatList" component={ChatListScreen} />
+        <Tab.Screen name="Requests" component={RequestScreen} />
+
         {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
       </Tab.Navigator>
     </>

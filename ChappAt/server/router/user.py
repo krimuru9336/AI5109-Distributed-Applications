@@ -16,32 +16,35 @@ class UserRegistration(BaseModel):
 
 @router.post("/register")
 async def register(user_data: UserRegistration, db: databases.Database = Depends(get_db)):
-    query = users.insert().values(username=user_data.username, password=user_data.password)
-    last_record_id = await db.execute(query)
-    if last_record_id:
-        return {"message": "User registered successfully"}
+    query = select(users).where(users.c.username == user_data.username)
+    user = await db.fetch_one(query)
+    if user:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Username Already Exists")
     else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+        query = users.insert().values(username=user_data.username, password=user_data.password)
+        last_record_id = await db.execute(query)
+        print(last_record_id)
+        if last_record_id:
+            query = select(users).where(users.c.user_id == last_record_id)
+            user = await db.fetch_one(query)
+            print(user)
+            return {"message": "User registered successfully","user":user}
+        else:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Registration Unsuccessful")
+    
 
 
-@router.get("/get-all")
-async def get_all_users(db: databases.Database = Depends(get_db)):
+
+@router.get("/get-all/{user_id}")
+async def get_all_users(user_id: int, db: databases.Database = Depends(get_db)):
     try:
-        query = select(users)
+        query = select(users.c.username,users.c.user_id).where(users.c.user_id != user_id)
         return await db.fetch_all(query)    
     except databases.DatabaseError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error Getting Users: {str(e)}"
         )
-@router.get("/get-all")
-async def get_all_users(db: databases.Database = Depends(get_db)):
-    try:
-        query = select(users)
-        return await db.fetch_all(query)    
-    except Exception:
-        return HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error Getting Users");
-
 
 @router.get("/get-user/{user_id}")
 async def get_user_by_id(user_id: int, db: databases.Database = Depends(get_db)):

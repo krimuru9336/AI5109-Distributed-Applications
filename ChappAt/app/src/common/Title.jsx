@@ -5,7 +5,7 @@ function Title({text, fontSize = 80}) {
     <>
       <Text
         style={{
-          color: 'white',
+          color: 'orange',
           backgroundColor: '#FFF9E0',
           textAlign: 'center',
           fontSize: fontSize,

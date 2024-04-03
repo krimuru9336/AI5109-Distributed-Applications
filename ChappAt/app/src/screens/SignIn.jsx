@@ -7,8 +7,8 @@ import Input from '../common/Input';
 import {loginUser} from '../core/api';
 import useGlobalStore from '../core/global';
 function SignInScreen({navigation}) {
-  const [username, setUsername] = useState('amar');
-  const [password, setPassword] = useState('amar');
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
   const login = useGlobalStore(state => state.login);
   handleUsername = e => {
     e.preventDefault();
@@ -57,13 +57,24 @@ function SignInScreen({navigation}) {
         }}>
         <Title text="Chappat" />
 
+        <Text
+          style={{
+            color: 'orange',
+            textAlign: 'center',
+            padding: 15,
+            fontSize: 20,
+            fontWeight: '200',
+          }}>
+          Login
+        </Text>
+
         <Input title="Username" value={username} onChangeText={setUsername} />
 
         <Input
           title="Password"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
+          secureTextEntry={true}
         />
 
         <Pressable
@@ -82,6 +93,26 @@ function SignInScreen({navigation}) {
           onPress={handleSignIn}>
           <Text style={{fontSize: 20}}>Login</Text>
         </Pressable>
+        <View
+          style={{
+            padding: 10,
+            paddingTop: 20,
+            textAlign: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 16,
+              color: 'black',
+              textAlign: 'center',
+            }}>
+            Not a user?{' '}
+            <Text
+              style={{color: 'orange'}}
+              onPress={() => navigation.navigate('SignUp')}>
+              Register Here
+            </Text>
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );

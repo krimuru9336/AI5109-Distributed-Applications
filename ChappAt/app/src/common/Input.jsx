@@ -14,6 +14,7 @@ function Input({title, value, onChangeText, secureTextEntry = false}) {
       <TextInput
         style={{
           backgroundColor: 'white',
+          color: 'black',
           borderWidth: 1,
           borderColor: 'transparent',
           borderRadius: 26,
@@ -21,7 +22,7 @@ function Input({title, value, onChangeText, secureTextEntry = false}) {
           paddingHorizontal: 16,
           fontSize: 16,
         }}
-        secureTextEntry={secureTextEntry}
+        secureTextEntry
         onChangeText={onChangeText}
         value={value}
       />
